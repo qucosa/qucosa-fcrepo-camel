@@ -8,7 +8,9 @@ public class Routes extends RouteBuilder {
         from("fcrepo:fedora:SetSpec")
             .process(new TransformXmlToJsonProccessor())
             .to("fcrepo:fedora:SetSpec");
-//            .log("${body}");
+
+        from("fcrepo:fedora:OaiPmh?shema=http&host=sdvcmr-app03.slub-dresden.de&port=8080")
+            .to("fcrepo:fedora:OaiPmh");
 
         // from("fcrepo://fedora:OaiPmh?shema=http&host=localhost&port=4711&user=fedoraAdmin&password=fedoraAdmin")
         // .process(new TransformXmlToJsonProccessor())

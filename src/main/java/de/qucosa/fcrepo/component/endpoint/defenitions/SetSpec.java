@@ -1,5 +1,8 @@
 package de.qucosa.fcrepo.component.endpoint.defenitions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Producer;
@@ -16,7 +19,7 @@ import de.qucosa.fcrepo.fedora.api.services.PersistenceService;
 import de.qucosa.fcrepo.fedora.api.services.SetSpecService;
 
 @EndpointDefAnnotation(isConsumer = true, isProducer = true)
-public class SetSpec extends EndpointDefAbstract implements EndpointDefInterface {
+public class SetSpec<T> extends EndpointDefAbstract implements EndpointDefInterface {
 
     @Override
     public Consumer getConsumer() {
@@ -28,7 +31,8 @@ public class SetSpec extends EndpointDefAbstract implements EndpointDefInterface
                 @Override
                 protected void doStart() throws Exception {
                     super.doStart();
-                    setSpecService.run();
+                    Map<Object, T> params = new HashMap<>();
+                    setSpecService.run(setSpecService, "", params);
                     Exchange exchange = endpoint.createExchange();
                     exchange.getIn().setBody(setSpecService.getServiceDataObject());
                     processor.process(exchange);
@@ -52,8 +56,9 @@ public class SetSpec extends EndpointDefAbstract implements EndpointDefInterface
                 
                 @Override
                 public void process(Exchange exchange) throws Exception {
+                    Map<Object, T> params = new HashMap<>();
                     service.setServiceDataObject(exchange.getIn().getBody());
-                    service.run(null);
+                    service.run(service, "saveSetSpecs", params);
                 }
                 
                 @Override

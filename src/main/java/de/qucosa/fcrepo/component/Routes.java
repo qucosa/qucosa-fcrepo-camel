@@ -5,12 +5,19 @@ import org.apache.camel.builder.RouteBuilder;;
 public class Routes extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from("fcrepo:fedora:SetSpec")
-            .process(new TransformXmlToJsonProccessor())
-            .to("fcrepo:fedora:SetSpec");
+        // (from) load all configure setspecs from the config json file and
+        // convert this data in the mapper object
+        // (to) write all setspecs in the database
+        // from("fcrepo:fedora:SetSpec").process(new TransformXmlToJsonProccessor()).to("fcrepo:fedora:SetSpec");
 
-        from("fcrepo:fedora:OaiPmh?shema=http&host=sdvcmr-app03.slub-dresden.de&port=8080")
-            .to("fcrepo:fedora:OaiPmh");
+        // (from) load all exists identifieres from the fedora repo
+        // (to) write identifieres in the database
+        // from("fcrepo:fedora:OaiPmh?shema=http&host=sdvcmr-app03.slub-dresden.de&port=8080").to("fcrepo:fedora:OaiPmh");
+
+        from("fcrepo:fedora:LoadDatastream?shema=http&host=sdvcmr-app03.slub-dresden.de&port=8080&metadataPrefix=xmetadissplus")
+            .process(new MergeSetsRecordXmlProcessor())
+            .log("${body}")
+            .to("mock:test");
 
         // from("fcrepo://fedora:OaiPmh?shema=http&host=localhost&port=4711&user=fedoraAdmin&password=fedoraAdmin")
         // .process(new TransformXmlToJsonProccessor())

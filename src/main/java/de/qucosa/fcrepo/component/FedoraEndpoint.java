@@ -1,6 +1,6 @@
 package de.qucosa.fcrepo.component;
 
-import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 import org.apache.camel.Component;
 import org.apache.camel.Consumer;
@@ -53,15 +53,17 @@ public class FedoraEndpoint extends DefaultEndpoint {
 		super(endpointUri, component);
 		this.configuration = configuration;
 	}
-	
+    
 	@Override
     public Consumer createConsumer(Processor processor) throws Exception {
-	    
-        if (isEndpointDefAnnotation().isConsumer()) {
+	    try {
+            Method method = endpointDef().getClass().getMethod("getConsumer");
             EndpointDefInterface endpointDef = endpointDef();
             endpointDef.setEndpoint(this);
             endpointDef.setProcessor(processor);
-            return endpointDef.getConsumer();
+            return (method.getReturnType() != null) ? endpointDef.getConsumer() : null;
+        } catch (NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
         }
         
         throw new Exception("Unsupported consumer in endpoint definition " + endpointDef().getClass().getCanonicalName());
@@ -69,14 +71,17 @@ public class FedoraEndpoint extends DefaultEndpoint {
 
     @Override
     public Producer createProducer() throws Exception {
-            
-        if (isEndpointDefAnnotation().isProducer()) {
+        Method method = endpointDef().getClass().getMethod("getProducer");
+        
+        try {
             EndpointDefInterface endpointDef = endpointDef();
             endpointDef.setEndpoint(this);
-            return endpointDef.getProducer();
+            return (method.getReturnType() != null) ? endpointDef.getProducer() : null;
+        } catch (NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
         }
         
-        throw new Exception("Unsupported producer in endpoint definition " + isEndpointDefAnnotation().getClass().getCanonicalName());
+        throw new Exception("Unsupported producer in endpoint definition " + endpointDef().getClass().getCanonicalName());
     }
     
     @Override
@@ -181,17 +186,6 @@ public class FedoraEndpoint extends DefaultEndpoint {
 	protected void doStop() throws Exception {
 	    super.doStop();
 	}
-	
-	private EndpointDefAnnotation isEndpointDefAnnotation() throws Exception {
-        Class clazz = Class.forName("de.qucosa.fcrepo.component.endpoint.defenitions." + getConfiguration().getEndpointDef());
-        Annotation annotation = clazz.getAnnotation(EndpointDefAnnotation.class);
-        
-        if (annotation instanceof EndpointDefAnnotation) {
-            return (EndpointDefAnnotation) annotation;
-        }
-        
-        throw new Exception("Endpoint definition Annotation is missing in " + clazz.getCanonicalName());
-    }
     
     private EndpointDefInterface endpointDef() throws Exception {
         Class clazz = Class.forName("de.qucosa.fcrepo.component.endpoint.defenitions." + getConfiguration().getEndpointDef());

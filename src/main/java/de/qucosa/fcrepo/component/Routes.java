@@ -3,6 +3,7 @@ package de.qucosa.fcrepo.component;
 import org.apache.camel.builder.RouteBuilder;;
 
 public class Routes extends RouteBuilder {
+    @SuppressWarnings("rawtypes")
     @Override
     public void configure() throws Exception {
         // (from) load all configure setspecs from the config json file and

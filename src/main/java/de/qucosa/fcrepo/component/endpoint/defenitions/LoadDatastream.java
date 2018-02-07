@@ -23,6 +23,7 @@ public class LoadDatastream<T> extends EndpointDefAbstract implements EndpointDe
     public Consumer getConsumer() {
         return new DefaultConsumer(endpoint, processor) {
             
+            @SuppressWarnings("unchecked")
             @Override
             protected void doStart() throws Exception {
                 super.doStart();

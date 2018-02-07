@@ -50,6 +50,7 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
     public Producer getProducer() {
         return new DefaultProducer(endpoint) {
             
+            @SuppressWarnings("unchecked")
             @Override
             public void process(Exchange exchange) throws Exception {
                 List<Identifier> identifiers = (List<Identifier>) exchange.getIn().getBody();

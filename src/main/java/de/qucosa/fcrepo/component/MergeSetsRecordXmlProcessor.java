@@ -1,21 +1,29 @@
 package de.qucosa.fcrepo.component;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import de.qucosa.fcrepo.fedora.api.FedoraClient;
 import de.qucosa.fcrepo.fedora.api.mappings.json.DissTerms.Term;
@@ -27,28 +35,102 @@ import de.qucosa.fcrepo.fedora.api.services.PersistenceService;
 import de.qucosa.fcrepo.fedora.api.xmlutils.SimpleNamespaceContext;
 
 public class MergeSetsRecordXmlProcessor<T> implements Processor {
-    private ResultSet sets = null;
+    private FedoraEndpoint endpoint = null;
 
+    private FedoraServiceInterface oaiService = null;
+
+    @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) throws Exception {
-        System.out.println("merge process running.");
-        sets = getSets();
-        FedoraEndpoint endpoint = (FedoraEndpoint) exchange.getProperty("fedora");
-        FedoraClient fedoraClient = client(endpoint);
+        endpoint = (FedoraEndpoint) exchange.getProperty("fedora");
+        oaiService = oaiService();
         ResultSet identifieres = (ResultSet) exchange.getIn().getBody();
-
-        FedoraServiceInterface oaiService = FedoraServiceFactory.createService(FedoraOaiService.class);
-        oaiService.setFedoraClient(fedoraClient);
-
-        // while(identifieres.next()) {
         Map<Object, T> args = new HashMap<>();
-        args.put("pid", (T) "qucosa:48670");
-        // args.put("pid", (T) identifieres.getString("pid"));
-        oaiService.run(oaiService, "findXmetaDiss", args);
-        DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = documentBuilder
-                .parse(new ByteArrayInputStream(oaiService.getServiceDataObject().toString().getBytes("UTF-8")));
+        int cnt = 0;
 
+        while (identifieres.next()) {
+            cnt++;
+            args.put("pid", (T) identifieres.getString("pid"));
+            oaiService.run(oaiService, "findXmetaDiss", args);
+            Document document = document(identifieres);
+            wirteSetSpecsInHeader(getSets(), document);
+            String xmlResult = resultXml(document);
+            
+            System.out.println(xmlResult);
+            
+            args.clear();
+
+            if (cnt == 4) {
+                break;
+            }
+        }
+
+        client(endpoint).close();
+    }
+
+    private FedoraClient client(FedoraEndpoint endpoint) {
+        FedoraClient fedoraClient = new FedoraClient(endpoint.getUser(), endpoint.getPassword());
+        fedoraClient.setHost(endpoint.getHost());
+        fedoraClient.setPort(endpoint.getPort());
+        fedoraClient.setShema(endpoint.getShema());
+        return fedoraClient;
+    }
+
+    private FedoraServiceInterface oaiService() {
+        FedoraServiceInterface oaiService = null;
+
+        try {
+            oaiService = FedoraServiceFactory.createService(FedoraOaiService.class);
+            oaiService.setFedoraClient(client(endpoint));
+        } catch (FedoraServiceInstanceException e) {
+            e.printStackTrace();
+        }
+
+        return oaiService;
+    }
+
+    private Document document(ResultSet identifiers) throws DOMException, SQLException {
+        Document document = null;
+
+        try {
+            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            builderFactory.setNamespaceAware(true);
+            DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
+            document = documentBuilder
+                    .parse(new ByteArrayInputStream(oaiService.getServiceDataObject().toString().getBytes("UTF-8")));
+
+            Node record = document.createElement("record");
+            Node header = record.appendChild(document.createElement("header"));
+            
+            Node identifierNode = document.createElement("identifier");
+            identifierNode.appendChild(document.createTextNode(identifiers.getString("identifier")));
+            header.appendChild(identifierNode);
+            
+            Node datestamp = document.createElement("datestamp");
+            datestamp.appendChild(document.createTextNode(""));
+            header.appendChild(datestamp);
+            
+            Node metadata = record.appendChild(document.createElement("metadata"));
+            metadata.appendChild(document.getDocumentElement());
+            
+            document.appendChild(record);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return document;
+    }
+
+    private XPath xpath() {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        xPath.setNamespaceContext(new SimpleNamespaceContext(oaiService.dissTermsConf().getMapXmlNamespaces()));
+        return xPath;
+    }
+    
+    private void wirteSetSpecsInHeader(ResultSet sets, Document document) throws XPathExpressionException, DOMException, SQLException {
+        Node header = document.getElementsByTagName("header").item(0);
+        XPath xPath = xpath();
+        
         if (sets != null) {
 
             while (sets.next()) {
@@ -61,16 +143,16 @@ public class MergeSetsRecordXmlProcessor<T> implements Processor {
                     } else {
                         Term term = oaiService.dissTermsConf().getTerm(predicate[0], endpoint.getMetadataPrefix());
 
-                        if (term != null) {
-                            XPath xPath = XPathFactory.newInstance().newXPath();
-                            xPath.setNamespaceContext(
-                                    new SimpleNamespaceContext(oaiService.dissTermsConf().getMapXmlNamespaces()));
-                            
-                            if (!term.getTerm().isEmpty()) {
-                                String xpathExp = term.getTerm().replace("$val", predicate[1]);
-                                Node node = (Node) xPath.compile(xpathExp).evaluate(document, XPathConstants.NODE);
-                                
-//                                node.getNodeName();
+                        if (term != null && !term.getTerm().isEmpty()) {
+                            Node node = (Node) xPath.compile(term.getTerm().replace("$val", predicate[1]))
+                                    .evaluate(document, XPathConstants.NODE);
+
+                            if (node != null) {
+                                Node setspecnode = document.createElement("setSpec");
+                                setspecnode
+                                        .appendChild(document.createTextNode(sets.getString("setspec").toString()));
+                                header.appendChild(setspecnode);
+                                setspecnode = null;
                             }
                         }
                     }
@@ -79,20 +161,15 @@ public class MergeSetsRecordXmlProcessor<T> implements Processor {
                 }
             }
         }
-
-        System.out.println(endpoint.getMetadataPrefix());
-        System.out.println(oaiService.getServiceDataObject().toString());
-        // }
-
-        fedoraClient.close();
     }
-
-    private FedoraClient client(FedoraEndpoint endpoint) {
-        FedoraClient fedoraClient = new FedoraClient(endpoint.getUser(), endpoint.getPassword());
-        fedoraClient.setHost(endpoint.getHost());
-        fedoraClient.setPort(endpoint.getPort());
-        fedoraClient.setShema(endpoint.getShema());
-        return fedoraClient;
+    
+    private String resultXml(Document document) throws IOException, SAXException {
+        OutputFormat outputFormat = new OutputFormat(document);
+        outputFormat.setOmitXMLDeclaration(true);
+        StringWriter stringWriter = new StringWriter();
+        XMLSerializer serialize = new XMLSerializer(stringWriter, outputFormat);
+        serialize.serialize(document);
+        return stringWriter.toString();
     }
 
     private ResultSet getSets() {

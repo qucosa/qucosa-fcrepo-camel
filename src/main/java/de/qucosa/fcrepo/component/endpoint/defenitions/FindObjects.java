@@ -31,6 +31,7 @@ public class FindObjects extends EndpointDefAbstract implements EndpointDefInter
     }
     
     public static class FindObjectsConsumer extends DefaultScheduledPollConsumer {
+        @SuppressWarnings("unused")
         private Logger logger = LoggerFactory.getLogger(FindObjectsConsumer.class);
 
         private FedoraEndpoint endpoint;

@@ -6,7 +6,9 @@ import java.io.StringWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,17 +29,21 @@ import org.xml.sax.SAXException;
 
 import de.qucosa.fcrepo.fedora.api.FedoraClient;
 import de.qucosa.fcrepo.fedora.api.mappings.json.DissTerms.Term;
+import de.qucosa.fcrepo.fedora.api.pojos.Record;
 import de.qucosa.fcrepo.fedora.api.services.FedoraOaiService;
 import de.qucosa.fcrepo.fedora.api.services.FedoraServiceFactory;
 import de.qucosa.fcrepo.fedora.api.services.FedoraServiceInstanceException;
 import de.qucosa.fcrepo.fedora.api.services.FedoraServiceInterface;
 import de.qucosa.fcrepo.fedora.api.services.PersistenceService;
+import de.qucosa.fcrepo.fedora.api.utils.DateTimeConverter;
 import de.qucosa.fcrepo.fedora.api.xmlutils.SimpleNamespaceContext;
 
 public class MergeSetsRecordXmlProcessor<T> implements Processor {
     private FedoraEndpoint endpoint = null;
 
     private FedoraServiceInterface oaiService = null;
+    
+    Set<Record> records = new HashSet<>();
 
     @SuppressWarnings("unchecked")
     @Override
@@ -56,15 +62,23 @@ public class MergeSetsRecordXmlProcessor<T> implements Processor {
             wirteSetSpecsInHeader(getSets(), document);
             String xmlResult = resultXml(document);
             
-            System.out.println(xmlResult);
+            Record record = new Record();
+            record.setIdentifierId(identifieres.getLong("id"));
+            record.setModDate(DateTimeConverter.sqlDate(document.getElementsByTagName("dcterms:modified").item(0).getTextContent()));
+            record.setXmlData(xmlResult);
+            record.setFormat("xmetadissplus");
+            
+            records.add(record);
             
             args.clear();
-
-            if (cnt == 4) {
-                break;
-            }
+            
+            System.out.println(cnt + " / " + identifieres.getString("pid"));
+//            if (cnt == 4) {
+//                break;
+//            }
         }
-
+        
+        exchange.getIn().setBody(records);
         client(endpoint).close();
     }
 
@@ -107,7 +121,7 @@ public class MergeSetsRecordXmlProcessor<T> implements Processor {
             header.appendChild(identifierNode);
             
             Node datestamp = document.createElement("datestamp");
-            datestamp.appendChild(document.createTextNode(""));
+            datestamp.appendChild(document.createTextNode(DateTimeConverter.sqlTimestampToString(identifiers.getTimestamp("datestamp"))));
             header.appendChild(datestamp);
             
             Node metadata = record.appendChild(document.createElement("metadata"));

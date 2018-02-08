@@ -3,6 +3,7 @@ package de.qucosa.fcrepo.component.endpoint.defenitions;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
@@ -13,6 +14,7 @@ import org.apache.camel.impl.DefaultProducer;
 import de.qucosa.fcrepo.component.EndpointDefAbstract;
 import de.qucosa.fcrepo.component.EndpointDefAnnotation;
 import de.qucosa.fcrepo.component.EndpointDefInterface;
+import de.qucosa.fcrepo.fedora.api.pojos.Record;
 import de.qucosa.fcrepo.fedora.api.services.FedoraServiceFactory;
 import de.qucosa.fcrepo.fedora.api.services.FedoraServiceInterface;
 import de.qucosa.fcrepo.fedora.api.services.PersistenceService;
@@ -28,7 +30,7 @@ public class LoadDatastream<T> extends EndpointDefAbstract implements EndpointDe
             protected void doStart() throws Exception {
                 super.doStart();
                 Map<Object, T> params = new HashMap<>();
-                params.put("stmt", (T) "SELECT id, identifier, SUBSTRING(identifier, 'qucosa:\\d+$') AS pid FROM identifier WHERE identifier ~ 'qucosa:\\d+$';");
+                params.put("stmt", (T) "SELECT id, identifier, datestamp, SUBSTRING(identifier, 'qucosa:\\d+$') AS pid FROM identifier WHERE identifier ~ 'qucosa:\\d+$';");
                 FedoraServiceInterface service = FedoraServiceFactory.createService(PersistenceService.class);
                 service.run(service, "getIdentifieres", params);
                 ResultSet data = service.getServiceDataObject();
@@ -44,9 +46,13 @@ public class LoadDatastream<T> extends EndpointDefAbstract implements EndpointDe
     public Producer getProducer() {
         return new DefaultProducer(endpoint) {
             
+            @SuppressWarnings("unchecked")
             @Override
             public void process(Exchange exchange) throws Exception {
-                System.out.println("DataSreamProducer: " + exchange.getIn().getBody());
+                Set<Record> records = (Set<Record>) exchange.getIn().getBody();
+                FedoraServiceInterface service = FedoraServiceFactory.createService(PersistenceService.class);
+                service.setServiceDataObject(records);
+                service.run(service, "saveRecords", null);
             }
         };
     }

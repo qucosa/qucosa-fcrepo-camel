@@ -53,6 +53,7 @@ public class LoadDatastream<T> extends EndpointDefAbstract implements EndpointDe
                 FedoraServiceInterface service = FedoraServiceFactory.createService(PersistenceService.class);
                 service.setServiceDataObject(records);
                 service.run(service, "saveRecords", null);
+                service.run(service, "saveSetsToRecords", null);
             }
         };
     }

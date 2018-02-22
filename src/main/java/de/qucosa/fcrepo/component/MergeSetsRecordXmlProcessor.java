@@ -60,6 +60,7 @@ public class MergeSetsRecordXmlProcessor<T> implements Processor {
             
             if (format != null && !format.isEmpty()) {
                 int cnt = 0;
+                endpoint.setMetadataPrefix(format);
                 
                 switch(format) {
                     case "xmetadissplus":
@@ -100,6 +101,10 @@ public class MergeSetsRecordXmlProcessor<T> implements Processor {
                 }
             }
         }
+        
+        formats.close();
+        identifieres.close();
+        getSets().close();
         
         exchange.getIn().setBody(records);
         client(endpoint).close();

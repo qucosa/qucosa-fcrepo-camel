@@ -2,15 +2,10 @@ package de.qucosa.fcrepo.component.pjos.oaiprivider;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@XmlRootElement(name = "set")
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Set implements Serializable {
@@ -19,8 +14,8 @@ public class Set implements Serializable {
     @JsonProperty("id")
     private Long id;
     
-    @JsonProperty("stespec")
-    private String stespec;
+    @JsonProperty("setSpec")
+    private String setSpec;
     
     @JsonProperty("setName")
     private String setName;
@@ -28,7 +23,6 @@ public class Set implements Serializable {
     @JsonProperty("predicate")
     private String predicate;
 
-    @XmlTransient
     public Long getId() {
         return id;
     }
@@ -37,16 +31,14 @@ public class Set implements Serializable {
         this.id = id;
     }
 
-    @XmlElement
-    public String getStespec() {
-        return stespec;
+    public String getSetSpec() {
+        return setSpec;
     }
 
-    public void setStespec(String stespec) {
-        this.stespec = stespec;
+    public void setSetSpec(String setSpec) {
+        this.setSpec = setSpec;
     }
     
-    @XmlElement
     public String getSetName() {
         return setName;
     }
@@ -55,7 +47,6 @@ public class Set implements Serializable {
         this.setName = setName;
     }
 
-    @XmlTransient
     public String getPredicate() {
         return predicate;
     }

@@ -7,7 +7,7 @@ public class Routes extends RouteBuilder {
     public void configure() throws Exception {
         // (from) load all configure setspecs from the config json file and convert this data in the mapper object
         // (to) write all setspecs in the database
-        from("fcrepo:fedora:SetSpec").to("fcrepo:fedora:SetSpec");
+//        from("fcrepo:fedora:SetSpec").to("fcrepo:fedora:SetSpec");
 
         // (from) load all exists identifieres from the fedora repo
         // (to) write identifieres in the database

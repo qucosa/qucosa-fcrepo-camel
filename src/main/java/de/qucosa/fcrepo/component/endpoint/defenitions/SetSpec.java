@@ -32,9 +32,9 @@ public class SetSpec<T> extends EndpointDefAbstract implements EndpointDefInterf
                 super.doStart();
                 ObjectMapper om = new ObjectMapper();
                 File setSpecs = new File("/home/dseelig/opt/oaiprovider/config/list-set-conf.json");
-                Set<de.qucosa.fcrepo.component.pjos.oaiprivider.Set> json = null;
+                Set<de.qucosa.fcrepo.component.pojos.oaiprivider.Set> json = null;
                 try {
-                    json = om.readValue(setSpecs, om.getTypeFactory().constructCollectionType(Set.class, de.qucosa.fcrepo.component.pjos.oaiprivider.Set.class));
+                    json = om.readValue(setSpecs, om.getTypeFactory().constructCollectionType(Set.class, de.qucosa.fcrepo.component.pojos.oaiprivider.Set.class));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

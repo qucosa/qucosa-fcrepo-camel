@@ -1,4 +1,4 @@
-package de.qucosa.fcrepo.component.pjos.oaiprivider;
+package de.qucosa.fcrepo.component.pojos.oaiprivider;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -12,9 +12,6 @@ public class Format {
     
     @JsonProperty("mdprefix")
     private String mdprefix;
-    
-    @JsonProperty("method")
-    private String method;
     
     @JsonProperty("lastpolldate")
     private Long lastpolldate;
@@ -33,14 +30,6 @@ public class Format {
 
     public void setMdprefix(String mdprefix) {
         this.mdprefix = mdprefix;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
     }
 
     public Long getLastpolldate() {

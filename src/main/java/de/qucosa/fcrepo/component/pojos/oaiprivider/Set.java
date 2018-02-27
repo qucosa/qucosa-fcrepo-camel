@@ -1,4 +1,4 @@
-package de.qucosa.fcrepo.component.pjos.oaiprivider;
+package de.qucosa.fcrepo.component.pojos.oaiprivider;
 
 import java.io.Serializable;
 

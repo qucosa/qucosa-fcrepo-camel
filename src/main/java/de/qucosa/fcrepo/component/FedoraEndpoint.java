@@ -1,6 +1,8 @@
 package de.qucosa.fcrepo.component;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 
 import org.apache.camel.Component;
 import org.apache.camel.Consumer;
@@ -9,12 +11,28 @@ import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultEndpoint;
 import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.qucosa.fcrepo.fedora.api.services.FedoraOaiService;
 
 @UriEndpoint(scheme = "fcrepo", syntax = "fcrepo:fedora:endpointDef", title = "Fedora Endpoint")
 public class FedoraEndpoint extends DefaultEndpoint {
-	@UriParam
+    private Logger logger = LoggerFactory.getLogger(FedoraEndpoint.class);
+    
+    @UriParam
 	private FcrepoConfiguration configuration;
 	
 	private FedoraOaiService objectService;
@@ -48,6 +66,16 @@ public class FedoraEndpoint extends DefaultEndpoint {
 	
     @UriParam
 	private String until;
+    
+    private CloseableHttpClient httpClient = null;
+    
+    public static final String OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&metadataPrefix=oai_dc";
+    
+    public static final String OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&resumptionToken=%s";
+    
+    public static final String OAIPMH_LISTRECORDS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&metadataPrefix=oai_dc";
+    
+    public static final String OAIPMH_LISTRECORDS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&resumptionToken=%s";
 	
     public FedoraEndpoint(String endpointUri, Component component, FcrepoConfiguration configuration) {
 		super(endpointUri, component);
@@ -87,6 +115,43 @@ public class FedoraEndpoint extends DefaultEndpoint {
     @Override
     public boolean isSingleton() {
         return true;
+    }
+    
+    public CloseableHttpClient fedoraClient() {
+
+        if (getUser() != null && !getUser().isEmpty() && getPassword() != null && !getPassword().isEmpty()) {
+            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(AuthScope.ANY,
+                    new UsernamePasswordCredentials(getUser(), getPassword()));
+            
+            httpClient = HttpClientBuilder.create().setConnectionManager(new PoolingHttpClientConnectionManager())
+                .setDefaultCredentialsProvider(credentialsProvider).build();
+        } else {
+            httpClient = HttpClientBuilder.create().build();
+        }
+        
+        return httpClient;
+    }
+    
+    public String get(String uriPattern, Object... params) {
+        HttpResponse response = null;
+        String content = "";
+
+        try {
+            response = httpClient.execute(new HttpGet(String.format(uriPattern, params)));
+
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                content = IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
+            }
+            
+        } catch (IOException e) {
+            logger.debug("Cannot load XML Data from fedora repositroy. Check your params!");
+            logger.debug(String.format(uriPattern, params));
+        } finally {
+            consumeResponseEntity(response);
+        }
+
+        return content;
     }
 	
 	public FcrepoConfiguration getConfiguration() {
@@ -191,5 +256,14 @@ public class FedoraEndpoint extends DefaultEndpoint {
     private EndpointDefInterface endpointDef() throws Exception {
         Class clazz = Class.forName("de.qucosa.fcrepo.component.endpoint.defenitions." + getConfiguration().getEndpointDef());
         return (EndpointDefInterface) clazz.newInstance();
+    }
+    
+    private void consumeResponseEntity(HttpResponse response) {
+        try {
+            if (response != null) {
+                EntityUtils.consume(response.getEntity());
+            }
+        } catch (IOException ignored) {
+        }
     }
 }

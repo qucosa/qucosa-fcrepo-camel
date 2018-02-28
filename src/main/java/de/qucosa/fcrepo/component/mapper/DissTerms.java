@@ -18,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.qucosa.fcrepo.component.pojos.oaiprivider.Format;
+
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DissTerms {
@@ -29,6 +31,9 @@ public class DissTerms {
 
     @JsonProperty("dissTerms")
     private Set<DissTerm> dissTerms;
+    
+    @JsonProperty("formats")
+    private Set<DissFormat> formats;
 
     public Set<XmlNamspace> getXmlnamespacees() {
         return xmlnamespacees;
@@ -44,6 +49,14 @@ public class DissTerms {
 
     public void setDissTerms(Set<DissTerm> dissTerms) {
         this.dissTerms = dissTerms;
+    }
+    
+    public Set<DissFormat> getFormats() {
+        return formats;
+    }
+
+    public void setFormats(Set<DissFormat> formats) {
+        this.formats = formats;
     }
 
     public static class XmlNamspace {
@@ -118,6 +131,30 @@ public class DissTerms {
         }
     }
     
+    public static class DissFormat {
+        @JsonProperty("format")
+        private String format;
+        
+        @JsonProperty("dissType")
+        private String dissType;
+
+        public String getFormat() {
+            return format;
+        }
+
+        public void setFormat(String format) {
+            this.format = format;
+        }
+
+        public String getDissType() {
+            return dissType;
+        }
+
+        public void setDissType(String dissType) {
+            this.dissType = dissType;
+        }
+    }
+    
     @JsonIgnore
     public Map<String, String> getMapXmlNamespaces() {
         return dao().getMapXmlNamespaces();
@@ -131,6 +168,10 @@ public class DissTerms {
     @JsonIgnore
     public Term getTerm(String diss, String name) {
         return dao().getTerm(diss, name);
+    }
+    
+    public Set<DissFormat> formats() {
+        return dao().dissFormats();
     }
     
     private DissTermsDao dao() {
@@ -220,6 +261,26 @@ public class DissTerms {
             }
 
             return term;
+        }
+        
+        @SuppressWarnings("unused")
+        public Set<DissFormat> dissFormats() {
+            return dissTerms.getFormats();
+        }
+        
+        @SuppressWarnings("unused")
+        public DissFormat dissFormat(String format) {
+            DissFormat dissFormat = null;
+            
+            for (DissFormat df : dissTerms.getFormats()) {
+                
+                if (df.getFormat().equals(format)) {
+                    dissFormat = df;
+                    break;
+                }
+            }
+            
+            return dissFormat;
         }
 
         private Set<XmlNamspace> xmlNamespaces() {

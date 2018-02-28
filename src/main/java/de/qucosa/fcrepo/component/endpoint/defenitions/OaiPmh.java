@@ -88,8 +88,8 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
     
     private String xml(String resumptionToken) {
         return (resumptionToken == null)
-            ? endpoint.get(FedoraEndpoint.OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN, endpoint.getShema(), endpoint.getHost(), endpoint.getPort())
-            : endpoint.get(FedoraEndpoint.OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN, endpoint.getShema(), endpoint.getHost(), endpoint.getPort(), resumptionToken);
+            ? endpoint.loadFromFedora(FedoraEndpoint.OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN, endpoint.getShema(), endpoint.getHost(), endpoint.getPort())
+            : endpoint.loadFromFedora(FedoraEndpoint.OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN, endpoint.getShema(), endpoint.getHost(), endpoint.getPort(), resumptionToken);
     }
     
     private void buildObjects(String resumptionToken) {
@@ -98,7 +98,7 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
         try {
             Document document = DocumentXmlUtils.document(new ByteArrayInputStream(xml.getBytes("UTF-8")), false);
             XPath xPath = DocumentXmlUtils.xpath();
-            xPath.setNamespaceContext(new SimpleNamespaceContext(endpoint.getConfiguration().dissConf().getMapXmlNamespaces()));
+            xPath.setNamespaceContext(new SimpleNamespaceContext(endpoint.getConfiguration().getDissConf().getMapXmlNamespaces()));
             Node rst = document.getElementsByTagName("resumptionToken").item(0);
             NodeList headers = (NodeList) xPath.compile("//header").evaluate(document, XPathConstants.NODESET);
             

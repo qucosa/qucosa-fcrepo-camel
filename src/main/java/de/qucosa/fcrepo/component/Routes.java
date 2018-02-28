@@ -16,7 +16,7 @@ public class Routes extends RouteBuilder {
 
         // (from) load all format definitions from fedora SDef/objectXML
         // (to) save formats and method definitions in database
-//        from("fcrepo:fedora:QucosaObjects?shema=http&host=sdvcmr-app03.slub-dresden.de&port=8080")
+//        from("fcrepo:fedora:QucosaObjects")
 //            .to("fcrepo:fedora:QucosaObjects");
 
         // (from) load xml dissemination by format and pid from fedora repository and modified the xml data strings with record definitions

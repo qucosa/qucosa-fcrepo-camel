@@ -133,7 +133,7 @@ public class FedoraEndpoint extends DefaultEndpoint {
         return httpClient;
     }
     
-    public String get(String uriPattern, Object... params) {
+    public String loadFromFedora(String uriPattern, Object... params) {
         HttpResponse response = null;
         String content = "";
 

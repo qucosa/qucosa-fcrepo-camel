@@ -3,6 +3,8 @@ package de.qucosa.fcrepo.component;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.camel.Component;
 import org.apache.camel.Consumer;
@@ -12,15 +14,22 @@ import org.apache.camel.impl.DefaultEndpoint;
 import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpClientConnection;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
+import org.apache.http.conn.ConnectionRequest;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -124,10 +133,15 @@ public class FedoraEndpoint extends DefaultEndpoint {
             credentialsProvider.setCredentials(AuthScope.ANY,
                     new UsernamePasswordCredentials(getUser(), getPassword()));
             
-            httpClient = HttpClientBuilder.create().setConnectionManager(new PoolingHttpClientConnectionManager())
-                .setDefaultCredentialsProvider(credentialsProvider).build();
+//            if (isHttpConnectionOpen()) {
+                httpClient = HttpClientBuilder.create().setConnectionManager(new PoolingHttpClientConnectionManager())
+                    .setDefaultCredentialsProvider(credentialsProvider).build();
+//            }
         } else {
-            httpClient = HttpClientBuilder.create().build();
+            
+//            if (isHttpConnectionOpen()) {
+                httpClient = HttpClientBuilder.create().build();
+//            }
         }
         
         return httpClient;
@@ -250,6 +264,26 @@ public class FedoraEndpoint extends DefaultEndpoint {
 	@Override
 	protected void doStop() throws Exception {
 	    super.doStop();
+	}
+	
+	@SuppressWarnings({ "resource", "unused" })
+    private boolean isHttpConnectionOpen() {
+	    boolean isOpen = false;
+        HttpClientConnectionManager hccm = new BasicHttpClientConnectionManager();
+        HttpRoute hr = new HttpRoute(new HttpHost(getHost(), Integer.valueOf(getPort())));
+
+        try {
+            ConnectionRequest cr = hccm.requestConnection(hr, null);
+            HttpClientConnection conn = cr.get(10, TimeUnit.SECONDS);
+            
+            if (conn.isOpen()) {
+                isOpen = true;
+            }
+        } catch (ConnectionPoolTimeoutException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        
+	    return isOpen;
 	}
     
     @SuppressWarnings("rawtypes")

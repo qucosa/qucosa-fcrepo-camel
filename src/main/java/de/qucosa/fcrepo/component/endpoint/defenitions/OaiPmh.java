@@ -1,12 +1,7 @@
 package de.qucosa.fcrepo.component.endpoint.defenitions;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,7 +36,6 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
     @Override
     public Consumer getConsumer() {
         return new DefaultConsumer(endpoint, processor) {
-            @SuppressWarnings("unused")
             private CloseableHttpClient fedoraClient;
             
             @Override
@@ -50,7 +44,14 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
                 fedoraClient = endpoint.fedoraClient();
                 buildObjects(null);
                 Exchange exchange = endpoint.createExchange();
-                exchange.getIn().setBody(identifiers);
+                
+                if (fedoraClient != null) {
+                    exchange.getIn().setBody(identifiers);
+                } else {
+                    exchange.getIn().setBody(null);
+                }
+                
+                fedoraClient.close();
                 processor.process(exchange);
             }
         };
@@ -60,28 +61,33 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
     public Producer getProducer() {
         return new DefaultProducer(endpoint) {
             
+            @SuppressWarnings("unused")
             @Override
             public void process(Exchange exchange) throws Exception {
                 ObjectMapper om = new ObjectMapper();
-                String json = om.writeValueAsString(exchange.getIn().getBody());
-                URL url = new URL("http://localhost:8080/qucosa-oai-provider/identifieres/add");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoOutput(true);
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "application/json");
                 
-                OutputStream outputStream = connection.getOutputStream();
-                outputStream.write(json.getBytes());
-                outputStream.flush();
-                
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String output = null;
-                
-                while ((output = reader.readLine()) != null) {
-                    System.out.println(output);
+                if (exchange.getIn().getBody() != null) {
+                    Set<Identifier> identifiers = (Set<Identifier>) exchange.getIn().getBody();
                 }
                 
-                connection.disconnect();
+//                URL url = new URL("http://localhost:8080/qucosa-oai-provider/identifieres/add");
+//                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//                connection.setDoOutput(true);
+//                connection.setRequestMethod("POST");
+//                connection.setRequestProperty("Content-Type", "application/json");
+//                
+//                OutputStream outputStream = connection.getOutputStream();
+//                outputStream.write(json.getBytes());
+//                outputStream.flush();
+//                
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//                String output = null;
+//                
+//                while ((output = reader.readLine()) != null) {
+//                    System.out.println(output);
+//                }
+//                
+//                connection.disconnect();
             }
         };
     }

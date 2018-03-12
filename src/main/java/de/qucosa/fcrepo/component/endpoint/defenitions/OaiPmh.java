@@ -66,6 +66,8 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
             public void process(Exchange exchange) throws Exception {
                 ObjectMapper om = new ObjectMapper();
                 
+                System.out.println(exchange.getIn().getBody(String.class));
+                
                 if (exchange.getIn().getBody() != null) {
                     Set<Identifier> identifiers = (Set<Identifier>) exchange.getIn().getBody();
                 }

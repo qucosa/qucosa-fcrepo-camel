@@ -13,8 +13,21 @@
     http://cxf.apache.org/jaxrs
 	http://cxf.apache.org/schemas/jaxrs.xsd">
 
-  <bean id="routes" class="de.qucosa.elasticsearch.routes.Routes" />
-
+  <bean id="routes" class="de.qucosa.fcrepo.component.Routes" />
+  
+  <bean id="fedoraJmsConnFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="tcp://sdvcmr-app03.slub-dresden.de:61616" />
+  </bean>
+  
+  <bean id="fedoraJmsPooledConnFactory" class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" destroy-method="stop" lazy-init="true">
+    <property name="maxConnections" value="5" />
+    <property name="connectionFactory" ref="fedoraJmsConnFactory" />
+  </bean>
+  
+  <bean id="fedoraJms" class="org.springframework.jms.core.JmsTemplate">
+    <property name="connectionFactory" ref="fedoraJmsPooledConnFactory" />
+  </bean>
+  
   <camel:camelContext trace="true">
     <camel:routeBuilder ref="routes" />
   </camel:camelContext>

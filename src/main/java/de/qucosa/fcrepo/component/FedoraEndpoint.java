@@ -3,6 +3,8 @@ package de.qucosa.fcrepo.component;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -76,9 +78,14 @@ public class FedoraEndpoint extends DefaultEndpoint {
     @UriParam
 	private String until;
     
+    @UriParam
+    private String source;
+    
     private CloseableHttpClient httpClient = null;
     
-    public static final String OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&metadataPrefix=oai_dc";
+    private Set<String> identifires = new HashSet<>();
+    
+    public static final String OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&metadataPrefix=oai_dc&from=2018-03-02";
     
     public static final String OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&resumptionToken=%s";
     
@@ -250,6 +257,18 @@ public class FedoraEndpoint extends DefaultEndpoint {
 
     public void setUntil(String until) {
         this.until = until;
+    }
+    
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+    
+    public Set<String> getIdentifires() {
+        return identifires;
     }
 
     public FedoraOaiService getObjectService() {

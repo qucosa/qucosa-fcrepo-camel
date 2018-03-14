@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -22,16 +24,13 @@ import org.w3c.dom.NodeList;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.qucosa.fcrepo.component.EndpointDefAbstract;
-import de.qucosa.fcrepo.component.EndpointDefAnnotation;
 import de.qucosa.fcrepo.component.EndpointDefInterface;
 import de.qucosa.fcrepo.component.FedoraEndpoint;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
 import de.qucosa.fcrepo.component.xml.utils.SimpleNamespaceContext;
-import de.qucosa.fcrepo.fedora.api.mappings.xml.Identifier;
 
-@EndpointDefAnnotation(isConsumer = true, isProducer = true)
-public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterface {
-    final Set<Identifier> identifiers = new HashSet<>();
+public class OaiPmh extends EndpointDefAbstract implements EndpointDefInterface {
+    final Set<String> identifiers = new HashSet<>();
     
     @Override
     public Consumer getConsumer() {
@@ -57,6 +56,9 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
         };
     }
     
+    public void callIdents() {
+    }
+    
     @Override
     public Producer getProducer() {
         return new DefaultProducer(endpoint) {
@@ -65,12 +67,7 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
             @Override
             public void process(Exchange exchange) throws Exception {
                 ObjectMapper om = new ObjectMapper();
-                
-                System.out.println(exchange.getIn().getBody(String.class));
-                
-                if (exchange.getIn().getBody() != null) {
-                    Set<Identifier> identifiers = (Set<Identifier>) exchange.getIn().getBody();
-                }
+//                System.out.println(exchange.getIn().getBody(String.class));
                 
 //                URL url = new URL("http://localhost:8080/qucosa-oai-provider/identifieres/add");
 //                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -113,10 +110,13 @@ public class OaiPmh<T> extends EndpointDefAbstract implements EndpointDefInterfa
             for (int i = 0; i < headers.getLength(); i++) {
                 Node header = headers.item(i);
                 header.getChildNodes();
-                Identifier identifier = new Identifier();
-                identifier.setIdentifier((String) xPath.compile("./identifier/text()").evaluate(header, XPathConstants.STRING));
-                identifier.setDatestamp((String) xPath.compile("./datestamp/text()").evaluate(header, XPathConstants.STRING));
-                identifiers.add(identifier);
+                String identifire = (String) xPath.compile("./identifier/text()").evaluate(header, XPathConstants.STRING);
+                Pattern idPattern = Pattern.compile("qucosa:\\d+");
+                Matcher idMatch = idPattern.matcher(identifire);
+                
+                if (idMatch.find()) {
+                    identifiers.add(idMatch.group(0));
+                }
             }
             
             if (rst != null) {

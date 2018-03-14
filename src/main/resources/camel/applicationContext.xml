@@ -16,7 +16,8 @@
   <bean id="routes" class="de.qucosa.fcrepo.component.Routes" />
   
   <bean id="fedoraJmsConnFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-    <property name="brokerURL" value="tcp://sdvcmr-app03.slub-dresden.de:61616" />
+<!--     <property name="brokerURL" value="tcp://sdvcmr-app03.slub-dresden.de:61616" /> -->
+    <property name="brokerURL" value="tcp://192.168.42.28:61616" />
   </bean>
   
   <bean id="fedoraJmsPooledConnFactory" class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" destroy-method="stop" lazy-init="true">
@@ -27,6 +28,10 @@
   <bean id="fedoraJms" class="org.springframework.jms.core.JmsTemplate">
     <property name="connectionFactory" ref="fedoraJmsPooledConnFactory" />
   </bean>
+  
+  <bean id="identifireAggregateStrategy" class="de.qucosa.fcrepo.component.endpoint.strategies.IdentifireAggregateStrategy" />
+  
+  <bean id="identifireQueuePredicate" class="de.qucosa.fcrepo.component.endpoint.predicates.IdentifireQueuePredicate" />
   
   <camel:camelContext trace="true">
     <camel:routeBuilder ref="routes" />

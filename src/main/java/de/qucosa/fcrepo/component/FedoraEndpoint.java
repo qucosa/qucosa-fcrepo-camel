@@ -85,13 +85,15 @@ public class FedoraEndpoint extends DefaultEndpoint {
     
     private Set<String> identifires = new HashSet<>();
     
-    public static final String OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&metadataPrefix=oai_dc&from=2018-03-02";
+    public static final String OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&metadataPrefix=oai_dc";
     
     public static final String OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&resumptionToken=%s";
     
     public static final String OAIPMH_LISTRECORDS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&metadataPrefix=oai_dc";
     
     public static final String OAIPMH_LISTRECORDS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&resumptionToken=%s";
+    
+    public static final String METS_URL = "%s://%s:%s/mets?pid=%s";
 	
     public FedoraEndpoint(String endpointUri, Component component, FcrepoConfiguration configuration) {
 		super(endpointUri, component);

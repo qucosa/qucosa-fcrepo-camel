@@ -29,10 +29,6 @@
     <property name="connectionFactory" ref="fedoraJmsPooledConnFactory" />
   </bean>
   
-  <bean id="identifireAggregateStrategy" class="de.qucosa.fcrepo.component.endpoint.strategies.IdentifireAggregateStrategy" />
-  
-  <bean id="identifireQueuePredicate" class="de.qucosa.fcrepo.component.endpoint.predicates.IdentifireQueuePredicate" />
-  
   <camel:camelContext trace="true">
     <camel:routeBuilder ref="routes" />
   </camel:camelContext>

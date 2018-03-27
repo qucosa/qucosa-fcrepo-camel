@@ -21,7 +21,7 @@ public class ReportingDb extends EndpointDefAbstract implements EndpointDefInter
             
             @Override
             public void process(Exchange exchange) throws Exception {
-                System.out.println("ReportingDB: " + exchange.getIn().getBody());
+//                System.out.println("ReportingDB: " + exchange.getIn().getBody());
             }
         };
     }

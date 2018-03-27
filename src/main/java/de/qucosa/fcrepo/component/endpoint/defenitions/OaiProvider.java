@@ -21,7 +21,7 @@ public class OaiProvider extends EndpointDefAbstract implements EndpointDefInter
             
             @Override
             public void process(Exchange exchange) throws Exception {
-                System.out.println("OaiProvider: " + exchange.getIn().getBody());
+//                System.out.println("OaiProvider: " + exchange.getIn().getBody());
             }
         };
     }

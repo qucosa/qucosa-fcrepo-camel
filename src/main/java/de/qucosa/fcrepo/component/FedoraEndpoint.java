@@ -37,8 +37,6 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.qucosa.fcrepo.fedora.api.services.FedoraOaiService;
-
 @UriEndpoint(scheme = "fcrepo", syntax = "fcrepo:fedora:endpointDef", title = "Fedora Endpoint")
 public class FedoraEndpoint extends DefaultEndpoint {
     private Logger logger = LoggerFactory.getLogger(FedoraEndpoint.class);
@@ -46,8 +44,6 @@ public class FedoraEndpoint extends DefaultEndpoint {
     @UriParam
 	private FcrepoConfiguration configuration;
 	
-	private FedoraOaiService objectService;
-
     @UriParam
 	private String shema = "http";
 
@@ -273,10 +269,6 @@ public class FedoraEndpoint extends DefaultEndpoint {
         return identifires;
     }
 
-    public FedoraOaiService getObjectService() {
-        return objectService;
-    }
-    
 	@Override
 	protected void doStart() throws Exception {
 		super.doStart();

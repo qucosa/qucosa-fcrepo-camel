@@ -10,20 +10,31 @@ public class Routes extends RouteBuilder {
         final DissTerms dt = new DissTerms();
         
         from("direct:oaiprovider")
+            .id("oaiProviderProcess")
+            .autoStartup(false)
+            .startupOrder(1)
             .process(new OaiProviderProcessor())
             .to("fcrepo:fedora:OaiProvider");
         
         from("direct:reportingDB")
+            .id("reportingDBProcess")
+            .autoStartup(false)
+            .startupOrder(2)
             .process(new ReportingDbProcessor())
             .to("fcrepo:fedora:ReportingDb");
         
         // @todo replace the mock endpoint with elastic serach endpoint
         from("direct:qucosaelastic")
+            .id("elasticSearchProcess")
+            .autoStartup(false)
+            .startupOrder(3)
             .process(new QucosaElasticSearchProcessor())
             .to("mock:test");
         
         from("direct:aggregateIdents")
-            .id("franz")
+            .id("cleanIdentifires")
+            .autoStartup(false)
+            .startupOrder(4)
             .resequence().body()
             .to("fcrepo:fedora:IdentifireQue?shema=http&host=192.168.42.28&port=8080")
             .filter().body().multicast()
@@ -32,12 +43,16 @@ public class Routes extends RouteBuilder {
         
      // test dev host sdvcmr-app03.slub-dresden.de
         from("fcrepo:fedora:OaiPmh?shema=http&host=192.168.42.28&port=8080")
-            .id("hanne")
+            .id("fedoraOai")
+            .startupOrder(5)
+            .autoStartup(false)
             .split().body()
             .to("direct:aggregateIdents");
         
 //        from("activemq:topic:fedora.apim.*")
-//            .id("lina")
+//            .id("fedoraJms")
+//            .startupOrder(3)
+//            .autoStartup(false)
 //            .process(new Processor() {
 //                @Override
 //                public void process(Exchange exchange) throws Exception {

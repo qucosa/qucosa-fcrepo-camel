@@ -44,9 +44,9 @@ public class OaiProviderProcessor implements Processor {
     }
 
     private RecordTransport buildXMetaDissplusObject(Document metsDoc) throws Exception {
-        XMetaDissMapper xMetaDiss = new XMetaDissMapper(metsDoc,
+        XMetaDissMapper xMetaDiss = new XMetaDissMapper("http://##AGENT##.example.com/##PID##/content.zip", "", true);
+        Document result = xMetaDiss.transformXmetaDissplus(metsDoc,
                 new StreamSource(getClass().getClassLoader().getResource("mets2xmetadissplus.xsl").getPath()));
-        Document result = xMetaDiss.transformXmetaDissplus();
         DocumentXmlUtils.resultXml(result);
 
         xmetadiss.setPid(xMetaDiss.pid());

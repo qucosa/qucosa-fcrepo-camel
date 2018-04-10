@@ -27,7 +27,6 @@ import de.qucosa.fcrepo.component.EndpointDefAbstract;
 import de.qucosa.fcrepo.component.EndpointDefInterface;
 import de.qucosa.fcrepo.component.FedoraEndpoint;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
-import de.qucosa.fcrepo.component.xml.utils.SimpleNamespaceContext;
 
 public class OaiPmh extends EndpointDefAbstract implements EndpointDefInterface {
     final Set<String> identifiers = new HashSet<>();
@@ -102,8 +101,7 @@ public class OaiPmh extends EndpointDefAbstract implements EndpointDefInterface 
         
         try {
             Document document = DocumentXmlUtils.document(new ByteArrayInputStream(xml.getBytes("UTF-8")), false);
-            XPath xPath = DocumentXmlUtils.xpath();
-            xPath.setNamespaceContext(new SimpleNamespaceContext(endpoint.getConfiguration().getDissConf().getMapXmlNamespaces()));
+            XPath xPath = DocumentXmlUtils.xpath(endpoint.getConfiguration().getDissConf().getMapXmlNamespaces());
             Node rst = document.getElementsByTagName("resumptionToken").item(0);
             NodeList headers = (NodeList) xPath.compile("//header").evaluate(document, XPathConstants.NODESET);
             

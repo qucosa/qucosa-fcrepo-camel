@@ -188,7 +188,7 @@ public class DissTerms {
 
         public DissTermsDao() {
             ObjectMapper om = new ObjectMapper();
-            File file = new File("/home/dseelig/opt/oaiprovider/config/dissemination-config.json");
+            File file = new File("/home/opt/camel-fedora-component/config/dissemination-config.json");
 
             try {
                 dissTerms = om.readValue(Files.readAllBytes(Paths.get(file.getAbsolutePath())), DissTerms.class);
@@ -261,7 +261,6 @@ public class DissTerms {
             return term;
         }
         
-        @SuppressWarnings("unused")
         public Set<DissFormat> dissFormats() {
             return dissTerms.getFormats();
         }

@@ -1,8 +1,17 @@
 package de.qucosa.fcrepo.component;
 
-import org.apache.camel.builder.RouteBuilder;
+import java.io.ByteArrayInputStream;
 
-import de.qucosa.fcrepo.component.mapper.DissTerms;;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.builder.RouteBuilder;
+import org.w3c.dom.Document;
+
+import de.qucosa.fcrepo.component.mapper.DissTerms;
+import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;;
 
 public class Routes extends RouteBuilder {
     @Override
@@ -13,7 +22,7 @@ public class Routes extends RouteBuilder {
             .id("oaiProviderProcess")
             .autoStartup(false)
             .startupOrder(1)
-            .process(new OaiProviderProcessor())
+            .process(new OaiProviderProcessor(dt))
             .to("fcrepo:fedora:OaiProvider");
         
         from("direct:reportingDB")
@@ -49,22 +58,21 @@ public class Routes extends RouteBuilder {
             .split().body()
             .to("direct:aggregateIdents");
         
-//        from("activemq:topic:fedora.apim.*")
-//            .id("fedoraJms")
-//            .startupOrder(3)
-//            .autoStartup(false)
-//            .process(new Processor() {
-//                @Override
-//                public void process(Exchange exchange) throws Exception {
-//                    String msg = (String) exchange.getIn().getBody();
-//                    Document document = DocumentXmlUtils.document(new ByteArrayInputStream(msg.getBytes("UTF-8")), false);
-//                    XPath xPath = DocumentXmlUtils.xpath();
-//                    xPath.setNamespaceContext(new SimpleNamespaceContext(dt.getMapXmlNamespaces()));
-//                    String id = (String) xPath.compile("//summary[@type=\"text\"]/text()").evaluate(document, XPathConstants.STRING);
-//                    exchange.getIn().setBody(id);
-//                }
-//            })
-//            .to("direct:aggregateIdents");  
+        from("activemq:topic:fedora.apim.update")
+            .id("fedoraJms")
+            .startupOrder(6)
+            .autoStartup(false)
+            .process(new Processor() {
+                @Override
+                public void process(Exchange exchange) throws Exception {
+                    String msg = (String) exchange.getIn().getBody();
+                    Document document = DocumentXmlUtils.document(new ByteArrayInputStream(msg.getBytes("UTF-8")), false);
+                    XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
+                    String id = (String) xPath.compile("//summary[@type=\"text\"]/text()").evaluate(document, XPathConstants.STRING);
+                    exchange.getIn().setBody(id);
+                }
+            })
+            .to("direct:aggregateIdents");  
         
         
         // .to("elasticsearch://elasticsearch?ip=192.168.42.27&port=9300&operation=INDEX&indexName=fedora&indexType=mods")

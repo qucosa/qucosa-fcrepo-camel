@@ -5,18 +5,20 @@ import java.util.Set;
 
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.fusesource.hawtbuf.ByteArrayInputStream;
 import org.w3c.dom.Document;
 
-import de.qucosa.dc.disseminator.DcDissMapper;
 import de.qucosa.dissemination.epicur.EpicurDissMapper;
+import de.qucosa.fcrepo.component.builders.RecordXmlBuilder;
 import de.qucosa.fcrepo.component.mapper.DissTerms;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
 import de.qucosa.fcrepo.component.mapper.SetsConfig;
 import de.qucosa.fcrepo.component.pojos.oaiprivider.RecordTransport;
+import de.qucosa.fcrepo.component.transformers.DcDissTransformer;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
 import de.qucosa.xmetadissplus.DateTimeConverter;
 import de.qucosa.xmetadissplus.XMetaDissMapper;
@@ -36,6 +38,8 @@ public class OaiProviderProcessor implements Processor {
     
     private MetsXmlMapper metsXml= null;
     
+    private static final String RECORD_TEMPLATE_FILE = "record.xml";
+    
     public OaiProviderProcessor(DissTerms dt, SetsConfig sets) {
         this.dt = dt;
         this.sets = sets;
@@ -45,6 +49,7 @@ public class OaiProviderProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         String mets = exchange.getIn().getBody().toString();
         Document metsDoc = DocumentXmlUtils.document(new ByteArrayInputStream(mets.getBytes("UTF-8")), true);
+        DocumentXmlUtils.resultXml(metsDoc);
         metsXml = new MetsXmlMapper(metsDoc, dt.getMapXmlNamespaces());
 
         buildDcObject(metsDoc);
@@ -65,11 +70,12 @@ public class OaiProviderProcessor implements Processor {
         Document result = xMetaDiss.transformXmetaDissplus(metsDoc,
                 new StreamSource(getClass().getClassLoader().getResource("mets2xmetadissplus.xsl").getPath()));
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
+        DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "xmetadissplus"));
 
         xmetadiss.setPid(metsXml.pid());
         xmetadiss.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
         xmetadiss.setPrefix("xmetadissplus");
-        xmetadiss.setData(result);
+        xmetadiss.setData(buildRecord(result, metsDoc, "xmetadissplus"));
         xmetadiss.setOaiId("");
 
         return xmetadiss;
@@ -77,15 +83,18 @@ public class OaiProviderProcessor implements Processor {
 
     @SuppressWarnings("unused")
     private RecordTransport buildDcObject(Document metsDoc) throws Exception {
-        DcDissMapper dcDissMapper = new DcDissMapper("/mets2dcdata.xsl");
-        Document result = dcDissMapper.transformDcDiss(metsDoc);
+        DcDissTransformer transformer = new DcDissTransformer(
+                "/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip", 
+                "", 
+                true);
+        Document result = transformer.transformDcDiss(metsDoc);
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
-        DocumentXmlUtils.resultXml(metsDoc);
+        DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "dc"));
         
         dc.setPid(metsXml.pid());
         dc.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
         dc.setPrefix("dc");
-        dc.setData(result);
+        dc.setData(buildRecord(result, metsDoc, "dc"));
         dc.setOaiId("");
 
         return dc;
@@ -96,20 +105,25 @@ public class OaiProviderProcessor implements Processor {
         EpicurDissMapper mapper = new EpicurDissMapper("http://test.##AGENT##.qucosa.de/id/##PID##", "", "", true);
         Document epicurRes = mapper.transformEpicurDiss(metsDoc);
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
-        
+        DocumentXmlUtils.resultXml(buildRecord(epicurRes, metsDoc, "epicur"));
+
         epicur.setPid(metsXml.pid());
         epicur.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
         epicur.setPrefix("epicur");
-        epicur.setData(epicurRes);
+        epicur.setData(buildRecord(epicurRes, metsDoc, "epicur"));
         epicur.setOaiId("");
         
         return epicur;
     }
     
-    private Document buildRecord(Document dissemination, MetsXmlMapper metsXml) {
-        Document record = null;
-        Document recordTemplate = DocumentXmlUtils.document(getClass().getClassLoader().getResource("record.xml").getPath(), true);
+    private Document buildRecord(Document dissemination, Document metsDoc, String format) throws XPathExpressionException {
+        Document recordTemplate = DocumentXmlUtils.document(getClass().getClassLoader().getResource(RECORD_TEMPLATE_FILE).getPath(), true);
+        RecordXmlBuilder builder = new RecordXmlBuilder(dissemination, recordTemplate)
+                .setMetsDocument(metsDoc)
+                .setDissTerms(dt)
+                .setSets(sets)
+                .setFormat(format);
         
-        return record;
+        return builder.buildRecord(metsXml);
     }
 }

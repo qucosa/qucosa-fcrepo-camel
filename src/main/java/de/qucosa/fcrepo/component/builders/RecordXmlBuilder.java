@@ -22,8 +22,6 @@ public class RecordXmlBuilder {
     
     private Document recordTemplate = null;
     
-    private Document metsDoc = null;
-    
     private DissTerms dissTerms = null;
     
     private SetsConfig sets = null;
@@ -45,7 +43,6 @@ public class RecordXmlBuilder {
     }
     
     public RecordXmlBuilder setMetsDocument(Document metsDoc) {
-        this.metsDoc = metsDoc;
         return this;
     }
     
@@ -96,7 +93,7 @@ public class RecordXmlBuilder {
         if (term != null) {
             
             if (!term.getTerm().isEmpty()) {
-                node = (Node) xPath.compile(term.getTerm().replace("$val", value)).evaluate(metsDoc, XPathConstants.NODE);
+                node = (Node) xPath.compile(term.getTerm().replace("$val", value)).evaluate(dissemination, XPathConstants.NODE);
             }
         }
         

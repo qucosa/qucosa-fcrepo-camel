@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>camel-fedora-component</groupId>
-  <artifactId>camel-fedora-component</artifactId>
+  <groupId>de.qucosa</groupId>
+  <artifactId>qucosa-fcrepo-camel</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>Camel Fedora Component</name>
@@ -220,13 +220,6 @@
       <artifactId>qucosa-fcrepo-xmetadissplus</artifactId>
       <version>${xmetadissplus.version}</version>
       <type>jar</type>
-    </dependency>
-    
-    <dependency>
-        <groupId>de.qucosa</groupId>
-        <artifactId>qucosa-fcrepo-dcdisseminator</artifactId>
-        <version>1.1.4</version>
-        <type>jar</type>
     </dependency>
     
     <dependency>

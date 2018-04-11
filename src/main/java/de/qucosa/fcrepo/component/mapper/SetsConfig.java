@@ -107,7 +107,7 @@ public class SetsConfig {
         
         public SetSpecDao() {
             ObjectMapper om = new ObjectMapper();
-            File setSpecs = new File("/home/opt/camel-fedora-component/config/list-set-conf.json");
+            File setSpecs = new File("/home/opt/qucosa-fcrepo-camel/config/list-set-conf.json");
 
             try {
                 sets = om.readValue(setSpecs, om.getTypeFactory().constructCollectionType(List.class, Set.class));

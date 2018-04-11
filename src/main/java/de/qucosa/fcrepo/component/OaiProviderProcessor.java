@@ -18,10 +18,10 @@ import de.qucosa.fcrepo.component.mapper.DissTerms;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
 import de.qucosa.fcrepo.component.mapper.SetsConfig;
 import de.qucosa.fcrepo.component.pojos.oaiprivider.RecordTransport;
+import de.qucosa.fcrepo.component.transformers.XMetaDissTransformer;
+import de.qucosa.fcrepo.component.utils.DateTimeConverter;
 import de.qucosa.fcrepo.component.transformers.DcDissTransformer;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
-import de.qucosa.xmetadissplus.DateTimeConverter;
-import de.qucosa.xmetadissplus.XMetaDissMapper;
 
 public class OaiProviderProcessor implements Processor {
     private RecordTransport xmetadiss = new RecordTransport();
@@ -66,8 +66,8 @@ public class OaiProviderProcessor implements Processor {
 
     @SuppressWarnings("unused")
     private RecordTransport buildXMetaDissplusObject(Document metsDoc) throws Exception {
-        XMetaDissMapper xMetaDiss = new XMetaDissMapper("http://##AGENT##.example.com/##PID##/content.zip", "", true);
-        Document result = xMetaDiss.transformXmetaDissplus(metsDoc,
+        XMetaDissTransformer transformer = new XMetaDissTransformer("http://##AGENT##.example.com/##PID##/content.zip", "", true);
+        Document result = transformer.transformXmetaDissplus(metsDoc,
                 new StreamSource(getClass().getClassLoader().getResource("mets2xmetadissplus.xsl").getPath()));
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
         DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "xmetadissplus"));

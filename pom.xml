@@ -216,13 +216,6 @@
 
     <!-- Dissemination Mappers -->
     <dependency>
-      <groupId>de.qucosa</groupId>
-      <artifactId>qucosa-fcrepo-xmetadissplus</artifactId>
-      <version>${xmetadissplus.version}</version>
-      <type>jar</type>
-    </dependency>
-    
-    <dependency>
         <groupId>de.qucosa</groupId>
         <artifactId>qucosa-epicurdisseminator</artifactId>
         <version>1.1.5</version>

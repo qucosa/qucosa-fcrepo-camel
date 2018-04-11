@@ -18,7 +18,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 import org.w3c.dom.Document;
 
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
@@ -65,7 +65,7 @@ public class DcDissTransformer {
             }
         };
         
-        StrSubstitutor substitutor = new StrSubstitutor(values, "##", "##");
+        StringSubstitutor substitutor = new StringSubstitutor(values, "##", "##");
         String transferUrl = substitutor.replace(transferUrlPattern);
         
         TransformerFactory transformerFactory = TransformerFactory.newInstance();

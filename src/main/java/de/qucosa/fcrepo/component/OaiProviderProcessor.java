@@ -28,7 +28,7 @@ import org.apache.camel.Processor;
 import org.fusesource.hawtbuf.ByteArrayInputStream;
 import org.w3c.dom.Document;
 
-import de.qucosa.dissemination.epicur.EpicurDissMapper;
+//import de.qucosa.dissemination.epicur.EpicurDissMapper;
 import de.qucosa.fcrepo.component.builders.RecordXmlBuilder;
 import de.qucosa.fcrepo.component.mapper.DissTerms;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
@@ -74,7 +74,7 @@ public class OaiProviderProcessor implements Processor {
         buildXMetaDissplusObject(metsDoc);
         disseminations.add(xmetadiss);
         
-        buildEpicurObject(metsDoc);
+//        buildEpicurObject(metsDoc);
         disseminations.add(epicur);
 
         exchange.getIn().setBody(disseminations);
@@ -116,6 +116,7 @@ public class OaiProviderProcessor implements Processor {
         return dc;
     }
 
+/*
     @SuppressWarnings("unused")
     private RecordTransport buildEpicurObject(Document metsDoc) throws Exception {
         EpicurDissMapper mapper = new EpicurDissMapper("http://test.##AGENT##.qucosa.de/id/##PID##", "", "", true);
@@ -131,7 +132,8 @@ public class OaiProviderProcessor implements Processor {
         
         return epicur;
     }
-    
+*/
+
     private Document buildRecord(Document dissemination, Document metsDoc, String format) throws XPathExpressionException {
         Document recordTemplate = DocumentXmlUtils.document(getClass().getClassLoader().getResource(RECORD_TEMPLATE_FILE).getPath(), true);
         RecordXmlBuilder builder = new RecordXmlBuilder(dissemination, recordTemplate)

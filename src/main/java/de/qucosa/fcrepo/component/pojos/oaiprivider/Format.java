@@ -16,24 +16,24 @@
 
 package de.qucosa.fcrepo.component.pojos.oaiprivider;
 
-import java.sql.Timestamp;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.sql.Timestamp;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Format {
     @JsonProperty("id")
     private Long id;
-    
+
     @JsonProperty("mdprefix")
     private String mdprefix;
-    
+
     @JsonProperty("lastpolldate")
     private Timestamp lastpolldate;
-    
+
     @JsonProperty("dissType")
     private String dissType;
 
@@ -60,7 +60,7 @@ public class Format {
     public void setLastpolldate(Timestamp lastpolldate) {
         this.lastpolldate = lastpolldate;
     }
-    
+
     public String getDissType() {
         return dissType;
     }

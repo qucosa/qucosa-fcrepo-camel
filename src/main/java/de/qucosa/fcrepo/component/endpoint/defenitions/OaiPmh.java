@@ -16,17 +16,11 @@
 
 package de.qucosa.fcrepo.component.endpoint.defenitions;
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.qucosa.fcrepo.component.EndpointDefAbstract;
+import de.qucosa.fcrepo.component.EndpointDefInterface;
+import de.qucosa.fcrepo.component.FedoraEndpoint;
+import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Producer;
@@ -37,53 +31,56 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.qucosa.fcrepo.component.EndpointDefAbstract;
-import de.qucosa.fcrepo.component.EndpointDefInterface;
-import de.qucosa.fcrepo.component.FedoraEndpoint;
-import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OaiPmh extends EndpointDefAbstract implements EndpointDefInterface {
     final Set<String> identifiers = new HashSet<>();
-    
+
     @Override
     public Consumer getConsumer() {
         return new DefaultConsumer(endpoint, processor) {
             private CloseableHttpClient fedoraClient;
-            
+
             @Override
             protected void doStart() throws Exception {
                 super.doStart();
                 fedoraClient = endpoint.fedoraClient();
                 buildObjects(null);
                 Exchange exchange = endpoint.createExchange();
-                
+
                 if (fedoraClient != null) {
                     exchange.getIn().setBody(identifiers);
                 } else {
                     exchange.getIn().setBody(null);
                 }
-                
+
                 fedoraClient.close();
                 processor.process(exchange);
             }
         };
     }
-    
+
     public void callIdents() {
     }
-    
+
     @Override
     public Producer getProducer() {
         return new DefaultProducer(endpoint) {
-            
+
             @SuppressWarnings("unused")
             @Override
             public void process(Exchange exchange) throws Exception {
                 ObjectMapper om = new ObjectMapper();
 //                System.out.println(exchange.getIn().getBody(String.class));
-                
+
 //                URL url = new URL("http://localhost:8080/qucosa-oai-provider/identifieres/add");
 //                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 //                connection.setDoOutput(true);
@@ -105,34 +102,34 @@ public class OaiPmh extends EndpointDefAbstract implements EndpointDefInterface 
             }
         };
     }
-    
+
     private String xml(String resumptionToken) {
         return (resumptionToken == null)
-            ? endpoint.loadFromFedora(FedoraEndpoint.OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN, endpoint.getShema(), endpoint.getHost(), endpoint.getPort())
-            : endpoint.loadFromFedora(FedoraEndpoint.OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN, endpoint.getShema(), endpoint.getHost(), endpoint.getPort(), resumptionToken);
+                ? endpoint.loadFromFedora(FedoraEndpoint.OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN, endpoint.getShema(), endpoint.getHost(), endpoint.getPort())
+                : endpoint.loadFromFedora(FedoraEndpoint.OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN, endpoint.getShema(), endpoint.getHost(), endpoint.getPort(), resumptionToken);
     }
-    
+
     private void buildObjects(String resumptionToken) {
         String xml = xml(resumptionToken);
-        
+
         try {
             Document document = DocumentXmlUtils.document(new ByteArrayInputStream(xml.getBytes("UTF-8")), false);
             XPath xPath = DocumentXmlUtils.xpath(endpoint.getConfiguration().getDissConf().getMapXmlNamespaces());
             Node rst = document.getElementsByTagName("resumptionToken").item(0);
             NodeList headers = (NodeList) xPath.compile("//header").evaluate(document, XPathConstants.NODESET);
-            
+
             for (int i = 0; i < headers.getLength(); i++) {
                 Node header = headers.item(i);
                 header.getChildNodes();
                 String identifire = (String) xPath.compile("./identifier/text()").evaluate(header, XPathConstants.STRING);
                 Pattern idPattern = Pattern.compile("qucosa:\\d+");
                 Matcher idMatch = idPattern.matcher(identifire);
-                
+
                 if (idMatch.find()) {
                     identifiers.add(idMatch.group(0));
                 }
             }
-            
+
             if (rst != null) {
                 buildObjects(rst.getTextContent());
             }

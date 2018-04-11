@@ -16,15 +16,14 @@
 
 package de.qucosa.fcrepo.component.endpoint.defenitions;
 
+import de.qucosa.fcrepo.component.EndpointDefAbstract;
+import de.qucosa.fcrepo.component.EndpointDefInterface;
+import de.qucosa.fcrepo.component.FedoraEndpoint;
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultProducer;
 import org.apache.http.impl.client.CloseableHttpClient;
-
-import de.qucosa.fcrepo.component.EndpointDefAbstract;
-import de.qucosa.fcrepo.component.EndpointDefInterface;
-import de.qucosa.fcrepo.component.FedoraEndpoint;
 
 public class IdentifireQue extends EndpointDefAbstract implements EndpointDefInterface {
     @Override

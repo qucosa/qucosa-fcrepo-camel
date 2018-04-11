@@ -16,15 +16,6 @@
 
 package de.qucosa.fcrepo.component.mapper;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -32,19 +23,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * This is a json mapper class for mapping the list sets config file
  *
  * @author dseelig
- *
  */
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SetsConfig {
     @JsonIgnore
     private SetSpecDao dao = null;
-    
+
     @JsonProperty("sets")
     private List<Set> sets = new ArrayList<>();
 
@@ -54,6 +52,30 @@ public class SetsConfig {
 
     public void setSets(List<Set> sets) {
         this.sets = sets;
+    }
+
+    @JsonIgnore
+    public Set getSetObject(String setSpec) {
+        return dao().getSetObject(setSpec);
+    }
+
+    @JsonIgnore
+    public List<Set> getSetObjects() {
+        return dao().getSetObjects();
+    }
+
+    @JsonIgnore
+    public java.util.Set<String> getSetSpecs() {
+        return dao().getSetSpecs();
+    }
+
+    private SetSpecDao dao() {
+
+        if (dao == null) {
+            dao = new SetSpecDao();
+        }
+
+        return dao;
     }
 
     public static class Set {
@@ -90,37 +112,13 @@ public class SetsConfig {
             this.predicate = predicate;
         }
     }
-    
-    @JsonIgnore
-    public Set getSetObject(String setSpec) {
-        return dao().getSetObject(setSpec);
-    }
-    
-    @JsonIgnore
-    public List<Set> getSetObjects() {
-        return dao().getSetObjects();
-    }
-    
-    @JsonIgnore
-    public java.util.Set<String> getSetSpecs() {
-        return dao().getSetSpecs();
-    }
-    
-    private SetSpecDao dao() {
-        
-        if (dao == null) {
-            dao = new SetSpecDao();
-        }
-        
-        return dao;
-    }
-    
+
     private static class SetSpecDao {
         @SuppressWarnings("unused")
         private final Logger logger = LoggerFactory.getLogger(SetSpecDao.class);
 
         private List<Set> sets = null;
-        
+
         public SetSpecDao() {
             ObjectMapper om = new ObjectMapper();
             File setSpecs = new File("/home/opt/qucosa-fcrepo-camel/config/list-set-conf.json");
@@ -135,7 +133,7 @@ public class SetsConfig {
                 e.printStackTrace();
             }
         }
-        
+
         public List<Set> getSetObjects() {
             return sets;
         }

@@ -23,7 +23,7 @@ public class QucosaElasticSearchProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        
+
     }
 
 }

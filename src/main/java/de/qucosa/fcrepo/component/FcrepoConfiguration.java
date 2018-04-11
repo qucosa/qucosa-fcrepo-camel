@@ -23,9 +23,9 @@ public class FcrepoConfiguration {
     private String endpointDef = "FindObjects";
 
     private DissTerms dissTerms = null;
-    
+
     private SetsConfig sets = null;
-    
+
     public String getEndpointDef() {
         return endpointDef;
     }
@@ -33,7 +33,7 @@ public class FcrepoConfiguration {
     public void setEndpointDef(String endpointDef) {
         this.endpointDef = endpointDef;
     }
-    
+
     public DissTerms getDissConf() {
         return dissTerms;
     }
@@ -41,7 +41,7 @@ public class FcrepoConfiguration {
     public void setDissConf(DissTerms dissTerms) {
         this.dissTerms = dissTerms;
     }
-    
+
     public SetsConfig getSets() {
         return sets;
     }

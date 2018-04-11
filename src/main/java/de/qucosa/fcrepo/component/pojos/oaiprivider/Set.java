@@ -16,11 +16,11 @@
 
 package de.qucosa.fcrepo.component.pojos.oaiprivider;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,13 +29,13 @@ public class Set implements Serializable {
 
     @JsonProperty("id")
     private Long id;
-    
+
     @JsonProperty("setSpec")
     private String setSpec;
-    
+
     @JsonProperty("setName")
     private String setName;
-    
+
     @JsonProperty("predicate")
     private String predicate;
 
@@ -54,7 +54,7 @@ public class Set implements Serializable {
     public void setSetSpec(String setSpec) {
         this.setSpec = setSpec;
     }
-    
+
     public String getSetName() {
         return setName;
     }

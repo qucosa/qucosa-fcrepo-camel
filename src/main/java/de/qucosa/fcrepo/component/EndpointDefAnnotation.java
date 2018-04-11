@@ -23,7 +23,9 @@ import java.lang.annotation.RetentionPolicy;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EndpointDefAnnotation {
-    boolean isProducer();;
-    
+    boolean isProducer();
+
+    ;
+
     boolean isConsumer();
 }

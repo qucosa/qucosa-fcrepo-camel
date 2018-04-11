@@ -16,34 +16,37 @@
 
 package de.qucosa.fcrepo.component.pojos.oaiprivider;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-
-import org.w3c.dom.Document;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.w3c.dom.Document;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RecordTransport implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     @JsonProperty("pid")
     private String pid;
-    
+
     @JsonProperty("prefix")
     private String prefix;
-    
+
     @JsonProperty("data")
     private Document data;
-    
+
     @JsonProperty("modified")
     private Timestamp modified;
-    
+
     @JsonProperty("oaiId")
     private String oaiId;
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
 
     public String getPid() {
         return pid;
@@ -83,9 +86,5 @@ public class RecordTransport implements Serializable {
 
     public void setOaiId(String oaiId) {
         this.oaiId = oaiId;
-    }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
     }
 }

@@ -16,12 +16,12 @@
 
 package de.qucosa.fcrepo.component.pojos.oaiprivider;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -30,13 +30,13 @@ public class Identifier implements Serializable {
 
     @JsonProperty("id")
     private Long id;
-    
+
     @JsonProperty("identifier")
     private String identifier;
-    
+
     @JsonProperty("datestamp")
     private Timestamp datestamp;
-    
+
     @JsonProperty("pid")
     private String pid;
 
@@ -63,7 +63,7 @@ public class Identifier implements Serializable {
     public void setDatestamp(Timestamp datestamp) {
         this.datestamp = datestamp;
     }
-    
+
     public String getPid() {
         return pid;
     }

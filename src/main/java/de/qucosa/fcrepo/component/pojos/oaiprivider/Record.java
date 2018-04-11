@@ -16,12 +16,12 @@
 
 package de.qucosa.fcrepo.component.pojos.oaiprivider;
 
-import java.io.Serializable;
-import java.sql.Date;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
+import java.sql.Date;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -30,16 +30,16 @@ public class Record implements Serializable {
 
     @JsonProperty("id")
     private Long id;
-    
+
     @JsonProperty("identifierId")
     private Long identifierId;
-    
+
     @JsonProperty("format")
     private Long format;
-    
+
     @JsonProperty("moddate")
     private Date moddate;
-    
+
     @JsonProperty("xmldata")
     private String xmldata;
 

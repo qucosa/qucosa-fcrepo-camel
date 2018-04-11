@@ -16,6 +16,18 @@
 
 package de.qucosa.fcrepo.component.xml.utils;
 
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -24,29 +36,16 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
-
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 public class DocumentXmlUtils {
-    
+
     public static <T> Document document(T source, boolean namespaceAware) {
         Document document = null;
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(namespaceAware);
-        
+
         try {
             DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
-            
+
             if (source == null) {
                 document = documentBuilder.newDocument();
             } else if (source instanceof InputStream) {
@@ -61,20 +60,20 @@ public class DocumentXmlUtils {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
-        
+
         return document;
     }
-    
+
     public static XPath xpath(Map<String, String> namespaces) {
         XPath xPath = XPathFactory.newInstance().newXPath();
-        
+
         if (namespaces != null && !namespaces.isEmpty()) {
             xPath.setNamespaceContext(new SimpleNamespaceContext(namespaces));
         }
-        
+
         return xPath;
     }
-    
+
     public static String resultXml(Document document) throws IOException, SAXException {
         OutputFormat outputFormat = new OutputFormat(document);
         outputFormat.setOmitXMLDeclaration(true);
@@ -83,13 +82,13 @@ public class DocumentXmlUtils {
         serialize.serialize(document);
         return stringWriter.toString();
     }
-    
+
     public static Element node(InputStream stream) {
         Element element = null;
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);
         Document document = null;
-        
+
         try {
             DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
             document = documentBuilder.parse(stream);
@@ -97,17 +96,17 @@ public class DocumentXmlUtils {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
-        
+
         return element;
     }
-    
+
     public static Element node(String input) {
         InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
         Element element = null;
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);
         Document document = null;
-        
+
         try {
             DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
             document = documentBuilder.parse(stream);
@@ -115,7 +114,7 @@ public class DocumentXmlUtils {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
-        
+
         return element;
     }
 }

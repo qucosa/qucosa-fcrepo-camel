@@ -16,46 +16,38 @@
 
 package de.qucosa.fcrepo.component;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.fusesource.hawtbuf.ByteArrayInputStream;
-import org.w3c.dom.Document;
-
-//import de.qucosa.dissemination.epicur.EpicurDissMapper;
 import de.qucosa.fcrepo.component.builders.RecordXmlBuilder;
 import de.qucosa.fcrepo.component.mapper.DissTerms;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
 import de.qucosa.fcrepo.component.mapper.SetsConfig;
 import de.qucosa.fcrepo.component.pojos.oaiprivider.RecordTransport;
+import de.qucosa.fcrepo.component.transformers.DcDissTransformer;
 import de.qucosa.fcrepo.component.transformers.XMetaDissTransformer;
 import de.qucosa.fcrepo.component.utils.DateTimeConverter;
-import de.qucosa.fcrepo.component.transformers.DcDissTransformer;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.fusesource.hawtbuf.ByteArrayInputStream;
+import org.w3c.dom.Document;
+
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import java.util.HashSet;
+import java.util.Set;
+
+//import de.qucosa.dissemination.epicur.EpicurDissMapper;
 
 public class OaiProviderProcessor implements Processor {
-    private RecordTransport xmetadiss = new RecordTransport();
-
-    private RecordTransport dc = new RecordTransport();
-
-    private RecordTransport epicur = new RecordTransport();
-
-    private Set<RecordTransport> disseminations = new HashSet<RecordTransport>();
-    
-    private DissTerms dt = null;
-    
-    private SetsConfig sets = null;
-    
-    private MetsXmlMapper metsXml= null;
-    
     private static final String RECORD_TEMPLATE_FILE = "record.xml";
-    
+    private RecordTransport xmetadiss = new RecordTransport();
+    private RecordTransport dc = new RecordTransport();
+    private RecordTransport epicur = new RecordTransport();
+    private Set<RecordTransport> disseminations = new HashSet<RecordTransport>();
+    private DissTerms dt = null;
+    private SetsConfig sets = null;
+    private MetsXmlMapper metsXml = null;
+
     public OaiProviderProcessor(DissTerms dt, SetsConfig sets) {
         this.dt = dt;
         this.sets = sets;
@@ -70,10 +62,10 @@ public class OaiProviderProcessor implements Processor {
 
         buildDcObject(metsDoc);
         disseminations.add(dc);
-        
+
         buildXMetaDissplusObject(metsDoc);
         disseminations.add(xmetadiss);
-        
+
 //        buildEpicurObject(metsDoc);
         disseminations.add(epicur);
 
@@ -100,13 +92,13 @@ public class OaiProviderProcessor implements Processor {
     @SuppressWarnings("unused")
     private RecordTransport buildDcObject(Document metsDoc) throws Exception {
         DcDissTransformer transformer = new DcDissTransformer(
-                "/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip", 
-                "", 
+                "/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip",
+                "",
                 true);
         Document result = transformer.transformDcDiss(metsDoc);
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
         DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "dc"));
-        
+
         dc.setPid(metsXml.pid());
         dc.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
         dc.setPrefix("dc");
@@ -141,7 +133,7 @@ public class OaiProviderProcessor implements Processor {
                 .setDissTerms(dt)
                 .setSets(sets)
                 .setFormat(format);
-        
+
         return builder.buildRecord(metsXml);
     }
 }

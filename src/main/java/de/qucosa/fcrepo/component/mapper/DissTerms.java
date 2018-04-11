@@ -16,6 +16,14 @@
 
 package de.qucosa.fcrepo.component.mapper;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,27 +33,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DissTerms {
     @JsonIgnore
     private DissTermsDao dao = null;
-    
+
     @JsonProperty("xmlnamespacees")
     private Set<XmlNamspace> xmlnamespacees;
 
     @JsonProperty("dissTerms")
     private Set<DissTerm> dissTerms;
-    
+
     @JsonProperty("formats")
     private Set<DissFormat> formats;
 
@@ -64,13 +63,41 @@ public class DissTerms {
     public void setDissTerms(Set<DissTerm> dissTerms) {
         this.dissTerms = dissTerms;
     }
-    
+
     public Set<DissFormat> getFormats() {
         return formats;
     }
 
     public void setFormats(Set<DissFormat> formats) {
         this.formats = formats;
+    }
+
+    @JsonIgnore
+    public Map<String, String> getMapXmlNamespaces() {
+        return dao().getMapXmlNamespaces();
+    }
+
+    @JsonIgnore
+    public XmlNamspace getXmlNamespace(String prefix) {
+        return dao().getXmlNamespace(prefix);
+    }
+
+    @JsonIgnore
+    public Term getTerm(String diss, String name) {
+        return dao().getTerm(diss, name);
+    }
+
+    public Set<DissFormat> formats() {
+        return dao().dissFormats();
+    }
+
+    private DissTermsDao dao() {
+
+        if (dao == null) {
+            dao = new DissTermsDao();
+        }
+
+        return dao;
     }
 
     public static class XmlNamspace {
@@ -144,11 +171,11 @@ public class DissTerms {
             this.term = term;
         }
     }
-    
+
     public static class DissFormat {
         @JsonProperty("format")
         private String format;
-        
+
         @JsonProperty("dissType")
         private String dissType;
 
@@ -168,35 +195,7 @@ public class DissTerms {
             this.dissType = dissType;
         }
     }
-    
-    @JsonIgnore
-    public Map<String, String> getMapXmlNamespaces() {
-        return dao().getMapXmlNamespaces();
-    }
-    
-    @JsonIgnore
-    public XmlNamspace getXmlNamespace(String prefix) {
-        return dao().getXmlNamespace(prefix);
-    }
-    
-    @JsonIgnore
-    public Term getTerm(String diss, String name) {
-        return dao().getTerm(diss, name);
-    }
-    
-    public Set<DissFormat> formats() {
-        return dao().dissFormats();
-    }
-    
-    private DissTermsDao dao() {
-        
-        if (dao == null) {
-            dao = new DissTermsDao();
-        }
-        
-        return dao;
-    }
-    
+
     private class DissTermsDao {
         private final Logger logger = LoggerFactory.getLogger(DissTermsDao.class);
 
@@ -276,23 +275,23 @@ public class DissTerms {
 
             return term;
         }
-        
+
         public Set<DissFormat> dissFormats() {
             return dissTerms.getFormats();
         }
-        
+
         @SuppressWarnings("unused")
         public DissFormat dissFormat(String format) {
             DissFormat dissFormat = null;
-            
+
             for (DissFormat df : dissTerms.getFormats()) {
-                
+
                 if (df.getFormat().equals(format)) {
                     dissFormat = df;
                     break;
                 }
             }
-            
+
             return dissFormat;
         }
 

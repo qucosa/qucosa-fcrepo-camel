@@ -19,9 +19,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.qucosa</groupId>
   <artifactId>qucosa-fcrepo-camel</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>Camel Fedora Component</name>
+  <name>Qucosa service integration workflows</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -231,6 +231,20 @@
     </dependency>
 
     <!-- Dissemination Mappers -->
+    <dependency>
+      <groupId>de.qucosa</groupId>
+      <artifactId>qucosa-fcrepo-xmetadissplus</artifactId>
+      <version>${xmetadissplus.version}</version>
+      <type>jar</type>
+    </dependency>
+    
+    <dependency>
+        <groupId>de.qucosa</groupId>
+        <artifactId>qucosa-fcrepo-dcdisseminator</artifactId>
+        <version>1.1.4</version>
+        <type>jar</type>
+    </dependency>
+    
     <dependency>
         <groupId>de.qucosa</groupId>
         <artifactId>qucosa-epicurdisseminator</artifactId>

@@ -11,18 +11,20 @@ import org.apache.camel.builder.RouteBuilder;
 import org.w3c.dom.Document;
 
 import de.qucosa.fcrepo.component.mapper.DissTerms;
+import de.qucosa.fcrepo.component.mapper.SetsConfig;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;;
 
 public class Routes extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        final DissTerms dt = new DissTerms();
+        DissTerms dt = new DissTerms();
+        SetsConfig sets = new SetsConfig();
         
         from("direct:oaiprovider")
             .id("oaiProviderProcess")
             .autoStartup(false)
             .startupOrder(1)
-            .process(new OaiProviderProcessor(dt))
+            .process(new OaiProviderProcessor(dt, sets))
             .to("fcrepo:fedora:OaiProvider");
         
         from("direct:reportingDB")

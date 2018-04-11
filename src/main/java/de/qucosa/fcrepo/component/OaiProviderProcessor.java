@@ -15,6 +15,7 @@ import de.qucosa.dc.disseminator.DcDissMapper;
 import de.qucosa.dissemination.epicur.EpicurDissMapper;
 import de.qucosa.fcrepo.component.mapper.DissTerms;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
+import de.qucosa.fcrepo.component.mapper.SetsConfig;
 import de.qucosa.fcrepo.component.pojos.oaiprivider.RecordTransport;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
 import de.qucosa.xmetadissplus.DateTimeConverter;
@@ -31,10 +32,13 @@ public class OaiProviderProcessor implements Processor {
     
     private DissTerms dt = null;
     
+    private SetsConfig sets = null;
+    
     private MetsXmlMapper metsXml= null;
     
-    public OaiProviderProcessor(DissTerms dt) {
+    public OaiProviderProcessor(DissTerms dt, SetsConfig sets) {
         this.dt = dt;
+        this.sets = sets;
     }
 
     @Override
@@ -76,6 +80,7 @@ public class OaiProviderProcessor implements Processor {
         DcDissMapper dcDissMapper = new DcDissMapper("/mets2dcdata.xsl");
         Document result = dcDissMapper.transformDcDiss(metsDoc);
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
+        DocumentXmlUtils.resultXml(metsDoc);
         
         dc.setPid(metsXml.pid());
         dc.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
@@ -99,5 +104,12 @@ public class OaiProviderProcessor implements Processor {
         epicur.setOaiId("");
         
         return epicur;
+    }
+    
+    private Document buildRecord(Document dissemination, MetsXmlMapper metsXml) {
+        Document record = null;
+        Document recordTemplate = DocumentXmlUtils.document(getClass().getClassLoader().getResource("record.xml").getPath(), true);
+        
+        return record;
     }
 }

@@ -6,6 +6,7 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
 
 import de.qucosa.fcrepo.component.mapper.DissTerms;
+import de.qucosa.fcrepo.component.mapper.SetsConfig;
 
 public class FcrepoComponent extends DefaultComponent {
 	
@@ -18,7 +19,9 @@ public class FcrepoComponent extends DefaultComponent {
 		    String[] remainingDef = remaining.split(":");
 		    configuration.setEndpointDef(remainingDef[1]);
 		    DissTerms dt = new DissTerms();
+		    SetsConfig sets = new SetsConfig();
 		    configuration.setDissConf(dt);
+		    configuration.setSets(sets);
 		    
 		    if (remainingDef[0].endsWith("fedora")) {
 		        Endpoint endpoint = new FedoraEndpoint(uri, this, configuration);

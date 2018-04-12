@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.cucosa.fcrepo.builder.tests;
+package de.qucosa.fcrepo.builders;
 
 import de.qucosa.fcrepo.component.builders.RecordXmlBuilder;
 import de.qucosa.fcrepo.component.mapper.DissTerms;
@@ -28,7 +28,7 @@ import org.w3c.dom.Document;
 
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
-public class BuildRecordsTests {
+public class RecordXmlBuilderTest {
     private DissTerms dissTerms = new DissTerms();
 
     private SetsConfig sets = new SetsConfig();

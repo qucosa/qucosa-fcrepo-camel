@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component;
+package de.qucosa.endpoint;
 
+import de.qucosa.fcrepo.component.FedoraEndpoint;
+import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
+import org.apache.camel.Producer;
 
-public abstract class AbstractEndpointDefinition implements EndpointDefinition {
-    protected FedoraEndpoint endpoint;
+public interface EndpointDefinition {
+    public void setEndpoint(FedoraEndpoint endpoint);
 
-    protected Processor processor;
+    public void setProcessor(Processor processor);
 
-    @Override
-    public void setEndpoint(FedoraEndpoint endpoint) {
-        this.endpoint = endpoint;
-    }
+    public Consumer getConsumer();
 
-    @Override
-    public void setProcessor(Processor processor) {
-        this.processor = processor;
-    }
+    public Producer getProducer();
 }

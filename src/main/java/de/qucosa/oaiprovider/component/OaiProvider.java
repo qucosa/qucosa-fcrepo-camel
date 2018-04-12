@@ -16,8 +16,8 @@
 
 package de.qucosa.oaiprovider.component;
 
-import de.qucosa.fcrepo.component.AbstractEndpointDefinition;
-import de.qucosa.fcrepo.component.EndpointDefinition;
+import de.qucosa.endpoint.AbstractEndpointDefinition;
+import de.qucosa.endpoint.EndpointDefinition;
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Producer;

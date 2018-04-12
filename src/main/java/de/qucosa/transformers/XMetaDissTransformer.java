@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.transformers;
+package de.qucosa.transformers;
 
 import de.qucosa.utils.SimpleNamespaceContext;
 import org.apache.commons.text.StringSubstitutor;

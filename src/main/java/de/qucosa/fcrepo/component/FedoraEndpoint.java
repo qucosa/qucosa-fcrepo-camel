@@ -16,6 +16,7 @@
 
 package de.qucosa.fcrepo.component;
 
+import de.qucosa.endpoint.EndpointDefinition;
 import org.apache.camel.Component;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;

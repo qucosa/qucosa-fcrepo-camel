@@ -17,8 +17,8 @@
 package de.qucosa.fcrepo.component.endpoint.definitions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.qucosa.fcrepo.component.AbstractEndpointDefinition;
-import de.qucosa.fcrepo.component.EndpointDefinition;
+import de.qucosa.endpoint.AbstractEndpointDefinition;
+import de.qucosa.endpoint.EndpointDefinition;
 import de.qucosa.fcrepo.component.FedoraEndpoint;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Consumer;

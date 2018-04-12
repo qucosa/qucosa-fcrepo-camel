@@ -20,7 +20,7 @@ import de.qucosa.oaiprovider.component.builders.RecordXmlBuilder;
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
-import de.qucosa.fcrepo.component.transformers.DcDissTransformer;
+import de.qucosa.transformers.DcDissTransformer;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -32,33 +32,29 @@ import java.io.ByteArrayInputStream;
 public class Main extends RouteBuilder {
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
         DissTerms dt = new DissTerms();
         SetsConfig sets = new SetsConfig();
 
         from("direct:oaiprovider")
                 .id("oaiProviderProcess")
-//            .autoStartup(false)
                 .startupOrder(1)
                 .process(new OaiProviderProcessor(dt, sets))
                 .to("oaiprovider:update");
 
         from("direct:reportingDB")
                 .id("reportingDBProcess")
-//            .autoStartup(false)
                 .startupOrder(2)
                 .to("fcrepo:fedora:ReportingDb");
 
         // @todo replace the mock endpoint with elastic serach endpoint
         from("direct:qucosaelastic")
                 .id("elasticSearchProcess")
-//            .autoStartup(false)
                 .startupOrder(3)
                 .to("mock:test");
 
         from("direct:aggregateIdents")
                 .id("cleanIdentifires")
-//            .autoStartup(false)
                 .startupOrder(4)
                 .resequence().body()
                 .to("fcrepo:fedora:METS?shema=http&host=192.168.42.28&port=8080")
@@ -70,14 +66,12 @@ public class Main extends RouteBuilder {
         from("fcrepo:fedora:OaiPmh?shema=http&host=192.168.42.28&port=8080")
                 .id("fedoraOai")
                 .startupOrder(5)
-//            .autoStartup(false)
                 .split().body()
                 .to("direct:aggregateIdents");
 
         from("activemq:topic:fedora.apim.update")
                 .id("fedoraJms")
                 .startupOrder(6)
-//            .autoStartup(false)
                 .process(new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
@@ -93,4 +87,5 @@ public class Main extends RouteBuilder {
 
         // .to("elasticsearch://elasticsearch?ip=192.168.42.27&port=9300&operation=INDEX&indexName=fedora&indexType=mods")
     }
+
 }

@@ -39,7 +39,7 @@
         <property name="connectionFactory" ref="fedoraJmsPooledConnFactory"/>
     </bean>
 
-    <camel:camelContext trace="true" id="fcrepo">
+    <camel:camelContext trace="true" id="fcrepo" autoStartup="false">
         <camel:routeBuilder ref="routes"/>
     </camel:camelContext>
 

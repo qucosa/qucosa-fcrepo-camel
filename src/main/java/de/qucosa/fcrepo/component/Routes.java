@@ -18,7 +18,7 @@ package de.qucosa.fcrepo.component;
 
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
-import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
+import de.qucosa.utils.DocumentXmlUtils;
 import de.qucosa.oaiprovider.component.OaiProviderProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;

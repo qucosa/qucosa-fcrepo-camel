@@ -16,8 +16,8 @@
 
 package de.qucosa.fcrepo.component.transformers;
 
-import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
-import de.qucosa.fcrepo.component.xml.utils.SimpleNamespaceContext;
+import de.qucosa.utils.DocumentXmlUtils;
+import de.qucosa.utils.SimpleNamespaceContext;
 import org.apache.commons.text.StringSubstitutor;
 import org.w3c.dom.Document;
 

@@ -16,7 +16,7 @@
 
 package de.qucosa.fcrepo.component.mapper;
 
-import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
+import de.qucosa.utils.DocumentXmlUtils;
 import org.w3c.dom.Document;
 
 import javax.xml.xpath.XPath;

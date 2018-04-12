@@ -21,7 +21,7 @@ import de.qucosa.oaiprovider.component.model.DissTerms.Term;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
 import de.qucosa.oaiprovider.component.model.SetsConfig.Set;
-import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
+import de.qucosa.utils.DocumentXmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

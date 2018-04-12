@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.qucosa.fcrepo.component.AbstractEndpointDefinition;
 import de.qucosa.fcrepo.component.EndpointDefinition;
 import de.qucosa.fcrepo.component.FedoraEndpoint;
-import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
+import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Producer;

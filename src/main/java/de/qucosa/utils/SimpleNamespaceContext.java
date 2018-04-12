@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.xml.utils;
+package de.qucosa.utils;
 
 import javax.xml.namespace.NamespaceContext;
 import java.util.HashMap;

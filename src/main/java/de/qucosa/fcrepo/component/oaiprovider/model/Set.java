@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.pojos.oaiprivider;
+package de.qucosa.fcrepo.component.oaiprovider.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Identifier implements Serializable {
+public class Set implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("identifier")
-    private String identifier;
+    @JsonProperty("setSpec")
+    private String setSpec;
 
-    @JsonProperty("datestamp")
-    private Timestamp datestamp;
+    @JsonProperty("setName")
+    private String setName;
 
-    @JsonProperty("pid")
-    private String pid;
+    @JsonProperty("predicate")
+    private String predicate;
 
     public Long getId() {
         return id;
@@ -48,27 +47,27 @@ public class Identifier implements Serializable {
         this.id = id;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public String getSetSpec() {
+        return setSpec;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setSetSpec(String setSpec) {
+        this.setSpec = setSpec;
     }
 
-    public Timestamp getDatestamp() {
-        return datestamp;
+    public String getSetName() {
+        return setName;
     }
 
-    public void setDatestamp(Timestamp datestamp) {
-        this.datestamp = datestamp;
+    public void setSetName(String setName) {
+        this.setName = setName;
     }
 
-    public String getPid() {
-        return pid;
+    public String getPredicate() {
+        return predicate;
     }
 
-    public void setPid(String pid) {
-        this.pid = pid;
+    public void setPredicate(String predicate) {
+        this.predicate = predicate;
     }
 }

@@ -20,7 +20,7 @@ import de.qucosa.fcrepo.component.builders.RecordXmlBuilder;
 import de.qucosa.fcrepo.component.mapper.DissTerms;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
 import de.qucosa.fcrepo.component.mapper.SetsConfig;
-import de.qucosa.fcrepo.component.pojos.oaiprivider.RecordTransport;
+import de.qucosa.fcrepo.component.oaiprovider.model.RecordTransport;
 import de.qucosa.fcrepo.component.transformers.DcDissTransformer;
 import de.qucosa.fcrepo.component.transformers.XMetaDissTransformer;
 import de.qucosa.fcrepo.component.utils.DateTimeConverter;

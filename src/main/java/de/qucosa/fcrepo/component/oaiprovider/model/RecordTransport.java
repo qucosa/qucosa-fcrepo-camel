@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.pojos.oaiprivider;
+package de.qucosa.fcrepo.component.oaiprovider.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.pojos.oaiprivider;
+package de.qucosa.fcrepo.component.oaiprovider.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Set implements Serializable {
+public class Identifier implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("setSpec")
-    private String setSpec;
+    @JsonProperty("identifier")
+    private String identifier;
 
-    @JsonProperty("setName")
-    private String setName;
+    @JsonProperty("datestamp")
+    private Timestamp datestamp;
 
-    @JsonProperty("predicate")
-    private String predicate;
+    @JsonProperty("pid")
+    private String pid;
 
     public Long getId() {
         return id;
@@ -47,27 +48,27 @@ public class Set implements Serializable {
         this.id = id;
     }
 
-    public String getSetSpec() {
-        return setSpec;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setSetSpec(String setSpec) {
-        this.setSpec = setSpec;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
-    public String getSetName() {
-        return setName;
+    public Timestamp getDatestamp() {
+        return datestamp;
     }
 
-    public void setSetName(String setName) {
-        this.setName = setName;
+    public void setDatestamp(Timestamp datestamp) {
+        this.datestamp = datestamp;
     }
 
-    public String getPredicate() {
-        return predicate;
+    public String getPid() {
+        return pid;
     }
 
-    public void setPredicate(String predicate) {
-        this.predicate = predicate;
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 }

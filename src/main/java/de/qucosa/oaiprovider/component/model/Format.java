@@ -14,30 +14,28 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.oaiprovider.model;
+package de.qucosa.oaiprovider.component.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
+import java.sql.Timestamp;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Set implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class Format {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("setSpec")
-    private String setSpec;
+    @JsonProperty("mdprefix")
+    private String mdprefix;
 
-    @JsonProperty("setName")
-    private String setName;
+    @JsonProperty("lastpolldate")
+    private Timestamp lastpolldate;
 
-    @JsonProperty("predicate")
-    private String predicate;
+    @JsonProperty("dissType")
+    private String dissType;
 
     public Long getId() {
         return id;
@@ -47,27 +45,27 @@ public class Set implements Serializable {
         this.id = id;
     }
 
-    public String getSetSpec() {
-        return setSpec;
+    public String getMdprefix() {
+        return mdprefix;
     }
 
-    public void setSetSpec(String setSpec) {
-        this.setSpec = setSpec;
+    public void setMdprefix(String mdprefix) {
+        this.mdprefix = mdprefix;
     }
 
-    public String getSetName() {
-        return setName;
+    public Timestamp getLastpolldate() {
+        return lastpolldate;
     }
 
-    public void setSetName(String setName) {
-        this.setName = setName;
+    public void setLastpolldate(Timestamp lastpolldate) {
+        this.lastpolldate = lastpolldate;
     }
 
-    public String getPredicate() {
-        return predicate;
+    public String getDissType() {
+        return dissType;
     }
 
-    public void setPredicate(String predicate) {
-        this.predicate = predicate;
+    public void setDissType(String dissType) {
+        this.dissType = dissType;
     }
 }

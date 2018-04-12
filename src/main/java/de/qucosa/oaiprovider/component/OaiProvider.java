@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.endpoint.definitions;
+package de.qucosa.oaiprovider.component;
 
 import de.qucosa.fcrepo.component.AbstractEndpointDefinition;
 import de.qucosa.fcrepo.component.EndpointDefinition;

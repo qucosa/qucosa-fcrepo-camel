@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component;
+package de.qucosa.oaiprovider.component;
 
-import de.qucosa.fcrepo.component.builders.RecordXmlBuilder;
-import de.qucosa.fcrepo.component.mapper.DissTerms;
+import de.qucosa.oaiprovider.component.builders.RecordXmlBuilder;
+import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
-import de.qucosa.fcrepo.component.mapper.SetsConfig;
-import de.qucosa.fcrepo.component.oaiprovider.model.RecordTransport;
+import de.qucosa.oaiprovider.component.model.SetsConfig;
+import de.qucosa.oaiprovider.component.model.RecordTransport;
 import de.qucosa.fcrepo.component.transformers.DcDissTransformer;
 import de.qucosa.fcrepo.component.transformers.XMetaDissTransformer;
 import de.qucosa.fcrepo.component.utils.DateTimeConverter;
@@ -60,6 +60,7 @@ public class OaiProviderProcessor implements Processor {
         DocumentXmlUtils.resultXml(metsDoc);
         metsXml = new MetsXmlMapper(metsDoc, dt.getMapXmlNamespaces());
 
+        //TODO extract transformations to camel route
         buildDcObject(metsDoc);
         disseminations.add(dc);
 

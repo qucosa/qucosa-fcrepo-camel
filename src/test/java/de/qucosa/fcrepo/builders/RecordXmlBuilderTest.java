@@ -16,10 +16,10 @@
 
 package de.qucosa.fcrepo.builders;
 
-import de.qucosa.fcrepo.component.builders.RecordXmlBuilder;
-import de.qucosa.fcrepo.component.mapper.DissTerms;
+import de.qucosa.oaiprovider.component.builders.RecordXmlBuilder;
+import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
-import de.qucosa.fcrepo.component.mapper.SetsConfig;
+import de.qucosa.oaiprovider.component.model.SetsConfig;
 import de.qucosa.fcrepo.component.transformers.DcDissTransformer;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
 import org.junit.Ignore;

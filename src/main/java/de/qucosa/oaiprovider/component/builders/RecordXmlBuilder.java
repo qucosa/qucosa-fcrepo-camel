@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.builders;
+package de.qucosa.oaiprovider.component.builders;
 
-import de.qucosa.fcrepo.component.mapper.DissTerms;
-import de.qucosa.fcrepo.component.mapper.DissTerms.Term;
+import de.qucosa.oaiprovider.component.model.DissTerms;
+import de.qucosa.oaiprovider.component.model.DissTerms.Term;
 import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
-import de.qucosa.fcrepo.component.mapper.SetsConfig;
-import de.qucosa.fcrepo.component.mapper.SetsConfig.Set;
+import de.qucosa.oaiprovider.component.model.SetsConfig;
+import de.qucosa.oaiprovider.component.model.SetsConfig.Set;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

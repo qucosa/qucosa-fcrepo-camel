@@ -14,34 +14,30 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.oaiprovider.model;
+package de.qucosa.oaiprovider.component.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Record implements Serializable {
+public class Set implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("identifierId")
-    private Long identifierId;
+    @JsonProperty("setSpec")
+    private String setSpec;
 
-    @JsonProperty("format")
-    private Long format;
+    @JsonProperty("setName")
+    private String setName;
 
-    @JsonProperty("moddate")
-    private Date moddate;
-
-    @JsonProperty("xmldata")
-    private String xmldata;
+    @JsonProperty("predicate")
+    private String predicate;
 
     public Long getId() {
         return id;
@@ -51,35 +47,27 @@ public class Record implements Serializable {
         this.id = id;
     }
 
-    public Long getIdentifierId() {
-        return identifierId;
+    public String getSetSpec() {
+        return setSpec;
     }
 
-    public void setIdentifierId(Long identifierId) {
-        this.identifierId = identifierId;
+    public void setSetSpec(String setSpec) {
+        this.setSpec = setSpec;
     }
 
-    public Long getFormat() {
-        return format;
+    public String getSetName() {
+        return setName;
     }
 
-    public void setFormat(Long format) {
-        this.format = format;
+    public void setSetName(String setName) {
+        this.setName = setName;
     }
 
-    public Date getModdate() {
-        return moddate;
+    public String getPredicate() {
+        return predicate;
     }
 
-    public void setModdate(Date moddate) {
-        this.moddate = moddate;
-    }
-
-    public String getXmldata() {
-        return xmldata;
-    }
-
-    public void setXmldata(String xmldata) {
-        this.xmldata = xmldata;
+    public void setPredicate(String predicate) {
+        this.predicate = predicate;
     }
 }

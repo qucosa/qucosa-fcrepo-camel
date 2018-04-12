@@ -16,9 +16,10 @@
 
 package de.qucosa.fcrepo.component;
 
-import de.qucosa.fcrepo.component.mapper.DissTerms;
-import de.qucosa.fcrepo.component.mapper.SetsConfig;
+import de.qucosa.oaiprovider.component.model.DissTerms;
+import de.qucosa.oaiprovider.component.model.SetsConfig;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
+import de.qucosa.oaiprovider.component.OaiProviderProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;

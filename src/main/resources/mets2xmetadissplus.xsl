@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2017 Saxon State and University Library Dresden (SLUB)
+  ~ Copyright 2018 Saxon State and University Library Dresden (SLUB)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
   -->
 
 <stylesheet xmlns:dc="http://purl.org/dc/elements/1.1/"
-            xmlns="http://www.w3.org/1999/XSL/Transform"
             xmlns:ddb="http://www.d-nb.de/standards/ddb/"
             xmlns:pc="http://www.d-nb.de/standards/pc/"
             xmlns:mets="http://www.loc.gov/METS/"
@@ -29,9 +28,10 @@
             xmlns:xs="http://www.w3.org/2001/XMLSchema"
             xmlns:urn="http://www.d-nb.de/standards/urn/"
             xmlns:slub="http://slub-dresden.de/"
-            version="2.0"
             xmlns:xMetaDiss="http://www.d-nb.de/standards/xmetadissplus/"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.w3.org/1999/XSL/Transform"
+            version="2.0"
             xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd
                                     http://www.d-nb.de/standards/xmetadissplus/ http://files.dnb.de/standards/xmetadissplus/xmetadissplus.xsd
                                     http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods.xsd

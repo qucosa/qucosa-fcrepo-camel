@@ -1,49 +1,70 @@
+<!--
+  ~ Copyright 2018 Saxon State and University Library Dresden (SLUB)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 
 <mods xmlns="http://www.loc.gov/mods/v3">
-          <originInfo eventType="distribution">
-            <dateIssued encoding="iso8601" keyDate="yes">1995-06-21</dateIssued>
-            <edition>[Electronic ed.]</edition>
-          </originInfo>
-          <name xmlns:xlin="http://www.w3.org/1999/xlink" ID="CORP_B11AD185" displayLabel="mapping-hack-default-publisher" type="corporate" xlin:type="corporate"></name>
-          <extension>
-            <slub:info xmlns:slub="http://slub-dresden.de/">
-              <slub:corporation address="09107 Chemnitz" place="Chemnitz" ref="CORP_B11AD185">
+    <originInfo eventType="distribution">
+        <dateIssued encoding="iso8601" keyDate="yes">1995-06-21</dateIssued>
+        <edition>[Electronic ed.]</edition>
+    </originInfo>
+    <name xmlns:xlin="http://www.w3.org/1999/xlink" ID="CORP_B11AD185" displayLabel="mapping-hack-default-publisher"
+          type="corporate" xlin:type="corporate"></name>
+    <extension>
+        <slub:info xmlns:slub="http://slub-dresden.de/">
+            <slub:corporation address="09107 Chemnitz" place="Chemnitz" ref="CORP_B11AD185">
                 <slub:university>Universitätsbibliothek Chemnitz</slub:university>
-              </slub:corporation>
-              <slub:corporation place="Chemnitz" ref="CORP_75AFE15" type="other">
+            </slub:corporation>
+            <slub:corporation place="Chemnitz" ref="CORP_75AFE15" type="other">
                 <slub:section>Universitätsrechenzentrum</slub:section>
-              </slub:corporation>
-            </slub:info>
-          </extension>
-          <abstract lang="ger" type="summary">Im Vortrag werden die Funktionsprinzipien von PGP sowie
-verwendete Verfahren dargelegt.
-Ziel ist die Schaffung einer geeigneten Technologie im Universitaetsrechenzentrum
-zur Sicherung des Mailbetriebs.</abstract>
-          <classification authority="ddc">004</classification>
-          <classification authority="sswd">PGP</classification>
-          <classification authority="z">Public_Key_Encryption</classification>
-          <classification authority="z">Authentication</classification>
-          <identifier type="qucosa:urn">urn:nbn:de:bsz:ch1-199500110</identifier>
-          <name ID="CORP_75AFE15" displayLabel="mapping-hack-other" type="corporate">
-            <namePart>Technische Universität Chemnitz</namePart>
-            <role>
-              <roleTerm authority="marcrelator" authorityURI="http://id.loc.gov/vocabulary/relators" type="code" valueURI="http://id.loc.gov/vocabulary/relators/pbl">pbl</roleTerm>
-            </role>
-          </name>
-          <name ID="PERS_845607A6" type="personal">
-            <namePart type="given">Thomas</namePart>
-            <namePart type="family">Mueller</namePart>
-            <role>
-              <roleTerm authority="marcrelator" authorityURI="http://id.loc.gov/vocabulary/relators" type="code" valueURI="http://id.loc.gov/vocabulary/relators/aut">aut</roleTerm>
-            </role>
-          </name>
-          <language>
-            <languageTerm authority="iso639-2b" type="code">ger</languageTerm>
-          </language>
-          <physicalDescription>
-            <digitalOrigin>born digital</digitalOrigin>
-          </physicalDescription>
-          <titleInfo lang="ger" usage="primary">
-            <title>PGP und authentisierte Kommunikation mit Nutzern des URZ</title>
-          </titleInfo>
-        </mods>
+            </slub:corporation>
+        </slub:info>
+    </extension>
+    <abstract lang="ger" type="summary">Im Vortrag werden die Funktionsprinzipien von PGP sowie
+        verwendete Verfahren dargelegt.
+        Ziel ist die Schaffung einer geeigneten Technologie im Universitaetsrechenzentrum
+        zur Sicherung des Mailbetriebs.
+    </abstract>
+    <classification authority="ddc">004</classification>
+    <classification authority="sswd">PGP</classification>
+    <classification authority="z">Public_Key_Encryption</classification>
+    <classification authority="z">Authentication</classification>
+    <identifier type="qucosa:urn">urn:nbn:de:bsz:ch1-199500110</identifier>
+    <name ID="CORP_75AFE15" displayLabel="mapping-hack-other" type="corporate">
+        <namePart>Technische Universität Chemnitz</namePart>
+        <role>
+            <roleTerm authority="marcrelator" authorityURI="http://id.loc.gov/vocabulary/relators" type="code"
+                      valueURI="http://id.loc.gov/vocabulary/relators/pbl">pbl
+            </roleTerm>
+        </role>
+    </name>
+    <name ID="PERS_845607A6" type="personal">
+        <namePart type="given">Thomas</namePart>
+        <namePart type="family">Mueller</namePart>
+        <role>
+            <roleTerm authority="marcrelator" authorityURI="http://id.loc.gov/vocabulary/relators" type="code"
+                      valueURI="http://id.loc.gov/vocabulary/relators/aut">aut
+            </roleTerm>
+        </role>
+    </name>
+    <language>
+        <languageTerm authority="iso639-2b" type="code">ger</languageTerm>
+    </language>
+    <physicalDescription>
+        <digitalOrigin>born digital</digitalOrigin>
+    </physicalDescription>
+    <titleInfo lang="ger" usage="primary">
+        <title>PGP und authentisierte Kommunikation mit Nutzern des URZ</title>
+    </titleInfo>
+</mods>

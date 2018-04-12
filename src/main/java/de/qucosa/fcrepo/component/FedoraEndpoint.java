@@ -298,7 +298,7 @@ public class FedoraEndpoint extends DefaultEndpoint {
 
     @SuppressWarnings("rawtypes")
     private EndpointDefInterface endpointDef() throws Exception {
-        Class clazz = Class.forName("de.qucosa.fcrepo.component.endpoint.defenitions." + getConfiguration().getEndpointDef());
+        Class clazz = Class.forName("de.qucosa.fcrepo.component.endpoint.definitions." + getConfiguration().getEndpointDef());
         return (EndpointDefInterface) clazz.newInstance();
     }
 

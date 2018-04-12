@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.endpoint.defenitions;
+package de.qucosa.fcrepo.component.endpoint.definitions;
 
 import de.qucosa.fcrepo.component.EndpointDefAbstract;
 import de.qucosa.fcrepo.component.EndpointDefInterface;

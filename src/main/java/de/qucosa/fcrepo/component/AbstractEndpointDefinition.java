@@ -18,7 +18,7 @@ package de.qucosa.fcrepo.component;
 
 import org.apache.camel.Processor;
 
-public abstract class EndpointDefAbstract implements EndpointDefInterface {
+public abstract class AbstractEndpointDefinition implements EndpointDefinition {
     protected FedoraEndpoint endpoint;
 
     protected Processor processor;

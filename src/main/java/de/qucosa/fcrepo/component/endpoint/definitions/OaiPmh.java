@@ -17,8 +17,8 @@
 package de.qucosa.fcrepo.component.endpoint.definitions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.qucosa.fcrepo.component.EndpointDefAbstract;
-import de.qucosa.fcrepo.component.EndpointDefInterface;
+import de.qucosa.fcrepo.component.AbstractEndpointDefinition;
+import de.qucosa.fcrepo.component.EndpointDefinition;
 import de.qucosa.fcrepo.component.FedoraEndpoint;
 import de.qucosa.fcrepo.component.xml.utils.DocumentXmlUtils;
 import org.apache.camel.Consumer;
@@ -41,7 +41,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class OaiPmh extends EndpointDefAbstract implements EndpointDefInterface {
+public class OaiPmh extends AbstractEndpointDefinition implements EndpointDefinition {
     final Set<String> identifiers = new HashSet<>();
 
     @Override

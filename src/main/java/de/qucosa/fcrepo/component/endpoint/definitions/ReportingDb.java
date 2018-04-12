@@ -16,14 +16,14 @@
 
 package de.qucosa.fcrepo.component.endpoint.definitions;
 
-import de.qucosa.fcrepo.component.EndpointDefAbstract;
-import de.qucosa.fcrepo.component.EndpointDefInterface;
+import de.qucosa.fcrepo.component.AbstractEndpointDefinition;
+import de.qucosa.fcrepo.component.EndpointDefinition;
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultProducer;
 
-public class ReportingDb extends EndpointDefAbstract implements EndpointDefInterface {
+public class ReportingDb extends AbstractEndpointDefinition implements EndpointDefinition {
 
     @Override
     public Consumer getConsumer() {

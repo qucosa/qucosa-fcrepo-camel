@@ -97,7 +97,7 @@ public class FedoraEndpoint extends DefaultEndpoint {
     public Consumer createConsumer(Processor processor) throws Exception {
         try {
             Method method = endpointDef().getClass().getMethod("getConsumer");
-            EndpointDefInterface endpointDef = endpointDef();
+            EndpointDefinition endpointDef = endpointDef();
             endpointDef.setEndpoint(this);
             endpointDef.setProcessor(processor);
             return (method.getReturnType() != null) ? endpointDef.getConsumer() : null;
@@ -113,7 +113,7 @@ public class FedoraEndpoint extends DefaultEndpoint {
         Method method = endpointDef().getClass().getMethod("getProducer");
 
         try {
-            EndpointDefInterface endpointDef = endpointDef();
+            EndpointDefinition endpointDef = endpointDef();
             endpointDef.setEndpoint(this);
             return (method.getReturnType() != null) ? endpointDef.getProducer() : null;
         } catch (NoSuchMethodException | SecurityException e) {
@@ -297,9 +297,9 @@ public class FedoraEndpoint extends DefaultEndpoint {
     }
 
     @SuppressWarnings("rawtypes")
-    private EndpointDefInterface endpointDef() throws Exception {
+    private EndpointDefinition endpointDef() throws Exception {
         Class clazz = Class.forName("de.qucosa.fcrepo.component.endpoint.definitions." + getConfiguration().getEndpointDef());
-        return (EndpointDefInterface) clazz.newInstance();
+        return (EndpointDefinition) clazz.newInstance();
     }
 
     private void consumeResponseEntity(HttpResponse response) {

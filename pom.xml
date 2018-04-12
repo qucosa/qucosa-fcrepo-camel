@@ -245,6 +245,13 @@
             <artifactId>xercesImpl</artifactId>
             <version>${xercesImpl.version}</version>
         </dependency>
+        
+        <!-- XSLT 2.0 support -->
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>9.8.0-4</version>
+        </dependency>
 
     </dependencies>
 

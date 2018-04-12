@@ -42,7 +42,7 @@ public class Routes extends RouteBuilder {
 //            .autoStartup(false)
                 .startupOrder(1)
                 .process(new OaiProviderProcessor(dt, sets))
-                .to("fcrepo:fedora:OaiProvider");
+                .to("oaiprovider:update");
 
         from("direct:reportingDB")
                 .id("reportingDBProcess")

@@ -25,7 +25,7 @@ import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultProducer;
 import org.apache.http.impl.client.CloseableHttpClient;
 
-public class IdentifireQue extends EndpointDefAbstract implements EndpointDefInterface {
+public class METS extends EndpointDefAbstract implements EndpointDefInterface {
     @Override
     public Consumer getConsumer() {
         return null;

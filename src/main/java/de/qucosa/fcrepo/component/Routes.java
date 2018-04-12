@@ -63,7 +63,7 @@ public class Routes extends RouteBuilder {
 //            .autoStartup(false)
                 .startupOrder(4)
                 .resequence().body()
-                .to("fcrepo:fedora:IdentifireQue?shema=http&host=192.168.42.28&port=8080")
+                .to("fcrepo:fedora:METS?shema=http&host=192.168.42.28&port=8080")
                 .filter().body().multicast()
                 .to("direct:oaiprovider", "direct:reportingDB", "direct:qucosaelastic")
                 .end();

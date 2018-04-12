@@ -48,7 +48,6 @@ public class Routes extends RouteBuilder {
                 .id("reportingDBProcess")
 //            .autoStartup(false)
                 .startupOrder(2)
-                .process(new ReportingDbProcessor())
                 .to("fcrepo:fedora:ReportingDb");
 
         // @todo replace the mock endpoint with elastic serach endpoint
@@ -56,7 +55,6 @@ public class Routes extends RouteBuilder {
                 .id("elasticSearchProcess")
 //            .autoStartup(false)
                 .startupOrder(3)
-                .process(new QucosaElasticSearchProcessor())
                 .to("mock:test");
 
         from("direct:aggregateIdents")

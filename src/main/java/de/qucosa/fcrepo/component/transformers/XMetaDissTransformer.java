@@ -45,16 +45,7 @@ public class XMetaDissTransformer {
 
     private boolean transferUrlPidencode;
 
-    @SuppressWarnings({"serial", "unused"})
-    private Map<String, String> agentNameSubstitutions = new HashMap<String, String>() {
-        {
-            put("ubc", "monarch");
-        }
-
-        {
-            put("ubl", "ul");
-        }
-    };
+    private Map<String, String> agentNameSubstitutions;
 
     public XMetaDissTransformer(String transferUrlPattern, String agentNameSubstitutions, boolean transferUrlPidencode) {
         this.transferUrlPattern = transferUrlPattern;

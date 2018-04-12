@@ -42,24 +42,13 @@ public class Main extends RouteBuilder {
                 .process(new OaiProviderProcessor(dt, sets))
                 .to("oaiprovider:update");
 
-        from("direct:reportingDB")
-                .id("reportingDBProcess")
-                .startupOrder(2)
-                .to("fcrepo:fedora:ReportingDb");
-
-        // @todo replace the mock endpoint with elastic serach endpoint
-        from("direct:qucosaelastic")
-                .id("elasticSearchProcess")
-                .startupOrder(3)
-                .to("mock:test");
-
         from("direct:aggregateIdents")
                 .id("cleanIdentifires")
                 .startupOrder(4)
                 .resequence().body()
                 .to("fcrepo:fedora:METS?shema=http&host=192.168.42.28&port=8080")
                 .filter().body().multicast()
-                .to("direct:oaiprovider", "direct:reportingDB", "direct:qucosaelastic")
+                .to("direct:oaiprovider")
                 .end();
 
         // test dev host sdvcmr-app03.slub-dresden.de
@@ -84,8 +73,6 @@ public class Main extends RouteBuilder {
                 })
                 .to("direct:aggregateIdents");
 
-
-        // .to("elasticsearch://elasticsearch?ip=192.168.42.27&port=9300&operation=INDEX&indexName=fedora&indexType=mods")
     }
 
 }

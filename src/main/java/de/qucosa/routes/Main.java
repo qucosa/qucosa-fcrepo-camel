@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component;
+package de.qucosa.routes;
 
+import de.qucosa.oaiprovider.component.OaiProviderProcessor;
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
 import de.qucosa.utils.DocumentXmlUtils;
-import de.qucosa.oaiprovider.component.OaiProviderProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
@@ -29,9 +29,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import java.io.ByteArrayInputStream;
 
-;
+public class Main extends RouteBuilder {
 
-public class Routes extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         DissTerms dt = new DissTerms();

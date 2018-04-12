@@ -20,12 +20,10 @@
        xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	                       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+                           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
 
-    <context:property-placeholder location="file:///home/opt/qucosa-fcrepo-camel/config/application.properties" />
-    
-    <bean id="routes" class="de.qucosa.fcrepo.component.Routes"/>
+    <bean id="routes" class="de.qucosa.routes.Main"/>
 
     <bean id="fedoraJmsConnFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="tcp://${fedora3.jms.host}:${fedora3.jms.port}"/>

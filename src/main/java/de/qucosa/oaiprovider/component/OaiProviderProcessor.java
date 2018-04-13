@@ -27,12 +27,12 @@ import de.qucosa.utils.DateTimeConverter;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.fusesource.hawtbuf.ByteArrayInputStream;
 import org.w3c.dom.Document;
 
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.ByteArrayInputStream;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -27,14 +27,11 @@ public class Main extends RouteBuilder {
 
     @Override
     public void configure() {
-        DissTerms dt = new DissTerms();
-        SetsConfig sets = new SetsConfig();
-
         from("direct:oaiprovider")
                 .id("oaiProviderProcess")
                 .startupOrder(1)
-                .process(new OaiProviderProcessor(dt, sets))
-                .to("oaiprovider:update");
+                .process(new OaiProviderProcessor())
+                .to("fcrepo:fedora:OaiProvider");
 
         long updateDelay = TimeUnit.SECONDS.toMillis(2);
 

@@ -48,9 +48,9 @@ public class OaiProviderProcessor implements Processor {
     private SetsConfig sets = null;
     private MetsXmlMapper metsXml = null;
 
-    public OaiProviderProcessor(DissTerms dt, SetsConfig sets) {
-        this.dt = dt;
-        this.sets = sets;
+    public OaiProviderProcessor() {
+        this.dt = new DissTerms();
+        this.sets = new SetsConfig();
     }
 
     @Override

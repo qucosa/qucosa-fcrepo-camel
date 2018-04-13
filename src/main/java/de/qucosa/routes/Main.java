@@ -17,13 +17,15 @@
 package de.qucosa.routes;
 
 import de.qucosa.oaiprovider.component.OaiProviderProcessor;
-import de.qucosa.oaiprovider.component.model.DissTerms;
-import de.qucosa.oaiprovider.component.model.SetsConfig;
+import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
 
 import java.util.concurrent.TimeUnit;
 
 public class Main extends RouteBuilder {
+
+    @PropertyInject("update.delay")
+    long updateDelay;
 
     @Override
     public void configure() {
@@ -33,21 +35,14 @@ public class Main extends RouteBuilder {
                 .process(new OaiProviderProcessor())
                 .to("fcrepo:fedora:OaiProvider");
 
-        long updateDelay = TimeUnit.SECONDS.toMillis(2);
-
         from("direct:update")
                 .id("update-message-route")
                 .startupOrder(4)
                 .resequence(body())
-                .timeout(updateDelay)
+                .timeout(TimeUnit.SECONDS.toMillis(updateDelay))
                 .to("fcrepo:fedora:METS?shema=http&host=${fedora.host}&port=${fedora.port}")
                 .to("direct:oaiprovider");
 
-        from("fcrepo:fedora:OaiPmh?shema=http&host=${fedora.host}&port=${fedora.port}")
-                .id("fedoraOai")
-                .startupOrder(5)
-                .split().body()
-                .to("direct:aggregateIdents");
 
         from("activemq:topic:fedora.apim.update")
                 .id("ActiveMQ-updates-route")

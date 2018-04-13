@@ -39,7 +39,7 @@ import java.util.Set;
 //import de.qucosa.dissemination.epicur.EpicurDissMapper;
 
 public class OaiProviderProcessor implements Processor {
-    private static final String RECORD_TEMPLATE_FILE = "record.xml";
+    private static final String RECORD_TEMPLATE_FILE = "oaiprovider/record.xml";
     private RecordTransport xmetadiss = new RecordTransport();
     private RecordTransport dc = new RecordTransport();
     private RecordTransport epicur = new RecordTransport();
@@ -77,7 +77,7 @@ public class OaiProviderProcessor implements Processor {
     private RecordTransport buildXMetaDissplusObject(Document metsDoc) throws Exception {
         XMetaDissTransformer transformer = new XMetaDissTransformer("http://##AGENT##.example.com/##PID##/content.zip", "", true);
         Document result = transformer.transformXmetaDissplus(metsDoc,
-                new StreamSource(getClass().getClassLoader().getResource("mets2xmetadissplus.xsl").getPath()));
+                new StreamSource(getClass().getClassLoader().getResource("xslt/mets2xmetadissplus.xsl").getPath()));
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
         DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "xmetadissplus"));
 
@@ -93,7 +93,7 @@ public class OaiProviderProcessor implements Processor {
     @SuppressWarnings("unused")
     private RecordTransport buildDcObject(Document metsDoc) throws Exception {
         DcDissTransformer transformer = new DcDissTransformer(
-                "/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip",
+                "/xslt/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip",
                 "",
                 true);
         Document result = transformer.transformDcDiss(metsDoc);

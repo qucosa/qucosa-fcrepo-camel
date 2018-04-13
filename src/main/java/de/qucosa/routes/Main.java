@@ -22,6 +22,7 @@ import de.qucosa.oaiprovider.component.model.SetsConfig;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
 import org.w3c.dom.Document;
 
@@ -46,13 +47,12 @@ public class Main extends RouteBuilder {
                 .id("cleanIdentifires")
                 .startupOrder(4)
                 .resequence().body()
-                .to("fcrepo:fedora:METS?shema=http&host=192.168.42.28&port=8080")
+                .to("fcrepo:fedora:METS?shema=http&host=${fedora.host}&port=${fedora.port}")
                 .filter().body().multicast()
                 .to("direct:oaiprovider")
                 .end();
 
-        // test dev host sdvcmr-app03.slub-dresden.de
-        from("fcrepo:fedora:OaiPmh?shema=http&host=192.168.42.28&port=8080")
+        from("fcrepo:fedora:OaiPmh?shema=http&host=${fedora.host}&port=${fedora.port}")
                 .id("fedoraOai")
                 .startupOrder(5)
                 .split().body()

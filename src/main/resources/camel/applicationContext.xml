@@ -17,16 +17,19 @@
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:application.properties"/>
 
     <bean id="routes" class="de.qucosa.routes.Main"/>
 
     <bean id="fedoraJmsConnFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://${fedora3.jms.host}:${fedora3.jms.port}"/>
+        <property name="brokerURL" value="tcp://${activemq.host}:${activemq.port}"/>
     </bean>
 
     <bean id="fedoraJmsPooledConnFactory" class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start"
@@ -39,7 +42,8 @@
         <property name="connectionFactory" ref="fedoraJmsPooledConnFactory"/>
     </bean>
 
-    <camel:camelContext trace="true" id="fcrepo" autoStartup="false">
+    <camel:camelContext trace="false" id="fcrepo" autoStartup="${routes.autoStartup}">
+        <camel:propertyPlaceholder id="properties" location="classpath:application.properties"/>
         <camel:routeBuilder ref="routes"/>
     </camel:camelContext>
 

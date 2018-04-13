@@ -29,24 +29,22 @@ public class Main extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:oaiprovider")
-                .id("oaiProviderProcess")
-                .startupOrder(1)
-                .process(new OaiProviderProcessor())
-                .to("fcrepo:fedora:OaiProvider");
+//        from("direct:oaiprovider")
+//                .id("oaiProviderProcess")
+//                .startupOrder(1)
+//                .process(new OaiProviderProcessor())
+//                .to("fcrepo:fedora:OaiProvider");
 
         from("direct:update")
                 .id("update-message-route")
-                .startupOrder(4)
-                .resequence(body())
-                .timeout(TimeUnit.SECONDS.toMillis(updateDelay))
-                .to("fcrepo:fedora:METS?shema=http&host=${fedora.host}&port=${fedora.port}")
-                .to("direct:oaiprovider");
+                .resequence(body()).timeout(TimeUnit.SECONDS.toMillis(updateDelay))
+                .log("Perform updates for ${body}");
+//                .to("fcrepo:fedora:METS?shema=http&host=${fedora.host}&port=${fedora.port}")
+//                .to("direct:oaiprovider");
 
 
         from("activemq:topic:fedora.apim.update")
                 .id("ActiveMQ-updates-route")
-                .startupOrder(6)
                 .transform(xpath("/atom:entry/atom:summary[@type='text']/text()")
                         .namespace("atom", "http://www.w3.org/2005/Atom"))
                 .to("direct:update");

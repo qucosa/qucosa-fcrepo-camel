@@ -19,16 +19,9 @@ package de.qucosa.routes;
 import de.qucosa.oaiprovider.component.OaiProviderProcessor;
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
-import de.qucosa.utils.DocumentXmlUtils;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
-import org.w3c.dom.Document;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import java.io.ByteArrayInputStream;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends RouteBuilder {
 
@@ -43,14 +36,15 @@ public class Main extends RouteBuilder {
                 .process(new OaiProviderProcessor(dt, sets))
                 .to("oaiprovider:update");
 
-        from("direct:aggregateIdents")
-                .id("cleanIdentifires")
+        long updateDelay = TimeUnit.SECONDS.toMillis(2);
+
+        from("direct:update")
+                .id("update-message-route")
                 .startupOrder(4)
-                .resequence().body()
+                .resequence(body())
+                .timeout(updateDelay)
                 .to("fcrepo:fedora:METS?shema=http&host=${fedora.host}&port=${fedora.port}")
-                .filter().body().multicast()
-                .to("direct:oaiprovider")
-                .end();
+                .to("direct:oaiprovider");
 
         from("fcrepo:fedora:OaiPmh?shema=http&host=${fedora.host}&port=${fedora.port}")
                 .id("fedoraOai")
@@ -59,19 +53,11 @@ public class Main extends RouteBuilder {
                 .to("direct:aggregateIdents");
 
         from("activemq:topic:fedora.apim.update")
-                .id("fedoraJms")
+                .id("ActiveMQ-updates-route")
                 .startupOrder(6)
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        String msg = (String) exchange.getIn().getBody();
-                        Document document = DocumentXmlUtils.document(new ByteArrayInputStream(msg.getBytes("UTF-8")), false);
-                        XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
-                        String id = (String) xPath.compile("//summary[@type=\"text\"]/text()").evaluate(document, XPathConstants.STRING);
-                        exchange.getIn().setBody(id);
-                    }
-                })
-                .to("direct:aggregateIdents");
+                .transform(xpath("/atom:entry/atom:summary[@type='text']/text()")
+                        .namespace("atom", "http://www.w3.org/2005/Atom"))
+                .to("direct:update");
 
     }
 

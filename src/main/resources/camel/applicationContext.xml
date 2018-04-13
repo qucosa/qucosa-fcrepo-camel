@@ -32,14 +32,8 @@
         <property name="brokerURL" value="tcp://${activemq.host}:${activemq.port}"/>
     </bean>
 
-    <bean id="fedoraJmsPooledConnFactory" class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start"
-          destroy-method="stop" lazy-init="true">
-        <property name="maxConnections" value="5"/>
-        <property name="connectionFactory" ref="fedoraJmsConnFactory"/>
-    </bean>
-
     <bean id="fedoraJms" class="org.springframework.jms.core.JmsTemplate">
-        <property name="connectionFactory" ref="fedoraJmsPooledConnFactory"/>
+        <property name="connectionFactory" ref="fedoraJmsConnFactory"/>
     </bean>
 
     <camel:camelContext trace="false" id="qucosa-fcrepo-camel" autoStartup="${routes.autoStartup}">

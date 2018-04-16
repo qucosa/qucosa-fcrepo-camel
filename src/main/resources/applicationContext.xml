@@ -18,13 +18,25 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:camel="http://camel.apache.org/schema/spring"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-
-    <context:property-placeholder location="classpath:application.properties"/>
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+    
+    <!-- Spring properties -->
+    <bean id="appProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="singleton" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:*.properties</value>
+                <value>file:${home.dir}/config/*.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <context:property-placeholder properties-ref="appProperties" ignore-unresolvable="true" ignore-resource-not-found="true" />
 
     <bean id="routes" class="de.qucosa.routes.Main"/>
 
@@ -35,9 +47,18 @@
     <bean id="fedoraJms" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="fedoraJmsConnFactory"/>
     </bean>
+    
+    <!-- Camel properties -->
+    <bean id="properties" class="org.apache.camel.component.properties.PropertiesComponent">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+                <value>file:${home.dir}/config/application.properties</value>
+            </list>
+        </property>
+    </bean>
 
     <camel:camelContext trace="false" id="qucosa-fcrepo-camel" autoStartup="${routes.autoStartup}">
-        <camel:propertyPlaceholder id="properties" location="classpath:application.properties"/>
         <camel:routeBuilder ref="routes"/>
     </camel:camelContext>
 

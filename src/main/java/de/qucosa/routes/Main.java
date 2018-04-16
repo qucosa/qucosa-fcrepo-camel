@@ -16,11 +16,10 @@
 
 package de.qucosa.routes;
 
-import de.qucosa.oaiprovider.component.OaiProviderProcessor;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
-
-import java.util.concurrent.TimeUnit;
 
 public class Main extends RouteBuilder {
 

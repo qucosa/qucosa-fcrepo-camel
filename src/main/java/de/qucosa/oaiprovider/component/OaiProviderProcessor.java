@@ -27,19 +27,19 @@ import de.qucosa.utils.DateTimeConverter;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.fusesource.hawtbuf.ByteArrayInputStream;
 import org.w3c.dom.Document;
 
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
+import java.io.ByteArrayInputStream;
 import java.util.HashSet;
 import java.util.Set;
 
 //import de.qucosa.dissemination.epicur.EpicurDissMapper;
 
 public class OaiProviderProcessor implements Processor {
-    private static final String RECORD_TEMPLATE_FILE = "record.xml";
+    private static final String RECORD_TEMPLATE_FILE = "oaiprovider/record.xml";
     private RecordTransport xmetadiss = new RecordTransport();
     private RecordTransport dc = new RecordTransport();
     private RecordTransport epicur = new RecordTransport();
@@ -48,9 +48,9 @@ public class OaiProviderProcessor implements Processor {
     private SetsConfig sets = null;
     private MetsXmlMapper metsXml = null;
 
-    public OaiProviderProcessor(DissTerms dt, SetsConfig sets) {
-        this.dt = dt;
-        this.sets = sets;
+    public OaiProviderProcessor() {
+        this.dt = new DissTerms();
+        this.sets = new SetsConfig();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class OaiProviderProcessor implements Processor {
     private RecordTransport buildXMetaDissplusObject(Document metsDoc) throws Exception {
         XMetaDissTransformer transformer = new XMetaDissTransformer("http://##AGENT##.example.com/##PID##/content.zip", "", true);
         Document result = transformer.transformXmetaDissplus(metsDoc,
-                new StreamSource(getClass().getClassLoader().getResource("mets2xmetadissplus.xsl").getPath()));
+                new StreamSource(getClass().getClassLoader().getResource("xslt/mets2xmetadissplus.xsl").getPath()));
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
         DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "xmetadissplus"));
 
@@ -93,7 +93,7 @@ public class OaiProviderProcessor implements Processor {
     @SuppressWarnings("unused")
     private RecordTransport buildDcObject(Document metsDoc) throws Exception {
         DcDissTransformer transformer = new DcDissTransformer(
-                "/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip",
+                "/xslt/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip",
                 "",
                 true);
         Document result = transformer.transformDcDiss(metsDoc);

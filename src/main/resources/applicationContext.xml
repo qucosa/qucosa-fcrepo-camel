@@ -1,65 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright 2018 Saxon State and University Library Dresden (SLUB)
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
+<!-- ~ Copyright 2018 Saxon State and University Library Dresden (SLUB) ~ 
+    ~ Licensed under the Apache License, Version 2.0 (the "License"); ~ you may 
+    not use this file except in compliance with the License. ~ You may obtain 
+    a copy of the License at ~ ~ http://www.apache.org/licenses/LICENSE-2.0 ~ 
+    ~ Unless required by applicable law or agreed to in writing, software ~ distributed 
+    under the License is distributed on an "AS IS" BASIS, ~ WITHOUT WARRANTIES 
+    OR CONDITIONS OF ANY KIND, either express or implied. ~ See the License for 
+    the specific language governing permissions and ~ limitations under the License. -->
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:camel="http://camel.apache.org/schema/spring"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-                           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+    xmlns:camel="http://camel.apache.org/schema/spring" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
     
     <!-- Spring properties -->
-    <bean id="appProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="singleton" value="true"/>
+    <bean id="appProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
                 <value>classpath:*.properties</value>
                 <value>file:${home.dir}/config/*.properties</value>
             </list>
         </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
     </bean>
-    
-    <context:property-placeholder properties-ref="appProperties" ignore-unresolvable="true" ignore-resource-not-found="true" />
 
-    <bean id="routes" class="de.qucosa.routes.Main"/>
+    <bean id="routes" class="de.qucosa.routes.Main" />
 
     <bean id="fedoraJmsConnFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://${activemq.host}:${activemq.port}"/>
+        <property name="brokerURL" value="${activemq.protocol}://${activemq.host}:${activemq.port}" />
     </bean>
 
     <bean id="fedoraJms" class="org.springframework.jms.core.JmsTemplate">
-        <property name="connectionFactory" ref="fedoraJmsConnFactory"/>
-    </bean>
-    
-    <!-- Camel properties -->
-    <bean id="properties" class="org.apache.camel.component.properties.PropertiesComponent">
-        <property name="locations">
-            <list>
-                <value>classpath:application.properties</value>
-                <value>file:${home.dir}/config/application.properties</value>
-            </list>
-        </property>
+        <property name="connectionFactory" ref="fedoraJmsConnFactory" />
     </bean>
 
-    <camel:camelContext trace="false" id="qucosa-fcrepo-camel" autoStartup="${routes.autoStartup}">
-        <camel:routeBuilder ref="routes"/>
+    <bean id="properties" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer" parent="appProperties"/>
+    
+    <camel:camelContext trace="false" id="qucosa-fcrepo-camel" autoStartup="true">
+        <camel:routeBuilder ref="routes" />
     </camel:camelContext>
 
 </beans>

@@ -18,25 +18,48 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:camel="http://camel.apache.org/schema/spring"
        xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <context:property-placeholder location="classpath:application.properties"/>
+    <!--
+        Configure application properties allowing system properties override.
+        We cannot use <context:property-placeholder> syntax here, because Camel property
+        bridging mechanism demands a bean ID.
+         -->
+    <bean id="appProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="home.dir">#{contextParameters['home.dir']}</prop>
+            </props>
+        </property>
+        <property name="locations">
+            <list>
+                <value>classpath:*.properties</value>
+                <value>file:${home.dir}/config/*.properties</value>
+            </list>
+        </property>
+    </bean>
 
-    <bean id="routes" class="de.qucosa.routes.Main"/>
+    <!-- Bridge Spring properties to Camel -->
+    <bean id="properties" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer"
+          parent="appProperties"/>
 
+    <!-- Fedora ActiveMQ connection configuration -->
     <bean id="fedoraJmsConnFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://${activemq.host}:${activemq.port}"/>
+        <property name="brokerURL" value="${activemq.protocol}://${activemq.host}:${activemq.port}"/>
     </bean>
 
     <bean id="fedoraJms" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="fedoraJmsConnFactory"/>
     </bean>
 
-    <camel:camelContext trace="false" id="qucosa-fcrepo-camel" autoStartup="${routes.autoStartup}">
-        <camel:propertyPlaceholder id="properties" location="classpath:application.properties"/>
+    <!-- Camel context configuration -->
+    <bean id="routes" class="de.qucosa.routes.Main"/>
+
+    <camel:camelContext trace="false" id="qucosa-fcrepo-camel" autoStartup="true">
         <camel:routeBuilder ref="routes"/>
     </camel:camelContext>
 

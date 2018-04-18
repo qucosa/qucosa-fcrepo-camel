@@ -16,6 +16,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.qucosa</groupId>
     <artifactId>qucosa-fcrepo-camel</artifactId>
@@ -37,6 +38,9 @@
         <activemq-camel.version>5.15.3</activemq-camel.version>
         <junit.version>4.12</junit.version>
         <xercesImpl.version>2.8.0</xercesImpl.version>
+
+        <!-- Spring version aligned with Camel Spring dependency -->
+        <spring.version>4.3.12.RELEASE</spring.version>
     </properties>
 
     <dependencies>
@@ -79,6 +83,13 @@
             <version>${activemq-camel.version}</version>
         </dependency>
 
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
         <!-- Provided by application server -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -99,6 +110,13 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-test</artifactId>
             <version>${camel.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -141,7 +159,7 @@
             <artifactId>xercesImpl</artifactId>
             <version>${xercesImpl.version}</version>
         </dependency>
-        
+
         <!-- XSLT 2.0 support -->
         <dependency>
             <groupId>net.sf.saxon</groupId>

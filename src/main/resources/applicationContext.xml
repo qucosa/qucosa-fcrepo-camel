@@ -21,22 +21,33 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <!-- Spring properties -->
+    <!--
+        Configure application properties allowing system properties override.
+        We cannot use <context:property-placeholder> syntax here, because Camel property
+        bridging mechanism demands a bean ID.
+         -->
     <bean id="appProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="home.dir">#{contextParameters['home.dir']}</prop>
+            </props>
+        </property>
         <property name="locations">
             <list>
                 <value>classpath:*.properties</value>
                 <value>file:${home.dir}/config/*.properties</value>
             </list>
         </property>
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
     </bean>
 
     <!-- Bridge Spring properties to Camel -->
-    <bean id="properties" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer" parent="appProperties"/>
+    <bean id="properties" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer"
+          parent="appProperties"/>
 
     <!-- Fedora ActiveMQ connection configuration -->
-
     <bean id="fedoraJmsConnFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="${activemq.protocol}://${activemq.host}:${activemq.port}"/>
     </bean>
@@ -45,12 +56,11 @@
         <property name="connectionFactory" ref="fedoraJmsConnFactory"/>
     </bean>
 
-    <!-- Camel Context configuration -->
-
+    <!-- Camel context configuration -->
     <bean id="routes" class="de.qucosa.routes.Main"/>
 
     <camel:camelContext trace="false" id="qucosa-fcrepo-camel" autoStartup="true">
-        <camel:routeBuilder  ref="routes"/>
+        <camel:routeBuilder ref="routes"/>
     </camel:camelContext>
 
 </beans>

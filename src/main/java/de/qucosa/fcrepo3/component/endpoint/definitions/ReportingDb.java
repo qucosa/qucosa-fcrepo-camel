@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.endpoint.definitions;
+package de.qucosa.fcrepo3.component.endpoint.definitions;
 
 import de.qucosa.endpoint.AbstractEndpointDefinition;
 import de.qucosa.endpoint.EndpointDefinition;
-import de.qucosa.fcrepo.component.FedoraEndpoint;
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultProducer;
-import org.apache.http.impl.client.CloseableHttpClient;
 
-public class METS extends AbstractEndpointDefinition implements EndpointDefinition {
+public class ReportingDb extends AbstractEndpointDefinition implements EndpointDefinition {
+
     @Override
     public Consumer getConsumer() {
         return null;
@@ -34,13 +33,10 @@ public class METS extends AbstractEndpointDefinition implements EndpointDefiniti
     @Override
     public Producer getProducer() {
         return new DefaultProducer(endpoint) {
+
             @Override
             public void process(Exchange exchange) throws Exception {
-                CloseableHttpClient fedoraClient = endpoint.fedoraClient();
-                String pid = exchange.getIn().getBody().toString();
-                String metsXml = endpoint.loadFromFedora(FedoraEndpoint.METS_URL, endpoint.getShema(), endpoint.getHost(), endpoint.getPort(), pid);
-                exchange.getIn().setBody(metsXml);
-                fedoraClient.close();
+//                System.out.println("ReportingDB: " + exchange.getIn().getBody());
             }
         };
     }

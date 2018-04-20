@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.endpoint.definitions;
+package de.qucosa.fcrepo3.component.endpoint.definitions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.qucosa.endpoint.AbstractEndpointDefinition;
 import de.qucosa.endpoint.EndpointDefinition;
-import de.qucosa.fcrepo.component.FedoraEndpoint;
+import de.qucosa.fcrepo3.component.FedoraEndpoint;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;

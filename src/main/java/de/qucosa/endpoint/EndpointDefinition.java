@@ -16,10 +16,11 @@
 
 package de.qucosa.endpoint;
 
-import de.qucosa.fcrepo.component.FedoraEndpoint;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
+
+import de.qucosa.fcrepo3.component.FedoraEndpoint;
 
 public interface EndpointDefinition {
     public void setEndpoint(FedoraEndpoint endpoint);

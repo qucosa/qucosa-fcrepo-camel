@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component;
+package de.qucosa.fcrepo3.component;
 
 import de.qucosa.endpoint.EndpointDefinition;
 import org.apache.camel.Component;

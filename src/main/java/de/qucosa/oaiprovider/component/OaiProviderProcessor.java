@@ -16,9 +16,9 @@
 
 package de.qucosa.oaiprovider.component;
 
+import de.qucosa.fcrepo3.component.mapper.MetsXmlMapper;
 import de.qucosa.oaiprovider.component.builders.RecordXmlBuilder;
 import de.qucosa.oaiprovider.component.model.DissTerms;
-import de.qucosa.fcrepo.component.mapper.MetsXmlMapper;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
 import de.qucosa.oaiprovider.component.model.RecordTransport;
 import de.qucosa.transformers.DcDissTransformer;

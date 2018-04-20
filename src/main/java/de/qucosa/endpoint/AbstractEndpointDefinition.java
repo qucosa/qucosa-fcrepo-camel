@@ -16,8 +16,9 @@
 
 package de.qucosa.endpoint;
 
-import de.qucosa.fcrepo.component.FedoraEndpoint;
 import org.apache.camel.Processor;
+
+import de.qucosa.fcrepo3.component.FedoraEndpoint;
 
 public abstract class AbstractEndpointDefinition implements EndpointDefinition {
     protected FedoraEndpoint endpoint;

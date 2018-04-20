@@ -4,16 +4,12 @@ import org.apache.camel.Component;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
-import org.apache.camel.impl.DefaultEndpoint;
-import org.apache.camel.spi.UriParam;
 
-public class METSEndpoint extends DefaultEndpoint {
-    @UriParam
-    private Fcrepo3Configuration configuration;
+public class METSEndpoint extends AbstractFcrepo3Endpoint {
     
     public METSEndpoint(String endpointUri, Component component, Fcrepo3Configuration configuration) {
         super(endpointUri, component);
-        this.configuration = configuration;
+        setConfiguration(configuration);
     }
     
     @Override

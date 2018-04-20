@@ -23,11 +23,11 @@ import org.apache.camel.impl.DefaultComponent;
 
 import java.util.Map;
 
-public class FcrepoComponent extends DefaultComponent {
+public class Fcrepo3Component extends DefaultComponent {
 
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-        FcrepoConfiguration configuration = new FcrepoConfiguration();
+        Fcrepo3Configuration configuration = new Fcrepo3Configuration();
         setProperties(configuration, parameters);
 
         if (remaining.contains(":")) {

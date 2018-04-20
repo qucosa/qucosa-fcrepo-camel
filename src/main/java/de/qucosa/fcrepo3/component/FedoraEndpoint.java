@@ -63,7 +63,7 @@ public class FedoraEndpoint extends DefaultEndpoint {
     public static final String METS_URL = "%s://%s:%s/mets?pid=%s";
     private Logger logger = LoggerFactory.getLogger(FedoraEndpoint.class);
     @UriParam
-    private FcrepoConfiguration configuration;
+    private Fcrepo3Configuration configuration;
     @UriParam
     private String shema = "http";
     @UriParam
@@ -89,7 +89,7 @@ public class FedoraEndpoint extends DefaultEndpoint {
     private CloseableHttpClient httpClient = null;
     private Set<String> identifires = new HashSet<>();
 
-    public FedoraEndpoint(String endpointUri, Component component, FcrepoConfiguration configuration) {
+    public FedoraEndpoint(String endpointUri, Component component, Fcrepo3Configuration configuration) {
         super(endpointUri, component);
         this.configuration = configuration;
     }
@@ -171,7 +171,7 @@ public class FedoraEndpoint extends DefaultEndpoint {
         return content;
     }
 
-    public FcrepoConfiguration getConfiguration() {
+    public Fcrepo3Configuration getConfiguration() {
         return configuration;
     }
 

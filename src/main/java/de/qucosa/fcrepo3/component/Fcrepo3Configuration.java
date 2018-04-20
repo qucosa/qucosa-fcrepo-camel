@@ -19,7 +19,7 @@ package de.qucosa.fcrepo3.component;
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
 
-public class FcrepoConfiguration {
+public class Fcrepo3Configuration {
     private String endpointDef = "FindObjects";
 
     private DissTerms dissTerms = null;

@@ -37,7 +37,7 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     @UriParam
     private Fcrepo3Configuration configuration;
     @UriParam
-    private String shema = "http";
+    private String schema = "http";
     @UriParam
     private String port = "8080";
     @UriParam
@@ -102,12 +102,12 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
         return content;
     }
     
-    public String getShema() {
-        return shema;
+    public String getSchema() {
+        return schema;
     }
 
-    public void setShema(String shema) {
-        this.shema = shema;
+    public void setSchema(String schema) {
+        this.schema = schema;
     }
 
     public String getPort() {

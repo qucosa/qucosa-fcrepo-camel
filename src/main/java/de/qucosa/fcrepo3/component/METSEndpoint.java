@@ -30,7 +30,7 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
                 CloseableHttpClient fedoraClient = fedoraClient();
                 NodeList list = (NodeList) exchange.getIn().getBody();
                 String pid = list.item(0).getNodeValue();
-                String metsXml = loadFromFedora(FedoraEndpoint.METS_URL, getSchema(), getHost(), getPort(), pid);
+                String metsXml = loadFromFedora(AbstractFcrepo3Endpoint.METS_URL, getSchema(), getHost(), getPort(), pid);
                 exchange.getIn().setBody(metsXml);
                 fedoraClient.close();
             }

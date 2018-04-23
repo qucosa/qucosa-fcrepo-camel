@@ -32,7 +32,7 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     
     protected static final String METS_URL = "%s://%s:%s/mets?pid=%s";
     
-    private Logger logger = LoggerFactory.getLogger(FedoraEndpoint.class);
+    private Logger logger = LoggerFactory.getLogger(AbstractFcrepo3Endpoint.class);
     
     @UriParam
     private Fcrepo3Configuration configuration;

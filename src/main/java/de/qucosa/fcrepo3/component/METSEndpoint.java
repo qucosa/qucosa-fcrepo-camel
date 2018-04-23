@@ -2,8 +2,12 @@ package de.qucosa.fcrepo3.component;
 
 import org.apache.camel.Component;
 import org.apache.camel.Consumer;
+import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
+import org.apache.camel.impl.DefaultProducer;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.w3c.dom.NodeList;
 
 public class METSEndpoint extends AbstractFcrepo3Endpoint {
     
@@ -19,7 +23,18 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
 
     @Override
     public Producer createProducer() throws Exception {
-        return null;
+        return new DefaultProducer(this) {
+
+            @Override
+            public void process(Exchange exchange) throws Exception {
+                CloseableHttpClient fedoraClient = fedoraClient();
+                NodeList list = (NodeList) exchange.getIn().getBody();
+                String pid = list.item(0).getNodeValue();
+                String metsXml = loadFromFedora(FedoraEndpoint.METS_URL, getSchema(), getHost(), getPort(), pid);
+                exchange.getIn().setBody(metsXml);
+                fedoraClient.close();
+            }
+        };
     }
 
     @Override

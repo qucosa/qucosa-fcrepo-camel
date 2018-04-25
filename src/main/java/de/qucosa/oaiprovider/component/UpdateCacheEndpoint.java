@@ -18,16 +18,16 @@ public class UpdateCacheEndpoint extends DefaultEndpoint {
     }
 
     @Override
-    public Consumer createConsumer(Processor processor) throws Exception {
+    public Consumer createConsumer(Processor processor) {
         return null;
     }
 
     @Override
-    public Producer createProducer() throws Exception {
+    public Producer createProducer() {
         return new DefaultProducer(endpoint) {
             
             @Override
-            public void process(Exchange exchange) throws Exception {
+            public void process(Exchange exchange) {
                 System.out.println(exchange.getIn().getBody());
             }
         };

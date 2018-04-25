@@ -74,7 +74,7 @@ public class DocumentXmlUtils {
         return xPath;
     }
 
-    public static String resultXml(Document document) throws IOException, SAXException {
+    public static String resultXml(Document document) throws IOException {
         OutputFormat outputFormat = new OutputFormat(document);
         outputFormat.setOmitXMLDeclaration(true);
         StringWriter stringWriter = new StringWriter();

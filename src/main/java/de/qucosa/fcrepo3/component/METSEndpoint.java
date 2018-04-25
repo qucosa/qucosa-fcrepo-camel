@@ -20,12 +20,12 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
     }
     
     @Override
-    public Consumer createConsumer(Processor arg0) throws Exception {
+    public Consumer createConsumer(Processor arg0) {
         return null;
     }
 
     @Override
-    public Producer createProducer() throws Exception {
+    public Producer createProducer() {
         return new DefaultProducer(this) {
 
             @Override

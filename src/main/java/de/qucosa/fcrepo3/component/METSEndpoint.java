@@ -6,10 +6,13 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultProducer;
+import org.apache.camel.spi.UriParam;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.w3c.dom.NodeList;
 
 public class METSEndpoint extends AbstractFcrepo3Endpoint {
+    @UriParam
+    private String supplement;
     
     public METSEndpoint(String endpointUri, Component component, Fcrepo3Configuration configuration) {
         super(endpointUri, component);
@@ -41,5 +44,12 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
     public boolean isSingleton() {
         return false;
     }
+    
+    public String getSupplement() {
+        return supplement;
+    }
 
+    public void setSupplement(String supplement) {
+        this.supplement = supplement;
+    }
 }

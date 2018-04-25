@@ -14,44 +14,43 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component;
+package de.qucosa.fcrepo3.component;
 
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
+import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
 
 import java.util.Map;
 
-public class FcrepoComponent extends DefaultComponent {
+public class Fcrepo3Component extends DefaultComponent {
 
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-        FcrepoConfiguration configuration = new FcrepoConfiguration();
+        Fcrepo3Configuration configuration = new Fcrepo3Configuration();
         setProperties(configuration, parameters);
+        Endpoint endpoint = null;
 
-        if (remaining.contains(":")) {
-            String[] remainingDef = remaining.split(":");
-            configuration.setEndpointDef(remainingDef[1]);
+        if (remaining != null && !remaining.isEmpty()) {
             DissTerms dt = new DissTerms();
             SetsConfig sets = new SetsConfig();
             configuration.setDissConf(dt);
             configuration.setSets(sets);
 
-            if (remainingDef[0].endsWith("fedora")) {
-                Endpoint endpoint = new FedoraEndpoint(uri, this, configuration);
-                return endpoint;
+            switch (remaining.toLowerCase()) {
+                case "mets":
+                    endpoint = mets(uri, this, configuration);
+                    break;
             }
 
-            throw new Exception("Unknown endpoint URI:" + remainingDef[0]);
-        } else {
-
-            if (remaining.endsWith("fedora")) {
-                Endpoint endpoint = new FedoraEndpoint(uri, this, configuration);
-                return endpoint;
-            }
+            return endpoint;
         }
 
         throw new Exception("Unknown endpoint URI:" + remaining);
+    }
+
+    private Endpoint mets(String uri, Component component, Fcrepo3Configuration configuration) {
+        return new METSEndpoint(uri, component, configuration);
     }
 }

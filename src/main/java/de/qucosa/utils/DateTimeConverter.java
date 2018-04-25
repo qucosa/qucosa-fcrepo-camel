@@ -28,7 +28,7 @@ import java.util.GregorianCalendar;
 
 public class DateTimeConverter {
 
-    public static Timestamp timestampWithTimezone(String dateString) throws ParseException, DatatypeConfigurationException {
+    public static Timestamp timestampWithTimezone(String dateString) throws DatatypeConfigurationException {
         XMLGregorianCalendar xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateString);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
         GregorianCalendar gc = xmlGregorianCalendar.toGregorianCalendar();

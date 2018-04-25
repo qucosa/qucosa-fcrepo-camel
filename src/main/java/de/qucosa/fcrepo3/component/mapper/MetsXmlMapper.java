@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component.mapper;
+package de.qucosa.fcrepo3.component.mapper;
 
 import de.qucosa.utils.DocumentXmlUtils;
 import org.w3c.dom.Document;

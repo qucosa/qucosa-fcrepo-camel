@@ -14,58 +14,46 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo.component;
+package de.qucosa.fcrepo3.component;
 
-import de.qucosa.endpoint.EndpointDefinition;
 import org.apache.camel.Component;
-import org.apache.camel.Consumer;
-import org.apache.camel.Processor;
-import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultEndpoint;
-import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpClientConnection;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ConnectionPoolTimeoutException;
-import org.apache.http.conn.ConnectionRequest;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
-@UriEndpoint(scheme = "fcrepo", syntax = "fcrepo:fedora:endpointDef", title = "Fedora Endpoint")
-public class FedoraEndpoint extends DefaultEndpoint {
-    public static final String OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&metadataPrefix=oai_dc";
-    public static final String OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&resumptionToken=%s";
-    public static final String OAIPMH_LISTRECORDS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&metadataPrefix=oai_dc";
-    public static final String OAIPMH_LISTRECORDS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&resumptionToken=%s";
-    public static final String METS_URL = "%s://%s:%s/mets?pid=%s";
-    private Logger logger = LoggerFactory.getLogger(FedoraEndpoint.class);
+abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
+    protected static final String OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&metadataPrefix=oai_dc";
+
+    protected static final String OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&resumptionToken=%s";
+
+    protected static final String OAIPMH_LISTRECORDS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&metadataPrefix=oai_dc";
+
+    protected static final String OAIPMH_LISTRECORDS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&resumptionToken=%s";
+
+    protected static final String METS_URL = "%s://%s:%s/mets?pid=%s";
+
+    private Logger logger = LoggerFactory.getLogger(AbstractFcrepo3Endpoint.class);
+
     @UriParam
-    private FcrepoConfiguration configuration;
+    private Fcrepo3Configuration configuration;
     @UriParam
-    private String shema = "http";
+    private String schema = "http";
     @UriParam
     private String port = "8080";
     @UriParam
@@ -86,47 +74,11 @@ public class FedoraEndpoint extends DefaultEndpoint {
     private String until;
     @UriParam
     private String source;
+
     private CloseableHttpClient httpClient = null;
-    private Set<String> identifires = new HashSet<>();
 
-    public FedoraEndpoint(String endpointUri, Component component, FcrepoConfiguration configuration) {
+    public AbstractFcrepo3Endpoint(String endpointUri, Component component) {
         super(endpointUri, component);
-        this.configuration = configuration;
-    }
-
-    @Override
-    public Consumer createConsumer(Processor processor) throws Exception {
-        try {
-            Method method = endpointDef().getClass().getMethod("getConsumer");
-            EndpointDefinition endpointDef = endpointDef();
-            endpointDef.setEndpoint(this);
-            endpointDef.setProcessor(processor);
-            return (method.getReturnType() != null) ? endpointDef.getConsumer() : null;
-        } catch (NoSuchMethodException | SecurityException e) {
-            e.printStackTrace();
-        }
-
-        throw new Exception("Unsupported consumer in endpoint definition " + endpointDef().getClass().getCanonicalName());
-    }
-
-    @Override
-    public Producer createProducer() throws Exception {
-        Method method = endpointDef().getClass().getMethod("getProducer");
-
-        try {
-            EndpointDefinition endpointDef = endpointDef();
-            endpointDef.setEndpoint(this);
-            return (method.getReturnType() != null) ? endpointDef.getProducer() : null;
-        } catch (NoSuchMethodException | SecurityException e) {
-            e.printStackTrace();
-        }
-
-        throw new Exception("Unsupported producer in endpoint definition " + endpointDef().getClass().getCanonicalName());
-    }
-
-    @Override
-    public boolean isSingleton() {
-        return true;
     }
 
     public CloseableHttpClient fedoraClient() {
@@ -136,15 +88,10 @@ public class FedoraEndpoint extends DefaultEndpoint {
             credentialsProvider.setCredentials(AuthScope.ANY,
                     new UsernamePasswordCredentials(getUser(), getPassword()));
 
-//            if (isHttpConnectionOpen()) {
             httpClient = HttpClientBuilder.create().setConnectionManager(new PoolingHttpClientConnectionManager())
                     .setDefaultCredentialsProvider(credentialsProvider).build();
-//            }
         } else {
-
-//            if (isHttpConnectionOpen()) {
             httpClient = HttpClientBuilder.create().build();
-//            }
         }
 
         return httpClient;
@@ -171,16 +118,12 @@ public class FedoraEndpoint extends DefaultEndpoint {
         return content;
     }
 
-    public FcrepoConfiguration getConfiguration() {
-        return configuration;
+    public String getSchema() {
+        return schema;
     }
 
-    public String getShema() {
-        return shema;
-    }
-
-    public void setShema(String shema) {
-        this.shema = shema;
+    public void setSchema(String schema) {
+        this.schema = schema;
     }
 
     public String getPort() {
@@ -263,44 +206,12 @@ public class FedoraEndpoint extends DefaultEndpoint {
         this.source = source;
     }
 
-    public Set<String> getIdentifires() {
-        return identifires;
+    public Fcrepo3Configuration getConfiguration() {
+        return configuration;
     }
 
-    @Override
-    protected void doStart() throws Exception {
-        super.doStart();
-    }
-
-    @Override
-    protected void doStop() throws Exception {
-        super.doStop();
-    }
-
-    @SuppressWarnings({"resource", "unused"})
-    private boolean isHttpConnectionOpen() {
-        boolean isOpen = false;
-        HttpClientConnectionManager hccm = new BasicHttpClientConnectionManager();
-        HttpRoute hr = new HttpRoute(new HttpHost(getHost(), Integer.valueOf(getPort())));
-
-        try {
-            ConnectionRequest cr = hccm.requestConnection(hr, null);
-            HttpClientConnection conn = cr.get(10, TimeUnit.SECONDS);
-
-            if (conn.isOpen()) {
-                isOpen = true;
-            }
-        } catch (ConnectionPoolTimeoutException | InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return isOpen;
-    }
-
-    @SuppressWarnings("rawtypes")
-    private EndpointDefinition endpointDef() throws Exception {
-        Class clazz = Class.forName("de.qucosa.fcrepo.component.endpoint.definitions." + getConfiguration().getEndpointDef());
-        return (EndpointDefinition) clazz.newInstance();
+    public void setConfiguration(Fcrepo3Configuration configuration) {
+        this.configuration = configuration;
     }
 
     private void consumeResponseEntity(HttpResponse response) {

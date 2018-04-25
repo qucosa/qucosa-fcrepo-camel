@@ -16,15 +16,18 @@
 
 package de.qucosa.fcrepo3.component;
 
-import org.apache.camel.Component;
-import org.apache.camel.Consumer;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.apache.camel.Producer;
+import de.qucosa.disseminator.MetsDisseminator;
+import de.qucosa.repository.AuthenticationException;
+import de.qucosa.repository.Credentials;
+import de.qucosa.repository.FedoraConnection;
+import org.apache.camel.*;
 import org.apache.camel.impl.DefaultProducer;
 import org.apache.camel.spi.UriParam;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
+import java.net.URL;
 
 public class METSEndpoint extends AbstractFcrepo3Endpoint {
     @UriParam
@@ -46,12 +49,22 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
 
             @Override
             public void process(Exchange exchange) throws Exception {
-                CloseableHttpClient fedoraClient = fedoraClient();
                 NodeList list = (NodeList) exchange.getIn().getBody();
                 String pid = list.item(0).getNodeValue();
-                String metsXml = loadFromFedora(AbstractFcrepo3Endpoint.METS_URL, getSchema(), getHost(), getPort(), pid);
-                exchange.getIn().setBody(metsXml);
-                fedoraClient.close();
+                String creds = getUser() + ":" + getPassword();
+                URL repoUrl = new URL(getSchema() + "://" + getHost() + ":" + getPort());
+                Document mets = null;
+
+                try {
+                    Credentials credentials = Credentials.fromColonSeparatedString(creds);
+                    FedoraConnection fedoraConnection = new FedoraConnection(repoUrl, credentials);
+                    MetsDisseminator disseminator = new MetsDisseminator(fedoraConnection);
+                    mets = disseminator.disseminate(pid, false);
+                } catch (AuthenticationException e) {
+                    e.printStackTrace();
+                }
+
+                exchange.getIn().setBody(mets);
             }
         };
     }

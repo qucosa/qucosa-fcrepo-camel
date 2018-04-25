@@ -167,6 +167,13 @@
             <version>9.8.0-4</version>
         </dependency>
 
+        <!-- Mets Dissemination -->
+        <dependency>
+            <groupId>de.qucosa</groupId>
+            <artifactId>qucosa-fcrepo-metsdisseminator</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>

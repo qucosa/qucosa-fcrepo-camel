@@ -16,9 +16,6 @@
 
 package de.qucosa.fcrepo3.component;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-
 import org.apache.camel.Component;
 import org.apache.camel.impl.DefaultEndpoint;
 import org.apache.camel.spi.UriParam;
@@ -37,19 +34,22 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+
 abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     protected static final String OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&metadataPrefix=oai_dc";
-    
+
     protected static final String OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&resumptionToken=%s";
-    
+
     protected static final String OAIPMH_LISTRECORDS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&metadataPrefix=oai_dc";
-    
+
     protected static final String OAIPMH_LISTRECORDS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&resumptionToken=%s";
-    
+
     protected static final String METS_URL = "%s://%s:%s/mets?pid=%s";
-    
+
     private Logger logger = LoggerFactory.getLogger(AbstractFcrepo3Endpoint.class);
-    
+
     @UriParam
     private Fcrepo3Configuration configuration;
     @UriParam
@@ -74,13 +74,13 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     private String until;
     @UriParam
     private String source;
-    
+
     private CloseableHttpClient httpClient = null;
-    
+
     public AbstractFcrepo3Endpoint(String endpointUri, Component component) {
         super(endpointUri, component);
     }
-    
+
     public CloseableHttpClient fedoraClient() {
 
         if (getUser() != null && !getUser().isEmpty() && getPassword() != null && !getPassword().isEmpty()) {
@@ -96,7 +96,7 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
 
         return httpClient;
     }
-    
+
     public String loadFromFedora(String uriPattern, Object... params) {
         HttpResponse response = null;
         String content = "";
@@ -117,7 +117,7 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
 
         return content;
     }
-    
+
     public String getSchema() {
         return schema;
     }
@@ -213,7 +213,7 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     public void setConfiguration(Fcrepo3Configuration configuration) {
         this.configuration = configuration;
     }
-    
+
     private void consumeResponseEntity(HttpResponse response) {
         try {
             if (response != null) {

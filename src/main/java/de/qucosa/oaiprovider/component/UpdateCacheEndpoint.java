@@ -27,7 +27,7 @@ import org.apache.camel.impl.DefaultProducer;
 
 public class UpdateCacheEndpoint extends DefaultEndpoint {
     private Endpoint endpoint;
-    
+
     public UpdateCacheEndpoint(String endpointUri, Component component, OaiProviderConfiguration configuration) {
         super(endpointUri, component);
         endpoint = this;
@@ -41,7 +41,7 @@ public class UpdateCacheEndpoint extends DefaultEndpoint {
     @Override
     public Producer createProducer() {
         return new DefaultProducer(endpoint) {
-            
+
             @Override
             public void process(Exchange exchange) {
                 System.out.println(exchange.getIn().getBody());

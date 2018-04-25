@@ -16,14 +16,13 @@
 
 package de.qucosa.fcrepo3.component;
 
-import java.util.Map;
-
+import de.qucosa.oaiprovider.component.model.DissTerms;
+import de.qucosa.oaiprovider.component.model.SetsConfig;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
 
-import de.qucosa.oaiprovider.component.model.DissTerms;
-import de.qucosa.oaiprovider.component.model.SetsConfig;
+import java.util.Map;
 
 public class Fcrepo3Component extends DefaultComponent {
 
@@ -32,25 +31,25 @@ public class Fcrepo3Component extends DefaultComponent {
         Fcrepo3Configuration configuration = new Fcrepo3Configuration();
         setProperties(configuration, parameters);
         Endpoint endpoint = null;
-        
+
         if (remaining != null && !remaining.isEmpty()) {
             DissTerms dt = new DissTerms();
             SetsConfig sets = new SetsConfig();
             configuration.setDissConf(dt);
             configuration.setSets(sets);
-            
-            switch(remaining.toLowerCase()) {
+
+            switch (remaining.toLowerCase()) {
                 case "mets":
                     endpoint = mets(uri, this, configuration);
-                break;
+                    break;
             }
-            
+
             return endpoint;
         }
 
         throw new Exception("Unknown endpoint URI:" + remaining);
     }
-    
+
     private Endpoint mets(String uri, Component component, Fcrepo3Configuration configuration) {
         return new METSEndpoint(uri, component, configuration);
     }

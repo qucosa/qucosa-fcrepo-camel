@@ -16,25 +16,25 @@
 
 package de.qucosa.routes;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
+
+import java.util.concurrent.TimeUnit;
 
 public class Main extends RouteBuilder {
 
     @PropertyInject("update.delay")
     long updateDelay;
-    
+
     @PropertyInject("fedora.host")
     private String fedoraHost;
-    
+
     @PropertyInject("fedora.schema")
     private String fedoraSchema;
-    
+
     @PropertyInject("fedora.port")
     private String fedoraPort;
-    
+
     @Override
     public void configure() {
 //        from("direct:oaiprovider")

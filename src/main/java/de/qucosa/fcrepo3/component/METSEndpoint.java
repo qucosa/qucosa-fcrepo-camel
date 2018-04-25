@@ -29,12 +29,12 @@ import org.w3c.dom.NodeList;
 public class METSEndpoint extends AbstractFcrepo3Endpoint {
     @UriParam
     private String supplement;
-    
+
     public METSEndpoint(String endpointUri, Component component, Fcrepo3Configuration configuration) {
         super(endpointUri, component);
         setConfiguration(configuration);
     }
-    
+
     @Override
     public Consumer createConsumer(Processor arg0) {
         return null;
@@ -60,7 +60,7 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
     public boolean isSingleton() {
         return false;
     }
-    
+
     public String getSupplement() {
         return supplement;
     }

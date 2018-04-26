@@ -39,7 +39,7 @@ public class Main extends RouteBuilder {
                 .log("PID: ${body}")
                 .resequence().body().timeout(TimeUnit.SECONDS.toMillis(updateDelay))
                 .log("Perform updates for ${body}")
-                .to("fcrepo3:METS?fedoraHosturl={{ fedora.url }}&fedoraCredentials={{ fedora.credentials }}");
+                .to("fcrepo3:METS?fedoraHosturl={{fedora.url}}&fedoraCredentials={{fedora.credentials}}");
 //                .to("direct:oaiprovider");
 
 

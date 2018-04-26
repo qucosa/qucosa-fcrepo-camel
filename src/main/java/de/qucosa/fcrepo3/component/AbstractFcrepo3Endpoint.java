@@ -69,8 +69,6 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     @UriParam
     private String source;
 
-    private CloseableHttpClient httpClient = null;
-
     public AbstractFcrepo3Endpoint(String endpointUri, Component component) {
         super(endpointUri, component);
     }

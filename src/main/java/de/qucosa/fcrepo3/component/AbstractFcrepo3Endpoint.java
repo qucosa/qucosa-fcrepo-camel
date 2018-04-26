@@ -55,9 +55,9 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     @UriParam
     private String fedoraHosturl;
     @UriParam
-    private String user = "fedoraAdmin";
+    private String user;
     @UriParam
-    private String password = "fedoraAdmin";
+    private String password;
     @UriParam
     private String verb;
     @UriParam

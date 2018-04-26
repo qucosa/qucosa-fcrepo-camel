@@ -38,16 +38,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
-    protected static final String OAIPMH_LISTIDENTIFIERS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&metadataPrefix=oai_dc";
-
-    protected static final String OAIPMH_LISTIDENTIFIERS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListIdentifiers&resumptionToken=%s";
-
-    protected static final String OAIPMH_LISTRECORDS_URL_WITHOUT_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&metadataPrefix=oai_dc";
-
-    protected static final String OAIPMH_LISTRECORDS_URL_WITH_RESUMPTIONTOKEN = "%s://%s:%s/fedora/oai?verb=ListRecords&resumptionToken=%s";
-
-    protected static final String METS_URL = "%s://%s:%s/mets?pid=%s";
-
     private Logger logger = LoggerFactory.getLogger(AbstractFcrepo3Endpoint.class);
 
     @UriParam
@@ -56,18 +46,6 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     private String fedoraHosturl;
     @UriParam
     private String fedoraCredentials;
-    @UriParam
-    private String verb;
-    @UriParam
-    private String set;
-    @UriParam
-    private String metadataPrefix;
-    @UriParam
-    private String from;
-    @UriParam
-    private String until;
-    @UriParam
-    private String source;
 
     public AbstractFcrepo3Endpoint(String endpointUri, Component component) {
         super(endpointUri, component);
@@ -81,59 +59,9 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
 
     public void setFedoraCredentials(String fedoraCredentials) { this.fedoraCredentials = fedoraCredentials; }
 
-    public String getVerb() {
-        return verb;
-    }
-
-    public void setVerb(String verb) {
-        this.verb = verb;
-    }
-
-    public String getSet() {
-        return set;
-    }
-
-    public void setSet(String set) {
-        this.set = set;
-    }
-
-    public String getMetadataPrefix() {
-        return metadataPrefix;
-    }
-
-    public void setMetadataPrefix(String metadataPrefix) {
-        this.metadataPrefix = metadataPrefix;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public String getUntil() {
-        return until;
-    }
-
-    public void setUntil(String until) {
-        this.until = until;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
     public Fcrepo3Configuration getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Fcrepo3Configuration configuration) {
-        this.configuration = configuration;
-    }
+    public void setConfiguration(Fcrepo3Configuration configuration) { this.configuration = configuration; }
 }

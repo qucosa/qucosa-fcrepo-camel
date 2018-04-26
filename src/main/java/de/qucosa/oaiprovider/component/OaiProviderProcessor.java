@@ -71,7 +71,6 @@ public class OaiProviderProcessor implements Processor {
         exchange.getIn().setBody(disseminations);
     }
 
-    @SuppressWarnings("unused")
     private RecordTransport buildXMetaDissplusObject(Document metsDoc) throws Exception {
         XMetaDissTransformer transformer = new XMetaDissTransformer("http://##AGENT##.example.com/##PID##/content.zip", "", true);
         Document result = transformer.transformXmetaDissplus(metsDoc,
@@ -87,7 +86,6 @@ public class OaiProviderProcessor implements Processor {
         return xmetadiss;
     }
 
-    @SuppressWarnings("unused")
     private RecordTransport buildDcObject(Document metsDoc) throws Exception {
         DcDissTransformer transformer = new DcDissTransformer(
                 "/xslt/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip",

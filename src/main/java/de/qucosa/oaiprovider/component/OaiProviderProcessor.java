@@ -17,7 +17,6 @@
 package de.qucosa.oaiprovider.component;
 
 import de.qucosa.fcrepo3.component.mapper.MetsXmlMapper;
-import de.qucosa.oaiprovider.component.builders.RecordXmlBuilder;
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.RecordTransport;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
@@ -31,7 +30,6 @@ import org.w3c.dom.Document;
 
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
 import java.util.HashSet;
 import java.util.Set;
@@ -79,12 +77,11 @@ public class OaiProviderProcessor implements Processor {
         Document result = transformer.transformXmetaDissplus(metsDoc,
                 new StreamSource(getClass().getClassLoader().getResource("xslt/mets2xmetadissplus.xsl").getPath()));
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
-        DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "xmetadissplus"));
 
         xmetadiss.setPid(metsXml.pid());
         xmetadiss.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
         xmetadiss.setPrefix("xmetadissplus");
-        xmetadiss.setData(buildRecord(result, metsDoc, "xmetadissplus"));
+        xmetadiss.setData(result);
         xmetadiss.setOaiId("");
 
         return xmetadiss;
@@ -98,12 +95,11 @@ public class OaiProviderProcessor implements Processor {
                 true);
         Document result = transformer.transformDcDiss(metsDoc);
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
-        DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "dc"));
 
         dc.setPid(metsXml.pid());
         dc.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
         dc.setPrefix("dc");
-        dc.setData(buildRecord(result, metsDoc, "dc"));
+        dc.setData(result);
         dc.setOaiId("");
 
         return dc;
@@ -126,15 +122,4 @@ public class OaiProviderProcessor implements Processor {
         return epicur;
     }
 */
-
-    private Document buildRecord(Document dissemination, Document metsDoc, String format) throws XPathExpressionException {
-        Document recordTemplate = DocumentXmlUtils.document(getClass().getClassLoader().getResource(RECORD_TEMPLATE_FILE).getPath(), true);
-        RecordXmlBuilder builder = new RecordXmlBuilder(dissemination, recordTemplate)
-                .setMetsDocument(metsDoc)
-                .setDissTerms(dt)
-                .setSets(sets)
-                .setFormat(format);
-
-        return builder.buildRecord(metsXml);
-    }
 }

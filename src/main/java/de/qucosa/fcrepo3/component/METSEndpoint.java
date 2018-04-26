@@ -63,7 +63,7 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
                     MetsDisseminator disseminator = new MetsDisseminator(fedoraConnection);
                     mets = disseminator.disseminate(pid, false);
                 } catch (AuthenticationException e) {
-                    e.printStackTrace();
+                    throw new Exception(e);
                 }
 
                 exchange.getIn().setBody(mets);

@@ -16,6 +16,7 @@
 
 package de.qucosa.routes;
 
+import de.qucosa.oaiprovider.component.OaiProviderProcessor;
 import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -28,19 +29,19 @@ public class Main extends RouteBuilder {
 
     @Override
     public void configure() {
-//        from("direct:oaiprovider")
-//                .id("oaiProviderProcess")
-//                .startupOrder(1)
-//                .process(new OaiProviderProcessor())
-//                .to("fcrepo:fedora:OaiProvider");
+        from("direct:oaiprovider")
+                .id("oaiProviderProcess")
+                .startupOrder(1)
+                .process(new OaiProviderProcessor())
+                .to("mock:test");
 
         from("direct:update")
                 .id("update-message-route")
                 .log("PID: ${body}")
                 .resequence().body().timeout(TimeUnit.SECONDS.toMillis(updateDelay))
                 .log("Perform updates for ${body}")
-                .to("fcrepo3:METS?fedoraHosturl={{fedora.url}}&fedoraCredentials={{fedora.credentials}}");
-//                .to("direct:oaiprovider");
+                .to("fcrepo3:METS?fedoraHosturl={{fedora.url}}&fedoraCredentials={{fedora.credentials}}")
+                .to("direct:oaiprovider");
 
 
         from("activemq:topic:fedora.apim.update")

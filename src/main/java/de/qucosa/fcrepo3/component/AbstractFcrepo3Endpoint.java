@@ -55,9 +55,7 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     @UriParam
     private String fedoraHosturl;
     @UriParam
-    private String user;
-    @UriParam
-    private String password;
+    private String fedoraCredentials;
     @UriParam
     private String verb;
     @UriParam
@@ -77,66 +75,13 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
         super(endpointUri, component);
     }
 
-    public CloseableHttpClient fedoraClient() {
+    public String getFedoraHosturl() { return fedoraHosturl; }
 
-        if (getUser() != null && !getUser().isEmpty() && getPassword() != null && !getPassword().isEmpty()) {
-            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY,
-                    new UsernamePasswordCredentials(getUser(), getPassword()));
+    public void setFedoraHosturl(String fedoraHosturl) { this.fedoraHosturl = fedoraHosturl; }
 
-            httpClient = HttpClientBuilder.create().setConnectionManager(new PoolingHttpClientConnectionManager())
-                    .setDefaultCredentialsProvider(credentialsProvider).build();
-        } else {
-            httpClient = HttpClientBuilder.create().build();
-        }
+    public String getFedoraCredentials() { return fedoraCredentials; }
 
-        return httpClient;
-    }
-
-    public String loadFromFedora(String uriPattern, Object... params) {
-        HttpResponse response = null;
-        String content = "";
-
-        try {
-            response = httpClient.execute(new HttpGet(String.format(uriPattern, params)));
-
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                content = IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
-            }
-
-        } catch (IOException e) {
-            logger.debug("Cannot load XML Data from fedora repositroy. Check your params!");
-            logger.debug(String.format(uriPattern, params));
-        } finally {
-            consumeResponseEntity(response);
-        }
-
-        return content;
-    }
-
-    public String getFedoraHosturl() {
-        return fedoraHosturl;
-    }
-
-    public void setFedoraHosturl(String fedoraHosturl) {
-        this.fedoraHosturl = fedoraHosturl;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setFedoraCredentials(String fedoraCredentials) { this.fedoraCredentials = fedoraCredentials; }
 
     public String getVerb() {
         return verb;

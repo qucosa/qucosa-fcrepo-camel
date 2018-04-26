@@ -51,12 +51,11 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
             public void process(Exchange exchange) throws Exception {
                 NodeList list = (NodeList) exchange.getIn().getBody();
                 String pid = list.item(0).getNodeValue();
-                String creds = getUser() + ":" + getPassword();
                 URL repoUrl = new URL(getFedoraHosturl());
                 Document mets = null;
 
                 try {
-                    Credentials credentials = Credentials.fromColonSeparatedString(creds);
+                    Credentials credentials = Credentials.fromColonSeparatedString(getFedoraCredentials());
                     FedoraConnection fedoraConnection = new FedoraConnection(repoUrl, credentials);
                     MetsDisseminator disseminator = new MetsDisseminator(fedoraConnection);
                     mets = disseminator.disseminate(pid, false);

@@ -20,10 +20,13 @@ import de.qucosa.disseminator.MetsDisseminator;
 import de.qucosa.repository.AuthenticationException;
 import de.qucosa.repository.Credentials;
 import de.qucosa.repository.FedoraConnection;
-import org.apache.camel.*;
+import org.apache.camel.Component;
+import org.apache.camel.Consumer;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultProducer;
 import org.apache.camel.spi.UriParam;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 

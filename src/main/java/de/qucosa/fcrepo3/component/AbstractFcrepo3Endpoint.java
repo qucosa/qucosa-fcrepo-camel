@@ -138,13 +138,4 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     public void setConfiguration(Fcrepo3Configuration configuration) {
         this.configuration = configuration;
     }
-
-    private void consumeResponseEntity(HttpResponse response) {
-        try {
-            if (response != null) {
-                EntityUtils.consume(response.getEntity());
-            }
-        } catch (IOException ignored) {
-        }
-    }
 }

@@ -27,11 +27,16 @@ import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 //import de.qucosa.dissemination.epicur.EpicurDissMapper;
@@ -53,9 +58,7 @@ public class OaiProviderProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        String mets = exchange.getIn().getBody().toString();
-        Document metsDoc = DocumentXmlUtils.document(new ByteArrayInputStream(mets.getBytes("UTF-8")), true);
-        DocumentXmlUtils.resultXml(metsDoc);
+        Document metsDoc = (Document) exchange.getIn().getBody();
         metsXml = new MetsXmlMapper(metsDoc, dt.getMapXmlNamespaces());
 
         //TODO extract transformations to camel route
@@ -82,6 +85,7 @@ public class OaiProviderProcessor implements Processor {
         xmetadiss.setPrefix("xmetadissplus");
         xmetadiss.setData(result);
         xmetadiss.setOaiId("");
+        xmetadiss.setSets(getSetSpecs("xmetadissplus", result));
 
         return xmetadiss;
     }
@@ -99,6 +103,7 @@ public class OaiProviderProcessor implements Processor {
         dc.setPrefix("dc");
         dc.setData(result);
         dc.setOaiId("");
+        dc.setSets(getSetSpecs("dc", result));
 
         return dc;
     }
@@ -120,4 +125,53 @@ public class OaiProviderProcessor implements Processor {
         return epicur;
     }
 */
+    private List<String> getSetSpecs(String format, Document dissemination) throws XPathExpressionException {
+        List<String> setSpecs = new ArrayList<>();
+
+        for (SetsConfig.Set setObj : sets.getSetObjects()) {
+            String predicateKey = null;
+            String predicateValue = null;
+
+            if (setObj.getPredicate() != null && !setObj.getPredicate().isEmpty()) {
+
+                if (setObj.getPredicate().contains("=")) {
+                    String[] predicate = setObj.getPredicate().split("=");
+                    predicateKey = predicate[0];
+                    predicateValue = predicate[1];
+
+                    if (!predicateValue.contains("/")) {
+
+                        if (matchTerm(predicateKey, predicateValue, format, dissemination)) {
+                            setSpecs.add(setObj.getSetSpec());
+                        }
+                    } else {
+                        String[] predicateValues = predicateValue.split("/");
+
+                        if (predicateValues.length > 0) {
+
+                        }
+                    }
+                } else {
+                    predicateKey = setObj.getPredicate();
+                }
+            }
+        }
+
+        return setSpecs;
+    }
+
+    private boolean matchTerm(String key, String value, String format, Document dissemination) throws XPathExpressionException {
+        DissTerms.Term term = dt.getTerm(key, format);
+        XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
+        Node node = null;
+
+        if (term != null) {
+
+            if (!term.getTerm().isEmpty()) {
+                node = (Node) xPath.compile(term.getTerm().replace("$val", value)).evaluate(dissemination, XPathConstants.NODE);
+            }
+        }
+
+        return (node != null) ? true : false;
+    }
 }

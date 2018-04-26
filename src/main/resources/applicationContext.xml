@@ -49,7 +49,7 @@
 
     <!-- Fedora ActiveMQ connection configuration -->
     <bean id="fedoraJmsConnFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="${activemq.protocol}://${activemq.host}:${activemq.port}"/>
+        <property name="brokerURL" value="${activemq.hosturl}"/>
     </bean>
 
     <bean id="fedoraJms" class="org.springframework.jms.core.JmsTemplate">

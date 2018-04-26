@@ -53,11 +53,7 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
     @UriParam
     private Fcrepo3Configuration configuration;
     @UriParam
-    private String schema = "http";
-    @UriParam
-    private String port = "8080";
-    @UriParam
-    private String host = "localhost";
+    private String fedoraHosturl;
     @UriParam
     private String user = "fedoraAdmin";
     @UriParam
@@ -118,28 +114,12 @@ abstract public class AbstractFcrepo3Endpoint extends DefaultEndpoint {
         return content;
     }
 
-    public String getSchema() {
-        return schema;
+    public String getFedoraHosturl() {
+        return fedoraHosturl;
     }
 
-    public void setSchema(String schema) {
-        this.schema = schema;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
+    public void setFedoraHosturl(String fedoraHosturl) {
+        this.fedoraHosturl = fedoraHosturl;
     }
 
     public String getUser() {

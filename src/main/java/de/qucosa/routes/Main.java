@@ -26,14 +26,8 @@ public class Main extends RouteBuilder {
     @PropertyInject("update.delay")
     long updateDelay;
 
-    @PropertyInject("fedora.host")
-    private String fedoraHost;
-
-    @PropertyInject("fedora.schema")
-    private String fedoraSchema;
-
-    @PropertyInject("fedora.port")
-    private String fedoraPort;
+    @PropertyInject("fedora.hosturl")
+    private String fedoraHosturl;
 
     @PropertyInject("fedora.user")
     private String fedoraUser;
@@ -54,8 +48,7 @@ public class Main extends RouteBuilder {
                 .log("PID: ${body}")
                 .resequence().body().timeout(TimeUnit.SECONDS.toMillis(updateDelay))
                 .log("Perform updates for ${body}")
-                .to("fcrepo3:METS?schema=" + fedoraSchema + "&host=" + fedoraHost + "&port=" + fedoraPort + "" +
-                        "&user=" + fedoraUser + "&password=" + fedoraPassword + "");
+                .to("fcrepo3:METS?hosturl=" + fedoraHosturl + "&user=" + fedoraUser + "&password=" + fedoraPassword + "");
 //                .to("direct:oaiprovider");
 
 

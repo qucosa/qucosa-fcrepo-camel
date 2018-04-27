@@ -33,7 +33,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -62,10 +61,10 @@ public class OaiProviderProcessor implements Processor {
         metsXml = new MetsXmlMapper(metsDoc, dt.getMapXmlNamespaces());
 
         //TODO extract transformations to camel route
-        buildDcObject(metsDoc);
+        buildDcObject(metsDoc, exchange);
         disseminations.add(dc);
 
-        buildXMetaDissplusObject(metsDoc);
+        buildXMetaDissplusObject(metsDoc, exchange);
         disseminations.add(xmetadiss);
 
 //        buildEpicurObject(metsDoc);
@@ -74,8 +73,8 @@ public class OaiProviderProcessor implements Processor {
         exchange.getIn().setBody(disseminations);
     }
 
-    private RecordTransport buildXMetaDissplusObject(Document metsDoc) throws Exception {
-        XMetaDissTransformer transformer = new XMetaDissTransformer("http://##AGENT##.example.com/##PID##/content.zip", "", true);
+    private RecordTransport buildXMetaDissplusObject(Document metsDoc, Exchange exchange) throws Exception {
+        XMetaDissTransformer transformer = new XMetaDissTransformer((String) exchange.getProperty("transfer.url.pattern"), "", true);
         Document result = transformer.transformXmetaDissplus(metsDoc,
                 new StreamSource(getClass().getClassLoader().getResource("xslt/mets2xmetadissplus.xsl").getPath()));
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
@@ -90,9 +89,9 @@ public class OaiProviderProcessor implements Processor {
         return xmetadiss;
     }
 
-    private RecordTransport buildDcObject(Document metsDoc) throws Exception {
+    private RecordTransport buildDcObject(Document metsDoc, Exchange exchange) throws Exception {
         DcDissTransformer transformer = new DcDissTransformer(
-                "/xslt/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip",
+                "/xslt/mets2dcdata.xsl", (String) exchange.getProperty("transfer.url.pattern"),
                 "",
                 true);
         Document result = transformer.transformDcDiss(metsDoc);

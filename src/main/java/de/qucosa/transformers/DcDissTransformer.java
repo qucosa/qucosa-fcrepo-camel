@@ -20,6 +20,7 @@ import de.qucosa.utils.DocumentXmlUtils;
 import de.qucosa.utils.SimpleNamespaceContext;
 import org.apache.commons.text.StringSubstitutor;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -32,6 +33,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -57,7 +59,7 @@ public class DcDissTransformer {
     }
 
     @SuppressWarnings("serial")
-    public Document transformDcDiss(Document metsDocument) throws TransformerException, XPathExpressionException, UnsupportedEncodingException {
+    public Document transformDcDiss(Document metsDocument) throws TransformerException, XPathExpressionException, IOException {
         metsDoc = metsDocument;
         StringWriter stringWriter = new StringWriter();
         StreamResult streamResult = new StreamResult(stringWriter);
@@ -78,7 +80,11 @@ public class DcDissTransformer {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer(xslSource);
         transformer.setParameter("transfer_url", transferUrl);
-        transformer.transform(new DOMSource(metsDocument), streamResult);
+
+        Document newDoc = DocumentXmlUtils.document(null, true);
+        Element newElem = (Element) newDoc.importNode(metsDocument.getDocumentElement(), true);
+        newDoc.appendChild(newElem);
+        transformer.transform(new DOMSource(newDoc), streamResult);
 
         Document transformDoc = DocumentXmlUtils.document(new ByteArrayInputStream(stringWriter.toString().getBytes("UTF-8")), true);
 

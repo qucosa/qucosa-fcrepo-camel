@@ -80,11 +80,7 @@ public class DcDissTransformer {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer(xslSource);
         transformer.setParameter("transfer_url", transferUrl);
-
-        Document newDoc = DocumentXmlUtils.document(null, true);
-        Element newElem = (Element) newDoc.importNode(metsDocument.getDocumentElement(), true);
-        newDoc.appendChild(newElem);
-        transformer.transform(new DOMSource(newDoc), streamResult);
+        transformer.transform(new DOMSource(metsDocument), streamResult);
 
         Document transformDoc = DocumentXmlUtils.document(new ByteArrayInputStream(stringWriter.toString().getBytes("UTF-8")), true);
 

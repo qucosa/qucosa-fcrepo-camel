@@ -171,6 +171,6 @@ public class OaiProviderProcessor implements Processor {
             }
         }
 
-        return (node != null) ? true : false;
+        return (node != null);
     }
 }

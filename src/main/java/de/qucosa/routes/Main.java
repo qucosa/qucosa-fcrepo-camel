@@ -32,6 +32,7 @@ public class Main extends RouteBuilder {
         from("direct:oaiprovider")
                 .id("oaiProviderProcess")
                 .startupOrder(1)
+                .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
                 .process(new OaiProviderProcessor())
                 .to("mock:test");
 

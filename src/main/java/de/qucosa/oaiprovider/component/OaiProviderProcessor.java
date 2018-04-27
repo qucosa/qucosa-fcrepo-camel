@@ -17,7 +17,6 @@
 package de.qucosa.oaiprovider.component;
 
 import de.qucosa.fcrepo3.component.mapper.MetsXmlMapper;
-import de.qucosa.oaiprovider.component.builders.RecordXmlBuilder;
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.RecordTransport;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
@@ -28,12 +27,15 @@ import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 //import de.qucosa.dissemination.epicur.EpicurDissMapper;
@@ -55,16 +57,14 @@ public class OaiProviderProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        String mets = exchange.getIn().getBody().toString();
-        Document metsDoc = DocumentXmlUtils.document(new ByteArrayInputStream(mets.getBytes("UTF-8")), true);
-        DocumentXmlUtils.resultXml(metsDoc);
+        Document metsDoc = (Document) exchange.getIn().getBody();
         metsXml = new MetsXmlMapper(metsDoc, dt.getMapXmlNamespaces());
 
         //TODO extract transformations to camel route
-        buildDcObject(metsDoc);
+        buildDcObject(metsDoc, exchange);
         disseminations.add(dc);
 
-        buildXMetaDissplusObject(metsDoc);
+        buildXMetaDissplusObject(metsDoc, exchange);
         disseminations.add(xmetadiss);
 
 //        buildEpicurObject(metsDoc);
@@ -73,38 +73,36 @@ public class OaiProviderProcessor implements Processor {
         exchange.getIn().setBody(disseminations);
     }
 
-    @SuppressWarnings("unused")
-    private RecordTransport buildXMetaDissplusObject(Document metsDoc) throws Exception {
-        XMetaDissTransformer transformer = new XMetaDissTransformer("http://##AGENT##.example.com/##PID##/content.zip", "", true);
+    private RecordTransport buildXMetaDissplusObject(Document metsDoc, Exchange exchange) throws Exception {
+        XMetaDissTransformer transformer = new XMetaDissTransformer((String) exchange.getProperty("transfer.url.pattern"), "", true);
         Document result = transformer.transformXmetaDissplus(metsDoc,
                 new StreamSource(getClass().getClassLoader().getResource("xslt/mets2xmetadissplus.xsl").getPath()));
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
-        DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "xmetadissplus"));
 
         xmetadiss.setPid(metsXml.pid());
         xmetadiss.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
         xmetadiss.setPrefix("xmetadissplus");
-        xmetadiss.setData(buildRecord(result, metsDoc, "xmetadissplus"));
+        xmetadiss.setData(result);
         xmetadiss.setOaiId("");
+        xmetadiss.setSets(getSetSpecs("xmetadissplus", result));
 
         return xmetadiss;
     }
 
-    @SuppressWarnings("unused")
-    private RecordTransport buildDcObject(Document metsDoc) throws Exception {
+    private RecordTransport buildDcObject(Document metsDoc, Exchange exchange) throws Exception {
         DcDissTransformer transformer = new DcDissTransformer(
-                "/xslt/mets2dcdata.xsl", "http://##AGENT##.example.com/##PID##/content.zip",
+                "/xslt/mets2dcdata.xsl", (String) exchange.getProperty("transfer.url.pattern"),
                 "",
                 true);
         Document result = transformer.transformDcDiss(metsDoc);
         XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
-        DocumentXmlUtils.resultXml(buildRecord(result, metsDoc, "dc"));
 
         dc.setPid(metsXml.pid());
         dc.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
         dc.setPrefix("dc");
-        dc.setData(buildRecord(result, metsDoc, "dc"));
+        dc.setData(result);
         dc.setOaiId("");
+        dc.setSets(getSetSpecs("dc", result));
 
         return dc;
     }
@@ -126,15 +124,53 @@ public class OaiProviderProcessor implements Processor {
         return epicur;
     }
 */
+    private List<String> getSetSpecs(String format, Document dissemination) throws XPathExpressionException {
+        List<String> setSpecs = new ArrayList<>();
 
-    private Document buildRecord(Document dissemination, Document metsDoc, String format) throws XPathExpressionException {
-        Document recordTemplate = DocumentXmlUtils.document(getClass().getClassLoader().getResource(RECORD_TEMPLATE_FILE).getPath(), true);
-        RecordXmlBuilder builder = new RecordXmlBuilder(dissemination, recordTemplate)
-                .setMetsDocument(metsDoc)
-                .setDissTerms(dt)
-                .setSets(sets)
-                .setFormat(format);
+        for (SetsConfig.Set setObj : sets.getSetObjects()) {
+            String predicateKey = null;
+            String predicateValue = null;
 
-        return builder.buildRecord(metsXml);
+            if (setObj.getPredicate() != null && !setObj.getPredicate().isEmpty()) {
+
+                if (setObj.getPredicate().contains("=")) {
+                    String[] predicate = setObj.getPredicate().split("=");
+                    predicateKey = predicate[0];
+                    predicateValue = predicate[1];
+
+                    if (!predicateValue.contains("/")) {
+
+                        if (matchTerm(predicateKey, predicateValue, format, dissemination)) {
+                            setSpecs.add(setObj.getSetSpec());
+                        }
+                    } else {
+                        String[] predicateValues = predicateValue.split("/");
+
+                        if (predicateValues.length > 0) {
+
+                        }
+                    }
+                } else {
+                    predicateKey = setObj.getPredicate();
+                }
+            }
+        }
+
+        return setSpecs;
+    }
+
+    private boolean matchTerm(String key, String value, String format, Document dissemination) throws XPathExpressionException {
+        DissTerms.Term term = dt.getTerm(key, format);
+        XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
+        Node node = null;
+
+        if (term != null) {
+
+            if (!term.getTerm().isEmpty()) {
+                node = (Node) xPath.compile(term.getTerm().replace("$val", value)).evaluate(dissemination, XPathConstants.NODE);
+            }
+        }
+
+        return (node != null);
     }
 }

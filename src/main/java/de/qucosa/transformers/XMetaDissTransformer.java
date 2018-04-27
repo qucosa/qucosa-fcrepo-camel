@@ -16,9 +16,11 @@
 
 package de.qucosa.transformers;
 
+import de.qucosa.utils.DocumentXmlUtils;
 import de.qucosa.utils.SimpleNamespaceContext;
 import org.apache.commons.text.StringSubstitutor;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -76,7 +78,7 @@ public class XMetaDissTransformer {
 
         transformer = TransformerFactory.newInstance().newTransformer(xslSource);
         transformer.setParameter("transfer_url", transferUrl);
-        transformer.transform(new DOMSource(this.metsDoc), streamResult);
+        transformer.transform(new DOMSource(metsDoc), streamResult);
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);

@@ -47,7 +47,7 @@ public class Main extends RouteBuilder {
                 .transform(new DcTransformer())
                 .log("${body}")
                 .setProperty("format", simple("dc"))
-                .to("mock:test");
+                .to("direct:oaiprovider");
 
         from("direct:xmetadiss")
                 .id("build-xmetadiss-dissemination")
@@ -58,7 +58,7 @@ public class Main extends RouteBuilder {
                 .transform(new XMetaDissTransformer())
                 .log("${body}")
                 .setProperty("format", simple("xmetadiss"))
-                .to("mock:test");
+                .to("direct:oaiprovider");
 
         from("direct:update")
                 .id("update-message-route")

@@ -106,18 +106,5 @@ public class DcTransformer extends AbstractDisseminationTransform implements Exp
 //        return record;
 //    }
 
-    private Map<String, String> decodeSubstitutions(String parameterValue) {
-        HashMap<String, String> result = new HashMap<String, String>();
-
-        if (parameterValue != null && !parameterValue.isEmpty()) {
-
-            for (String substitution : parameterValue.split(";")) {
-                String[] s = substitution.split("=");
-                result.put(s[0].trim(), s[1].trim());
-            }
-        }
-
-        return result;
-    }
 
 }

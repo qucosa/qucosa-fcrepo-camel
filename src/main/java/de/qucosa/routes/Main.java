@@ -32,10 +32,10 @@ public class Main extends RouteBuilder {
     @Override
     public void configure() {
         from("direct:oaiprovider")
-//                .id("oaiProviderProcess")
+                .id("oaiProviderProcess")
 //                .startupOrder(1)
 //                .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
-//                .process(new OaiProviderProcessor())
+                .process(new OaiProviderProcessor())
                 .to("mock:test");
 
         from("direct:dcdiss")

@@ -68,7 +68,7 @@ public class Main extends RouteBuilder {
                 .to("fcrepo3:METS?fedoraHosturl={{fedora.url}}&fedoraCredentials={{fedora.credentials}}")
                 .split().body()
                 .multicast()
-                .to("direct:dcdiss", "direct:xmetadiss", "direct:epicurdiss");
+                .to("direct:dcdiss", "direct:xmetadiss");
 
 
         from("activemq:topic:fedora.apim.update")

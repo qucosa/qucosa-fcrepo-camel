@@ -30,6 +30,7 @@ import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 abstract public class AbstractDisseminationTransform {
     protected DissTerms dissTerms = new DissTerms();
@@ -113,5 +114,19 @@ abstract public class AbstractDisseminationTransform {
         }
 
         return (node != null);
+    }
+
+    protected Map<String, String> decodeSubstitutions(String parameterValue) {
+        HashMap<String, String> result = new HashMap<String, String>();
+
+        if (parameterValue != null && !parameterValue.isEmpty()) {
+
+            for (String substitution : parameterValue.split(";")) {
+                String[] s = substitution.split("=");
+                result.put(s[0].trim(), s[1].trim());
+            }
+        }
+
+        return result;
     }
 }

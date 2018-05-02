@@ -36,13 +36,21 @@ public class Main extends RouteBuilder {
                 .process(new OaiProviderProcessor())
                 .to("mock:test");
 
+        from("direct:dcdiss").id("build-dc-dissemination").to("mock:test");
+
+        from("direct:xmetadiss").id("build-xmetadiss-dissemination").to("mock:test");
+
+        from("direct:epicurdiss").id("build-epicur-dissemination").to("mock:test");
+
         from("direct:update")
                 .id("update-message-route")
                 .log("PID: ${body}")
                 .resequence().body().timeout(TimeUnit.SECONDS.toMillis(updateDelay))
                 .log("Perform updates for ${body}")
                 .to("fcrepo3:METS?fedoraHosturl={{fedora.url}}&fedoraCredentials={{fedora.credentials}}")
-                .to("direct:oaiprovider");
+                .split().body()
+                .multicast()
+                .to("direct:dcdiss", "direct:xmetadiss", "direct:epicurdiss");
 
 
         from("activemq:topic:fedora.apim.update")

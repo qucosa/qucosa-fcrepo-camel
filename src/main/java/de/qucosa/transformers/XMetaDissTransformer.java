@@ -18,6 +18,8 @@ package de.qucosa.transformers;
 
 import de.qucosa.utils.DocumentXmlUtils;
 import de.qucosa.utils.SimpleNamespaceContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Expression;
 import org.apache.commons.text.StringSubstitutor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,7 +42,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class XMetaDissTransformer {
+public class XMetaDissTransformer extends AbstractDisseminationTransform implements Expression {
     private Document metsDoc = null;
 
     private String transferUrlPattern;
@@ -48,6 +50,13 @@ public class XMetaDissTransformer {
     private boolean transferUrlPidencode;
 
     private Map<String, String> agentNameSubstitutions;
+
+    @Override
+    public <T> T evaluate(Exchange exchange, Class<T> aClass) {
+        return null;
+    }
+
+    public XMetaDissTransformer() { }
 
     public XMetaDissTransformer(String transferUrlPattern, String agentNameSubstitutions, boolean transferUrlPidencode) {
         this.transferUrlPattern = transferUrlPattern;
@@ -65,11 +74,11 @@ public class XMetaDissTransformer {
 
         Map<String, String> values = new LinkedHashMap<String, String>() {
             {
-                put("AGENT", extractAgent());
+                put("AGENT", extractAgent(metsDoc));
             }
 
             {
-                put("PID", extractPid());
+                put("PID", extractPid(true, metsDoc));
             }
         };
 
@@ -88,25 +97,6 @@ public class XMetaDissTransformer {
         return xmetadiss;
     }
 
-    private String extractAgent() throws XPathExpressionException {
-        String agent = null;
-        XPath xPath = xpath();
-        agent = (String) xPath.compile("//mets:agent[@ROLE='EDITOR' and @TYPE='ORGANIZATION']/mets:name[1]")
-                .evaluate(metsDoc, XPathConstants.STRING);
-        return agent;
-    }
-
-    private String extractPid() throws XPathExpressionException {
-        String pid = null;
-
-        if (transferUrlPidencode) {
-            XPath xPath = xpath();
-            pid = (String) xPath.compile("//mets:mets/@OBJID").evaluate(metsDoc, XPathConstants.STRING);
-        }
-
-        return pid;
-    }
-
     private Map<String, String> decodeSubstitutions(String parameterValue) {
         HashMap<String, String> result = new HashMap<String, String>();
 
@@ -119,16 +109,5 @@ public class XMetaDissTransformer {
         }
 
         return result;
-    }
-
-    @SuppressWarnings("serial")
-    private XPath xpath() {
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        xPath.setNamespaceContext(new SimpleNamespaceContext(new HashMap<String, String>() {
-            {
-                put("mets", "http://www.loc.gov/METS/");
-            }
-        }));
-        return xPath;
     }
 }

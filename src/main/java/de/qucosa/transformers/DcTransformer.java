@@ -106,25 +106,6 @@ public class DcTransformer extends AbstractDisseminationTransform implements Exp
 //        return record;
 //    }
 
-    private String extractAgent(Document metsDoc) throws XPathExpressionException {
-        String agent = null;
-        XPath xPath = xpath();
-        agent = (String) xPath.compile("//mets:agent[@ROLE='EDITOR' and @TYPE='ORGANIZATION']/mets:name[1]")
-                .evaluate(metsDoc, XPathConstants.STRING);
-        return agent;
-    }
-
-    private String extractPid(boolean transferUrlPidencode, Document metsDoc) throws XPathExpressionException {
-        String pid = null;
-
-        if (transferUrlPidencode) {
-            XPath xPath = xpath();
-            pid = (String) xPath.compile("//mets:mets/@OBJID").evaluate(metsDoc, XPathConstants.STRING);
-        }
-
-        return pid;
-    }
-
     private Map<String, String> decodeSubstitutions(String parameterValue) {
         HashMap<String, String> result = new HashMap<String, String>();
 
@@ -137,16 +118,6 @@ public class DcTransformer extends AbstractDisseminationTransform implements Exp
         }
 
         return result;
-    }
-
-    private XPath xpath() {
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        xPath.setNamespaceContext(new SimpleNamespaceContext(new HashMap<String, String>() {
-            {
-                put("mets", "http://www.loc.gov/METS/");
-            }
-        }));
-        return xPath;
     }
 
 }

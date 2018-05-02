@@ -21,14 +21,13 @@ import de.qucosa.utils.SimpleNamespaceContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Expression;
 import org.apache.commons.text.StringSubstitutor;
+import org.apache.xerces.dom.ElementNSImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -38,39 +37,36 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class XMetaDissTransformer extends AbstractDisseminationTransform implements Expression {
-    private Document metsDoc = null;
-
-    private String transferUrlPattern;
-
-    private boolean transferUrlPidencode;
-
-    private Map<String, String> agentNameSubstitutions;
 
     @Override
     public <T> T evaluate(Exchange exchange, Class<T> aClass) {
-        return null;
+        ElementNSImpl elem = (ElementNSImpl) exchange.getIn().getBody();
+        Document metsDoc = elem.getOwnerDocument();
+        StreamSource xslSource = new StreamSource(this.getClass().getResourceAsStream(exchange.getProperty("xsltStylesheetResourceName").toString()));
+
+        try {
+            exchange.getIn().setBody(transformXmetadisDocument(exchange, metsDoc, xslSource));
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return (T) exchange.getIn().getBody();
     }
 
-    public XMetaDissTransformer() { }
-
-    public XMetaDissTransformer(String transferUrlPattern, String agentNameSubstitutions, boolean transferUrlPidencode) {
-        this.transferUrlPattern = transferUrlPattern;
-        this.transferUrlPidencode = transferUrlPidencode;
-        this.agentNameSubstitutions = decodeSubstitutions(agentNameSubstitutions);
-    }
-
-    @SuppressWarnings("serial")
-    public Document transformXmetaDissplus(Document metsDoc, StreamSource xslSource) throws TransformerFactoryConfigurationError, Exception, XPathExpressionException {
-        this.metsDoc = metsDoc;
+    private Document transformXmetadisDocument(Exchange exchange, Document metsDoc, StreamSource xslSource) throws XPathExpressionException, TransformerException, UnsupportedEncodingException {
         Transformer transformer = null;
         StringWriter stringWriter = new StringWriter();
         StreamResult streamResult = new StreamResult(stringWriter);
-        Document xmetadiss = null;
 
         Map<String, String> values = new LinkedHashMap<String, String>() {
             {
@@ -83,31 +79,13 @@ public class XMetaDissTransformer extends AbstractDisseminationTransform impleme
         };
 
         StringSubstitutor substitutor = new StringSubstitutor(values, "##", "##");
-        String transferUrl = substitutor.replace(transferUrlPattern);
+        String transferUrl = substitutor.replace(exchange.getProperty("transfer.url.pattern").toString());
 
         transformer = TransformerFactory.newInstance().newTransformer(xslSource);
         transformer.setParameter("transfer_url", transferUrl);
         transformer.transform(new DOMSource(metsDoc), streamResult);
 
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        builderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
-        xmetadiss = documentBuilder.parse(new ByteArrayInputStream(stringWriter.toString().getBytes("UTF-8")));
-
-        return xmetadiss;
+        return DocumentXmlUtils.document(new ByteArrayInputStream(stringWriter.toString().getBytes("UTF-8")), true);
     }
 
-    private Map<String, String> decodeSubstitutions(String parameterValue) {
-        HashMap<String, String> result = new HashMap<String, String>();
-
-        if (parameterValue != null && !parameterValue.isEmpty()) {
-
-            for (String substitution : parameterValue.split(";")) {
-                String[] s = substitution.split("=");
-                result.put(s[0].trim(), s[1].trim());
-            }
-        }
-
-        return result;
-    }
 }

@@ -45,6 +45,7 @@ public class Main extends RouteBuilder {
                 .setProperty("transferUrlPidencode", simple("true"))
                 .transform(new DcTransformer())
                 .log("${body}")
+                .setProperty("format", simple("dc"))
                 .to("mock:test");
 
         from("direct:xmetadiss").id("build-xmetadiss-dissemination").to("mock:test");

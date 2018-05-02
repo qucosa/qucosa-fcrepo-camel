@@ -20,7 +20,6 @@ import de.qucosa.fcrepo3.component.mapper.MetsXmlMapper;
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.RecordTransport;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
-import de.qucosa.transformers.DcDissTransformer;
 import de.qucosa.transformers.XMetaDissTransformer;
 import de.qucosa.utils.DateTimeConverter;
 import de.qucosa.utils.DocumentXmlUtils;
@@ -38,12 +37,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//import de.qucosa.dissemination.epicur.EpicurDissMapper;
-
 public class OaiProviderProcessor implements Processor {
     private static final String RECORD_TEMPLATE_FILE = "oaiprovider/record.xml";
     private RecordTransport xmetadiss = new RecordTransport();
-    private RecordTransport dc = new RecordTransport();
     private RecordTransport epicur = new RecordTransport();
     private Set<RecordTransport> disseminations = new HashSet<RecordTransport>();
     private DissTerms dt = null;
@@ -61,9 +57,6 @@ public class OaiProviderProcessor implements Processor {
         metsXml = new MetsXmlMapper(metsDoc, dt.getMapXmlNamespaces());
 
         //TODO extract transformations to camel route
-        buildDcObject(metsDoc, exchange);
-        disseminations.add(dc);
-
         buildXMetaDissplusObject(metsDoc, exchange);
         disseminations.add(xmetadiss);
 
@@ -87,24 +80,6 @@ public class OaiProviderProcessor implements Processor {
         xmetadiss.setSets(getSetSpecs("xmetadissplus", result));
 
         return xmetadiss;
-    }
-
-    private RecordTransport buildDcObject(Document metsDoc, Exchange exchange) throws Exception {
-        DcDissTransformer transformer = new DcDissTransformer(
-                "/xslt/mets2dcdata.xsl", (String) exchange.getProperty("transfer.url.pattern"),
-                "",
-                true);
-        Document result = transformer.transformDcDiss(metsDoc);
-        XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
-
-        dc.setPid(metsXml.pid());
-        dc.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
-        dc.setPrefix("dc");
-        dc.setData(result);
-        dc.setOaiId("");
-        dc.setSets(getSetSpecs("dc", result));
-
-        return dc;
     }
 
 /*

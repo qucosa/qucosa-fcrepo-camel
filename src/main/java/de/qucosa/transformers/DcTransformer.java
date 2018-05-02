@@ -17,10 +17,6 @@
 package de.qucosa.transformers;
 
 import de.qucosa.fcrepo3.component.mapper.MetsXmlMapper;
-import de.qucosa.oaiprovider.component.model.DissTerms;
-import de.qucosa.oaiprovider.component.model.RecordTransport;
-import de.qucosa.oaiprovider.component.model.SetsConfig;
-import de.qucosa.utils.DateTimeConverter;
 import de.qucosa.utils.DocumentXmlUtils;
 import de.qucosa.utils.SimpleNamespaceContext;
 import org.apache.camel.Exchange;
@@ -28,9 +24,7 @@ import org.apache.camel.Expression;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.xerces.dom.ElementNSImpl;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -44,7 +38,6 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -60,14 +53,12 @@ public class DcTransformer extends AbstractDisseminationTransform implements Exp
         StreamSource xslSource = new StreamSource(this.getClass().getResourceAsStream(exchange.getProperty("xsltStylesheetResourceName").toString()));
 
         try {
-            RecordTransport record = dcRecord(extractPid(true, metsDoc),
-                    DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()),
-                    transformDcDocument(exchange, metsDoc, xslSource));
+//            RecordTransport record = dcRecord(extractPid(true, metsDoc),
+//                    DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()),
+//                    transformDcDocument(exchange, metsDoc, xslSource));
 
-            exchange.getIn().setBody(record);
+            exchange.getIn().setBody(transformDcDocument(exchange, metsDoc, xslSource));
         } catch (XPathExpressionException e) {
-
-        } catch (DatatypeConfigurationException e) {
 
         } catch (TransformerException e) {
 
@@ -104,16 +95,16 @@ public class DcTransformer extends AbstractDisseminationTransform implements Exp
         return DocumentXmlUtils.document(new ByteArrayInputStream(stringWriter.toString().getBytes("UTF-8")), true);
     }
 
-    private RecordTransport dcRecord(String pid, Timestamp lastModDate, Document result) throws XPathExpressionException {
-        RecordTransport record = new RecordTransport();
-        record.setPid(pid);
-        record.setModified(lastModDate);
-        record.setPrefix("dc");
-        record.setData(result);
-        record.setSets(getSetSpecs("dc", result));
-        record.setOaiId("");
-        return record;
-    }
+//    private RecordTransport dcRecord(String pid, Timestamp lastModDate, Document result) throws XPathExpressionException {
+//        RecordTransport record = new RecordTransport();
+//        record.setPid(pid);
+//        record.setModified(lastModDate);
+//        record.setPrefix("dc");
+//        record.setData(result);
+//        record.setSets(getSetSpecs("dc", result));
+//        record.setOaiId("");
+//        return record;
+//    }
 
     private String extractAgent(Document metsDoc) throws XPathExpressionException {
         String agent = null;

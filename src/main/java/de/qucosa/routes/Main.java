@@ -52,7 +52,7 @@ public class Main extends RouteBuilder {
         from("direct:xmetadiss")
                 .id("build-xmetadiss-dissemination")
                 .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
-                .setProperty("xsltStylesheetResourceName", simple("/xslt/mets2dcdata.xsl"))
+                .setProperty("xsltStylesheetResourceName", simple("/xslt/mets2xmetadissplus.xsl"))
                 .setProperty("agentNameSubstitutions", simple(""))
                 .setProperty("transferUrlPidencode", simple("true"))
                 .transform(new XMetaDissTransformer())

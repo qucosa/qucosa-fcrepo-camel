@@ -50,8 +50,6 @@ public class Main extends RouteBuilder {
 
         from("direct:xmetadiss").id("build-xmetadiss-dissemination").to("mock:test");
 
-        from("direct:epicurdiss").id("build-epicur-dissemination").to("mock:test");
-
         from("direct:update")
                 .id("update-message-route")
                 .log("PID: ${body}")

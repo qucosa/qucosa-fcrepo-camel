@@ -25,22 +25,4 @@ public class OaiProviderProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
     }
-
-/*
-    @SuppressWarnings("unused")
-    private RecordTransport buildEpicurObject(Document metsDoc) throws Exception {
-        EpicurDissMapper mapper = new EpicurDissMapper("http://test.##AGENT##.qucosa.de/id/##PID##", "", "", true);
-        Document epicurRes = mapper.transformEpicurDiss(metsDoc);
-        XPath xPath = DocumentXmlUtils.xpath(dt.getMapXmlNamespaces());
-        DocumentXmlUtils.resultXml(buildRecord(epicurRes, metsDoc, "epicur"));
-
-        epicur.setPid(metsXml.pid());
-        epicur.setModified(DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()));
-        epicur.setPrefix("epicur");
-        epicur.setData(buildRecord(epicurRes, metsDoc, "epicur"));
-        epicur.setOaiId("");
-        
-        return epicur;
-    }
-*/
 }

@@ -17,6 +17,7 @@
 package de.qucosa.routes;
 
 import de.qucosa.oaiprovider.component.OaiProviderProcessor;
+import de.qucosa.transformers.DcTransformer;
 import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -29,14 +30,22 @@ public class Main extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:oaiprovider")
-                .id("oaiProviderProcess")
-                .startupOrder(1)
-                .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
-                .process(new OaiProviderProcessor())
-                .to("mock:test");
+//        from("direct:oaiprovider")
+//                .id("oaiProviderProcess")
+//                .startupOrder(1)
+//                .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
+//                .process(new OaiProviderProcessor())
+//                .to("mock:test");
 
-        from("direct:dcdiss").id("build-dc-dissemination").to("mock:test");
+        from("direct:dcdiss")
+                .id("build-dc-dissemination")
+                .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
+                .setProperty("xsltStylesheetResourceName", simple("/xslt/mets2dcdata.xsl"))
+                .setProperty("agentNameSubstitutions", simple(""))
+                .setProperty("transferUrlPidencode", simple("true"))
+                .transform(new DcTransformer())
+                .log("${body}")
+                .to("mock:test");
 
         from("direct:xmetadiss").id("build-xmetadiss-dissemination").to("mock:test");
 

@@ -18,6 +18,7 @@ package de.qucosa.routes;
 
 import de.qucosa.oaiprovider.component.OaiProviderProcessor;
 import de.qucosa.transformers.DcTransformer;
+import de.qucosa.transformers.XMetaDissTransformer;
 import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -48,7 +49,16 @@ public class Main extends RouteBuilder {
                 .setProperty("format", simple("dc"))
                 .to("mock:test");
 
-        from("direct:xmetadiss").id("build-xmetadiss-dissemination").to("mock:test");
+        from("direct:xmetadiss")
+                .id("build-xmetadiss-dissemination")
+                .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
+                .setProperty("xsltStylesheetResourceName", simple("/xslt/mets2dcdata.xsl"))
+                .setProperty("agentNameSubstitutions", simple(""))
+                .setProperty("transferUrlPidencode", simple("true"))
+                .transform(new XMetaDissTransformer())
+                .log("${body}")
+                .setProperty("format", simple("xmetadiss"))
+                .to("mock:test");
 
         from("direct:update")
                 .id("update-message-route")

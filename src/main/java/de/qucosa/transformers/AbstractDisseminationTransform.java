@@ -19,19 +19,51 @@ package de.qucosa.transformers;
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
 import de.qucosa.utils.DocumentXmlUtils;
+import de.qucosa.utils.SimpleNamespaceContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 abstract public class AbstractDisseminationTransform {
     protected DissTerms dissTerms = new DissTerms();
 
     protected SetsConfig sets = new SetsConfig();
+
+    protected String extractAgent(Document metsDoc) throws XPathExpressionException {
+        String agent = null;
+        XPath xPath = xpath();
+        agent = (String) xPath.compile("//mets:agent[@ROLE='EDITOR' and @TYPE='ORGANIZATION']/mets:name[1]")
+                .evaluate(metsDoc, XPathConstants.STRING);
+        return agent;
+    }
+
+    protected String extractPid(boolean transferUrlPidencode, Document metsDoc) throws XPathExpressionException {
+        String pid = null;
+
+        if (transferUrlPidencode) {
+            XPath xPath = xpath();
+            pid = (String) xPath.compile("//mets:mets/@OBJID").evaluate(metsDoc, XPathConstants.STRING);
+        }
+
+        return pid;
+    }
+
+    protected XPath xpath() {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        xPath.setNamespaceContext(new SimpleNamespaceContext(new HashMap<String, String>() {
+            {
+                put("mets", "http://www.loc.gov/METS/");
+            }
+        }));
+        return xPath;
+    }
 
     protected List<String> getSetSpecs(String format, Document dissemination) throws XPathExpressionException {
         List<String> setSpecs = new ArrayList<>();

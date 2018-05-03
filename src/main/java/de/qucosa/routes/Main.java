@@ -47,6 +47,7 @@ public class Main extends RouteBuilder {
         from("direct:oaiprovider")
                 .id("oaiProviderProcess")
                 .process(new OaiProviderProcessor())
+                .end()
                 .to("oaiprovider:update")
                 .log("${body}");
 

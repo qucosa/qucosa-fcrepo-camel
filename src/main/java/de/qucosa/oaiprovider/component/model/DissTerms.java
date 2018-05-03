@@ -87,18 +87,13 @@ public class DissTerms {
         return dao().getTerm(diss, name);
     }
 
+    @JsonIgnore
     public Set<DissFormat> formats() {
         return dao().dissFormats();
     }
 
-    private DissTermsDao dao() {
-
-        if (dao == null) {
-            dao = new DissTermsDao();
-        }
-
-        return dao;
-    }
+    @JsonIgnore
+    public Set<XmlNamspace> getSetXmlNamespaces() { return dao().getSetXmlNamespaces(); }
 
     public static class XmlNamspace {
         @JsonProperty("prefix")
@@ -194,6 +189,15 @@ public class DissTerms {
         public void setDissType(String dissType) {
             this.dissType = dissType;
         }
+    }
+
+    private DissTermsDao dao() {
+
+        if (dao == null) {
+            dao = new DissTermsDao();
+        }
+
+        return dao;
     }
 
     private class DissTermsDao {

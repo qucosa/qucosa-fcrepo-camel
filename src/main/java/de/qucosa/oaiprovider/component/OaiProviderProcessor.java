@@ -16,13 +16,96 @@
 
 package de.qucosa.oaiprovider.component;
 
+import de.qucosa.fcrepo3.component.mapper.MetsXmlMapper;
+import de.qucosa.oaiprovider.component.model.DissTerms;
+import de.qucosa.oaiprovider.component.model.RecordTransport;
+import de.qucosa.oaiprovider.component.model.SetsConfig;
+import de.qucosa.utils.DateTimeConverter;
+import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class OaiProviderProcessor implements Processor {
+    private Set<RecordTransport> records = new HashSet<>();
 
     @Override
     public void process(Exchange exchange) throws Exception {
+        DissTerms dissTerms = (DissTerms) exchange.getContext().getRegistry().lookupByName("dissTerms");
+        SetsConfig setsConfig = (SetsConfig) exchange.getContext().getRegistry().lookupByName("setsConfig");
+        Document dissemination = (Document) exchange.getIn().getBody();
+        MetsXmlMapper metsXmlMapper = new MetsXmlMapper(dissemination, dissTerms.getMapXmlNamespaces());
+        String format = exchange.getProperty("format").toString();
 
+        RecordTransport record = new RecordTransport();
+        record.setPrefix(format);
+        record.setPid(exchange.getProperty("pid").toString());
+        record.setData(dissemination);
+        record.setModified(DateTimeConverter.timestampWithTimezone(exchange.getProperty("lastmoddate").toString()));
+        record.setSets(getSetSpecs(dissTerms, setsConfig, format, dissemination));
+        record.setOaiId("");
+
+        records.add(record);
+
+        exchange.getIn().setBody(records);
+    }
+
+    private List<String> getSetSpecs(DissTerms dissTerms, SetsConfig setsConfig, String format, Document dissemination) throws XPathExpressionException {
+        List<String> setSpecs = new ArrayList<>();
+
+        for (SetsConfig.Set setObj : setsConfig.getSetObjects()) {
+            String predicateKey = null;
+            String predicateValue = null;
+
+            if (setObj.getPredicate() != null && !setObj.getPredicate().isEmpty()) {
+
+                if (setObj.getPredicate().contains("=")) {
+                    String[] predicate = setObj.getPredicate().split("=");
+                    predicateKey = predicate[0];
+                    predicateValue = predicate[1];
+
+                    if (!predicateValue.contains("/")) {
+
+                        if (matchTerm(predicateKey, predicateValue, format, dissTerms, dissemination)) {
+                            setSpecs.add(setObj.getSetSpec());
+                        }
+                    } else {
+                        String[] predicateValues = predicateValue.split("/");
+
+                        if (predicateValues.length > 0) {
+
+                        }
+                    }
+                } else {
+                    predicateKey = setObj.getPredicate();
+                }
+            }
+        }
+
+        return setSpecs;
+    }
+
+    private boolean matchTerm(String key, String value, String format, DissTerms dissTerms, Document dissemination) throws XPathExpressionException {
+        DissTerms.Term term = dissTerms.getTerm(key, format);
+        XPath xPath = DocumentXmlUtils.xpath(dissTerms.getMapXmlNamespaces());
+        Node node = null;
+
+        if (term != null) {
+
+            if (!term.getTerm().isEmpty()) {
+                node = (Node) xPath.compile(term.getTerm().replace("$val", value)).evaluate(dissemination, XPathConstants.NODE);
+            }
+        }
+
+        return (node != null);
     }
 }

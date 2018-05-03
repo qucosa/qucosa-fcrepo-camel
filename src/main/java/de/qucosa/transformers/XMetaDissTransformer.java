@@ -54,6 +54,9 @@ public class XMetaDissTransformer extends AbstractDisseminationTransform impleme
             e.printStackTrace();
         }
 
+        exchange.setProperty("pid", exchange.getProperty("pid"));
+        exchange.setProperty("lastmoddate", exchange.getProperty("lastmoddate"));
+
         return (T) exchange.getIn().getBody();
     }
 

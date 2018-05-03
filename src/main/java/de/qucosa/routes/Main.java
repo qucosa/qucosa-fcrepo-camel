@@ -17,11 +17,17 @@
 package de.qucosa.routes;
 
 import de.qucosa.oaiprovider.component.OaiProviderProcessor;
+import de.qucosa.oaiprovider.component.model.DissTerms;
+import de.qucosa.oaiprovider.component.model.SetsConfig;
 import de.qucosa.transformers.DcTransformer;
 import de.qucosa.transformers.XMetaDissTransformer;
+import org.apache.camel.BeanInject;
 import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.builder.xml.DefaultNamespaceContext;
+import org.apache.camel.builder.xml.Namespaces;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends RouteBuilder {
@@ -29,14 +35,20 @@ public class Main extends RouteBuilder {
     @PropertyInject("update.delay")
     long updateDelay;
 
+    @BeanInject("dissTerms")
+    private DissTerms dissTerms;
+
+    @BeanInject("setsConfig")
+    private SetsConfig setsConfig;
+
     @Override
     public void configure() {
+
         from("direct:oaiprovider")
                 .id("oaiProviderProcess")
-//                .startupOrder(1)
-//                .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
                 .process(new OaiProviderProcessor())
-                .to("mock:test");
+                .to("oaiprovider:update")
+                .log("${body}");
 
         from("direct:dcdiss")
                 .id("build-dc-dissemination")
@@ -45,7 +57,6 @@ public class Main extends RouteBuilder {
                 .setProperty("agentNameSubstitutions", simple(""))
                 .setProperty("transferUrlPidencode", simple("true"))
                 .transform(new DcTransformer())
-                .log("${body}")
                 .setProperty("format", simple("dc"))
                 .to("direct:oaiprovider");
 
@@ -56,17 +67,17 @@ public class Main extends RouteBuilder {
                 .setProperty("agentNameSubstitutions", simple(""))
                 .setProperty("transferUrlPidencode", simple("true"))
                 .transform(new XMetaDissTransformer())
-                .log("${body}")
                 .setProperty("format", simple("xmetadiss"))
                 .to("direct:oaiprovider");
 
         from("direct:update")
                 .id("update-message-route")
-                .log("PID: ${body}")
                 .resequence().body().timeout(TimeUnit.SECONDS.toMillis(updateDelay))
                 .log("Perform updates for ${body}")
                 .to("fcrepo3:METS?fedoraHosturl={{fedora.url}}&fedoraCredentials={{fedora.credentials}}")
                 .split().body()
+                .setProperty("pid", xpath("//mets:mets/@OBJID", String.class).namespaces(namespaces()))
+                .setProperty("lastmoddate", xpath("//mets:mets/mets:metsHdr/@LASTMODDATE", String.class).namespaces(namespaces()))
                 .multicast()
                 .to("direct:dcdiss", "direct:xmetadiss");
 
@@ -80,4 +91,13 @@ public class Main extends RouteBuilder {
 
     }
 
+    private Namespaces namespaces() {
+        Namespaces namespaces = new Namespaces("", "");
+
+        for (DissTerms.XmlNamspace xmlNamspace : dissTerms.getSetXmlNamespaces()) {
+            namespaces.add(xmlNamspace.getPrefix(), xmlNamspace.getUrl());
+        }
+
+        return namespaces;
+    }
 }

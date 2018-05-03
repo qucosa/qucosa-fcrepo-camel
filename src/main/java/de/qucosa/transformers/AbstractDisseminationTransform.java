@@ -18,18 +18,14 @@ package de.qucosa.transformers;
 
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.SetsConfig;
-import de.qucosa.utils.DocumentXmlUtils;
 import de.qucosa.utils.SimpleNamespaceContext;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 abstract public class AbstractDisseminationTransform {
@@ -56,66 +52,6 @@ abstract public class AbstractDisseminationTransform {
         return pid;
     }
 
-    protected XPath xpath() {
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        xPath.setNamespaceContext(new SimpleNamespaceContext(new HashMap<String, String>() {
-            {
-                put("mets", "http://www.loc.gov/METS/");
-            }
-        }));
-        return xPath;
-    }
-
-    protected List<String> getSetSpecs(String format, Document dissemination) throws XPathExpressionException {
-        List<String> setSpecs = new ArrayList<>();
-
-        for (SetsConfig.Set setObj : sets.getSetObjects()) {
-            String predicateKey = null;
-            String predicateValue = null;
-
-            if (setObj.getPredicate() != null && !setObj.getPredicate().isEmpty()) {
-
-                if (setObj.getPredicate().contains("=")) {
-                    String[] predicate = setObj.getPredicate().split("=");
-                    predicateKey = predicate[0];
-                    predicateValue = predicate[1];
-
-                    if (!predicateValue.contains("/")) {
-
-                        if (matchTerm(predicateKey, predicateValue, format, dissemination)) {
-                            setSpecs.add(setObj.getSetSpec());
-                        }
-                    } else {
-                        String[] predicateValues = predicateValue.split("/");
-
-                        if (predicateValues.length > 0) {
-
-                        }
-                    }
-                } else {
-                    predicateKey = setObj.getPredicate();
-                }
-            }
-        }
-
-        return setSpecs;
-    }
-
-    protected boolean matchTerm(String key, String value, String format, Document dissemination) throws XPathExpressionException {
-        DissTerms.Term term = dissTerms.getTerm(key, format);
-        XPath xPath = DocumentXmlUtils.xpath(dissTerms.getMapXmlNamespaces());
-        Node node = null;
-
-        if (term != null) {
-
-            if (!term.getTerm().isEmpty()) {
-                node = (Node) xPath.compile(term.getTerm().replace("$val", value)).evaluate(dissemination, XPathConstants.NODE);
-            }
-        }
-
-        return (node != null);
-    }
-
     protected Map<String, String> decodeSubstitutions(String parameterValue) {
         HashMap<String, String> result = new HashMap<String, String>();
 
@@ -128,5 +64,15 @@ abstract public class AbstractDisseminationTransform {
         }
 
         return result;
+    }
+
+    private XPath xpath() {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        xPath.setNamespaceContext(new SimpleNamespaceContext(new HashMap<String, String>() {
+            {
+                put("mets", "http://www.loc.gov/METS/");
+            }
+        }));
+        return xPath;
     }
 }

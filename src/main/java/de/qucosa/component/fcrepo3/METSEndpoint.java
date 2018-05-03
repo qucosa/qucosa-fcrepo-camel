@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo3.component;
+package de.qucosa.component.fcrepo3;
 
 import de.qucosa.disseminator.MetsDisseminator;
 import de.qucosa.repository.AuthenticationException;

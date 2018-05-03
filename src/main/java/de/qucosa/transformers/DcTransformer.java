@@ -16,7 +16,6 @@
 
 package de.qucosa.transformers;
 
-import de.qucosa.fcrepo3.component.mapper.MetsXmlMapper;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Expression;

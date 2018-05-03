@@ -16,7 +16,7 @@
 
 package de.qucosa.oaiprovider.component;
 
-import de.qucosa.fcrepo3.component.mapper.MetsXmlMapper;
+import de.qucosa.component.fcrepo3.mapper.MetsXmlMapper;
 import de.qucosa.oaiprovider.component.model.DissTerms;
 import de.qucosa.oaiprovider.component.model.RecordTransport;
 import de.qucosa.oaiprovider.component.model.SetsConfig;

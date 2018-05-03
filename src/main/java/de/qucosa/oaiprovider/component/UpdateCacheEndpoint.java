@@ -16,6 +16,8 @@
 
 package de.qucosa.oaiprovider.component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.qucosa.oaiprovider.component.model.RecordTransport;
 import org.apache.camel.Component;
 import org.apache.camel.Consumer;
 import org.apache.camel.Endpoint;
@@ -24,6 +26,14 @@ import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultEndpoint;
 import org.apache.camel.impl.DefaultProducer;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Set;
 
 public class UpdateCacheEndpoint extends DefaultEndpoint {
     private Endpoint endpoint;
@@ -43,8 +53,28 @@ public class UpdateCacheEndpoint extends DefaultEndpoint {
         return new DefaultProducer(endpoint) {
 
             @Override
-            public void process(Exchange exchange) {
+            public void process(Exchange exchange) throws IOException {
                 System.out.println(exchange.getIn().getBody());
+                ObjectMapper om = new ObjectMapper();
+                Set<RecordTransport> records = (Set<RecordTransport>) exchange.getIn().getBody();
+                URL url = new URL("http://localhost:8080/qucosa-oai-provider/record/update");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+
+                OutputStream outputStream = connection.getOutputStream();
+                outputStream.write(om.writeValueAsBytes(records));
+                outputStream.flush();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String output = null;
+
+                while ((output = reader.readLine()) != null) {
+                    System.out.println(output);
+                }
+
+                connection.disconnect();
             }
         };
     }

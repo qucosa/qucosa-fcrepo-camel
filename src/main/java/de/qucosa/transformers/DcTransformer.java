@@ -18,7 +18,6 @@ package de.qucosa.transformers;
 
 import de.qucosa.fcrepo3.component.mapper.MetsXmlMapper;
 import de.qucosa.utils.DocumentXmlUtils;
-import de.qucosa.utils.SimpleNamespaceContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Expression;
 import org.apache.commons.text.StringSubstitutor;
@@ -31,14 +30,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -49,14 +44,9 @@ public class DcTransformer extends AbstractDisseminationTransform implements Exp
         ElementNSImpl elem = (ElementNSImpl) exchange.getIn().getBody();
         Document metsDoc = elem.getOwnerDocument();
 //        Document metsDoc = (Document) exchange.getIn().getBody();
-        MetsXmlMapper metsXml = new MetsXmlMapper(metsDoc, dissTerms.getMapXmlNamespaces());
         StreamSource xslSource = new StreamSource(this.getClass().getResourceAsStream(exchange.getProperty("xsltStylesheetResourceName").toString()));
 
         try {
-//            RecordTransport record = dcRecord(extractPid(true, metsDoc),
-//                    DateTimeConverter.timestampWithTimezone(metsXml.lastModDate()),
-//                    transformDcDocument(exchange, metsDoc, xslSource));
-
             exchange.getIn().setBody(transformDcDocument(exchange, metsDoc, xslSource));
         } catch (XPathExpressionException e) {
 
@@ -66,11 +56,13 @@ public class DcTransformer extends AbstractDisseminationTransform implements Exp
 
         }
 
+        exchange.setProperty("pid", exchange.getProperty("pid"));
+        exchange.setProperty("lastmoddate", exchange.getProperty("lastmoddate"));
+
         return (T) exchange.getIn().getBody();
     }
 
     private Document transformDcDocument(Exchange exchange, Document metsDoc, StreamSource xslSource) throws XPathExpressionException, TransformerException, UnsupportedEncodingException {
-        Document transDoc = null;
         StringWriter stringWriter = new StringWriter();
         StreamResult streamResult = new StreamResult(stringWriter);
 
@@ -94,17 +86,5 @@ public class DcTransformer extends AbstractDisseminationTransform implements Exp
 
         return DocumentXmlUtils.document(new ByteArrayInputStream(stringWriter.toString().getBytes("UTF-8")), true);
     }
-
-//    private RecordTransport dcRecord(String pid, Timestamp lastModDate, Document result) throws XPathExpressionException {
-//        RecordTransport record = new RecordTransport();
-//        record.setPid(pid);
-//        record.setModified(lastModDate);
-//        record.setPrefix("dc");
-//        record.setData(result);
-//        record.setSets(getSetSpecs("dc", result));
-//        record.setOaiId("");
-//        return record;
-//    }
-
 
 }

@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-package de.qucosa.oaiprovider.component.model;
+package de.qucosa.component.oaiprovider.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Format {
+public class Identifier implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("mdprefix")
-    private String mdprefix;
+    @JsonProperty("identifier")
+    private String identifier;
 
-    @JsonProperty("lastpolldate")
-    private Timestamp lastpolldate;
+    @JsonProperty("datestamp")
+    private Timestamp datestamp;
 
-    @JsonProperty("dissType")
-    private String dissType;
+    @JsonProperty("pid")
+    private String pid;
 
     public Long getId() {
         return id;
@@ -45,27 +48,27 @@ public class Format {
         this.id = id;
     }
 
-    public String getMdprefix() {
-        return mdprefix;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setMdprefix(String mdprefix) {
-        this.mdprefix = mdprefix;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
-    public Timestamp getLastpolldate() {
-        return lastpolldate;
+    public Timestamp getDatestamp() {
+        return datestamp;
     }
 
-    public void setLastpolldate(Timestamp lastpolldate) {
-        this.lastpolldate = lastpolldate;
+    public void setDatestamp(Timestamp datestamp) {
+        this.datestamp = datestamp;
     }
 
-    public String getDissType() {
-        return dissType;
+    public String getPid() {
+        return pid;
     }
 
-    public void setDissType(String dissType) {
-        this.dissType = dissType;
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 }

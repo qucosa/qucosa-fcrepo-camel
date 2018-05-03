@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package de.qucosa.oaiprovider.component;
+package de.qucosa.component.oaiprovider;
 
 import de.qucosa.component.fcrepo3.mapper.MetsXmlMapper;
-import de.qucosa.oaiprovider.component.model.DissTerms;
-import de.qucosa.oaiprovider.component.model.RecordTransport;
-import de.qucosa.oaiprovider.component.model.SetsConfig;
+import de.qucosa.component.oaiprovider.model.DissTerms;
+import de.qucosa.component.oaiprovider.model.RecordTransport;
+import de.qucosa.component.oaiprovider.model.SetsConfig;
 import de.qucosa.utils.DateTimeConverter;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;

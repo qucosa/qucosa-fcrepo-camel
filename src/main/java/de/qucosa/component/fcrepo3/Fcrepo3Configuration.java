@@ -16,8 +16,8 @@
 
 package de.qucosa.component.fcrepo3;
 
-import de.qucosa.oaiprovider.component.model.DissTerms;
-import de.qucosa.oaiprovider.component.model.SetsConfig;
+import de.qucosa.component.oaiprovider.model.DissTerms;
+import de.qucosa.component.oaiprovider.model.SetsConfig;
 
 public class Fcrepo3Configuration {
     private String endpointDef = "FindObjects";

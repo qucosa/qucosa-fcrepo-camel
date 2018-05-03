@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package de.qucosa.oaiprovider.component;
+package de.qucosa.component.oaiprovider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.qucosa.oaiprovider.component.model.RecordTransport;
+import de.qucosa.component.oaiprovider.model.RecordTransport;
 import org.apache.camel.Component;
 import org.apache.camel.Consumer;
 import org.apache.camel.Endpoint;

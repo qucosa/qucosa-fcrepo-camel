@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.oaiprovider.component;
+package de.qucosa.component.oaiprovider;
 
 public class OaiProviderConfiguration {
 

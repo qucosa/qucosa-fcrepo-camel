@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.oaiprovider.component;
+package de.qucosa.component.oaiprovider;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;

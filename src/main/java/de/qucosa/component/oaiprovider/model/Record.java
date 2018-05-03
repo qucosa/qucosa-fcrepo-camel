@@ -14,30 +14,34 @@
  * limitations under the License.
  */
 
-package de.qucosa.oaiprovider.component.model;
+package de.qucosa.component.oaiprovider.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Set implements Serializable {
+public class Record implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("setSpec")
-    private String setSpec;
+    @JsonProperty("identifierId")
+    private Long identifierId;
 
-    @JsonProperty("setName")
-    private String setName;
+    @JsonProperty("format")
+    private Long format;
 
-    @JsonProperty("predicate")
-    private String predicate;
+    @JsonProperty("moddate")
+    private Date moddate;
+
+    @JsonProperty("xmldata")
+    private String xmldata;
 
     public Long getId() {
         return id;
@@ -47,27 +51,35 @@ public class Set implements Serializable {
         this.id = id;
     }
 
-    public String getSetSpec() {
-        return setSpec;
+    public Long getIdentifierId() {
+        return identifierId;
     }
 
-    public void setSetSpec(String setSpec) {
-        this.setSpec = setSpec;
+    public void setIdentifierId(Long identifierId) {
+        this.identifierId = identifierId;
     }
 
-    public String getSetName() {
-        return setName;
+    public Long getFormat() {
+        return format;
     }
 
-    public void setSetName(String setName) {
-        this.setName = setName;
+    public void setFormat(Long format) {
+        this.format = format;
     }
 
-    public String getPredicate() {
-        return predicate;
+    public Date getModdate() {
+        return moddate;
     }
 
-    public void setPredicate(String predicate) {
-        this.predicate = predicate;
+    public void setModdate(Date moddate) {
+        this.moddate = moddate;
+    }
+
+    public String getXmldata() {
+        return xmldata;
+    }
+
+    public void setXmldata(String xmldata) {
+        this.xmldata = xmldata;
     }
 }

@@ -16,18 +16,16 @@
 
 package de.qucosa.routes;
 
-import de.qucosa.oaiprovider.component.OaiProviderProcessor;
-import de.qucosa.oaiprovider.component.model.DissTerms;
-import de.qucosa.oaiprovider.component.model.SetsConfig;
+import de.qucosa.component.oaiprovider.OaiProviderProcessor;
+import de.qucosa.component.oaiprovider.model.DissTerms;
+import de.qucosa.component.oaiprovider.model.SetsConfig;
 import de.qucosa.transformers.DcTransformer;
 import de.qucosa.transformers.XMetaDissTransformer;
 import org.apache.camel.BeanInject;
 import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.xml.DefaultNamespaceContext;
 import org.apache.camel.builder.xml.Namespaces;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends RouteBuilder {

@@ -45,6 +45,12 @@ public class Main extends RouteBuilder {
 
         RecordListAggregator recordListAggregator = new RecordListAggregator();
 
+        Namespaces namespaces = new Namespaces("", "");
+
+        for (DissTerms.XmlNamspace xmlNamspace : dissTerms.getSetXmlNamespaces()) {
+            namespaces.add(xmlNamspace.getPrefix(), xmlNamspace.getUrl());
+        }
+
         from("direct:oaiprovider")
                 .id("oaiProviderProcess")
                 .process(new OaiProviderProcessor())
@@ -78,8 +84,8 @@ public class Main extends RouteBuilder {
                 .log("Perform updates for ${body}")
                 .to("fcrepo3:METS?fedoraHosturl={{fedora.url}}&fedoraCredentials={{fedora.credentials}}")
                 .split().body()
-                .setProperty("pid", xpath("//mets:mets/@OBJID", String.class).namespaces(namespaces()))
-                .setProperty("lastmoddate", xpath("//mets:mets/mets:metsHdr/@LASTMODDATE", String.class).namespaces(namespaces()))
+                .setProperty("pid", xpath("//mets:mets/@OBJID", String.class).namespaces(namespaces))
+                .setProperty("lastmoddate", xpath("//mets:mets/mets:metsHdr/@LASTMODDATE", String.class).namespaces(namespaces))
                 .multicast()
                 .to("direct:dcdiss", "direct:xmetadiss")
                 .end();
@@ -94,13 +100,4 @@ public class Main extends RouteBuilder {
 
     }
 
-    private Namespaces namespaces() {
-        Namespaces namespaces = new Namespaces("", "");
-
-        for (DissTerms.XmlNamspace xmlNamspace : dissTerms.getSetXmlNamespaces()) {
-            namespaces.add(xmlNamspace.getPrefix(), xmlNamspace.getUrl());
-        }
-
-        return namespaces;
-    }
 }

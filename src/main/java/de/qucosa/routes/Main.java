@@ -16,7 +16,7 @@
 
 package de.qucosa.routes;
 
-import de.qucosa.component.fcrepo3.aggregate.RecordListAggragator;
+import de.qucosa.component.fcrepo3.aggregate.RecordListAggregator;
 import de.qucosa.component.oaiprovider.OaiProviderProcessor;
 import de.qucosa.component.oaiprovider.model.DissTerms;
 import de.qucosa.component.oaiprovider.model.SetsConfig;
@@ -43,12 +43,12 @@ public class Main extends RouteBuilder {
     @Override
     public void configure() {
 
-        RecordListAggragator recordListAggragator = new RecordListAggragator();
+        RecordListAggregator recordListAggregator = new RecordListAggregator();
 
         from("direct:oaiprovider")
                 .id("oaiProviderProcess")
                 .process(new OaiProviderProcessor())
-                .aggregate(constant(true), recordListAggragator).completionSize(2)
+                .aggregate(constant(true), recordListAggregator).completionSize(2)
                 .to("oaiprovider:update")
                 .log("${body}");
 

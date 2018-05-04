@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RecordListAggragator implements AggregationStrategy {
+public class RecordListAggregator implements AggregationStrategy {
     @Override
     public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
 

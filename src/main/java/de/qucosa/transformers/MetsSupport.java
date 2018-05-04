@@ -28,8 +28,7 @@ import javax.xml.xpath.XPathFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract public class AbstractDisseminationTransform {
-    protected DissTerms dissTerms = new DissTerms();
+abstract public class MetsSupport {
 
     protected SetsConfig sets = new SetsConfig();
 

@@ -16,6 +16,7 @@
 
 package de.qucosa.routes;
 
+import de.qucosa.component.fcrepo3.aggregate.RecordListAggragator;
 import de.qucosa.component.oaiprovider.OaiProviderProcessor;
 import de.qucosa.component.oaiprovider.model.DissTerms;
 import de.qucosa.component.oaiprovider.model.SetsConfig;
@@ -42,10 +43,12 @@ public class Main extends RouteBuilder {
     @Override
     public void configure() {
 
+        RecordListAggragator recordListAggragator = new RecordListAggragator();
+
         from("direct:oaiprovider")
                 .id("oaiProviderProcess")
                 .process(new OaiProviderProcessor())
-                .end()
+                .aggregate(constant(true), recordListAggragator).completionSize(2)
                 .to("oaiprovider:update")
                 .log("${body}");
 
@@ -78,7 +81,8 @@ public class Main extends RouteBuilder {
                 .setProperty("pid", xpath("//mets:mets/@OBJID", String.class).namespaces(namespaces()))
                 .setProperty("lastmoddate", xpath("//mets:mets/mets:metsHdr/@LASTMODDATE", String.class).namespaces(namespaces()))
                 .multicast()
-                .to("direct:dcdiss", "direct:xmetadiss");
+                .to("direct:dcdiss", "direct:xmetadiss")
+                .end();
 
 
         from("activemq:topic:fedora.apim.update")

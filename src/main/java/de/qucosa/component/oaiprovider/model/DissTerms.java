@@ -39,8 +39,8 @@ public class DissTerms {
     @JsonIgnore
     private DissTermsDao dao = null;
 
-    @JsonProperty("xmlnamespacees")
-    private Set<XmlNamspace> xmlnamespacees;
+    @JsonProperty("xmlnamespaces")
+    private Set<XmlNamspace> xmlnamespaces;
 
     @JsonProperty("dissTerms")
     private Set<DissTerm> dissTerms;
@@ -48,12 +48,12 @@ public class DissTerms {
     @JsonProperty("formats")
     private Set<DissFormat> formats;
 
-    public Set<XmlNamspace> getXmlnamespacees() {
-        return xmlnamespacees;
+    public Set<XmlNamspace> getXmlnamespaces() {
+        return xmlnamespaces;
     }
 
-    public void setXmlnamespacees(Set<XmlNamspace> xmlnamespacees) {
-        this.xmlnamespacees = xmlnamespacees;
+    public void setXmlnamespaces(Set<XmlNamspace> xmlnamespaces) {
+        this.xmlnamespaces = xmlnamespaces;
     }
 
     public Set<DissTerm> getDissTerms() {
@@ -218,7 +218,7 @@ public class DissTerms {
         }
 
         public Map<String, String> getMapXmlNamespaces() {
-            HashSet<XmlNamspace> xmlNamespaces = (HashSet<XmlNamspace>) dissTerms.getXmlnamespacees();
+            HashSet<XmlNamspace> xmlNamespaces = (HashSet<XmlNamspace>) dissTerms.getXmlnamespaces();
             Map<String, String> map = new HashMap<>();
 
             for (XmlNamspace namspace : xmlNamespaces) {
@@ -300,7 +300,7 @@ public class DissTerms {
         }
 
         private Set<XmlNamspace> xmlNamespaces() {
-            HashSet<XmlNamspace> xmlNamespaces = (HashSet<XmlNamspace>) dissTerms.getXmlnamespacees();
+            HashSet<XmlNamspace> xmlNamespaces = (HashSet<XmlNamspace>) dissTerms.getXmlnamespaces();
             return xmlNamespaces;
         }
     }

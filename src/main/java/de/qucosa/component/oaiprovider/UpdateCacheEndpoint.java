@@ -70,9 +70,7 @@ public class UpdateCacheEndpoint extends DefaultEndpoint {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String output = null;
 
-                while ((output = reader.readLine()) != null) {
-                    System.out.println(output);
-                }
+                while ((output = reader.readLine()) != null) { }
 
                 connection.disconnect();
             }

@@ -31,12 +31,9 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class OaiProviderProcessor implements Processor {
-    private Set<RecordTransport> records = new HashSet<>();
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -54,9 +51,7 @@ public class OaiProviderProcessor implements Processor {
         record.setSets(getSetSpecs(dissTerms, setsConfig, format, dissemination));
         record.setOaiId("");
 
-        records.add(record);
-
-        exchange.getIn().setBody(records);
+        exchange.getIn().setBody(record);
     }
 
     private List<String> getSetSpecs(DissTerms dissTerms, SetsConfig setsConfig, String format, Document dissemination) throws XPathExpressionException {

@@ -36,7 +36,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class XMetaDissTransformer extends AbstractDisseminationTransform implements Expression {
+public class XMetaDissTransformer extends MetsSupport implements Expression {
 
     @Override
     public <T> T evaluate(Exchange exchange, Class<T> aClass) {

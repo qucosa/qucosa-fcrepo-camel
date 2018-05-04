@@ -16,7 +16,6 @@
 
 package de.qucosa.component.oaiprovider;
 
-import de.qucosa.component.fcrepo3.mapper.MetsXmlMapper;
 import de.qucosa.component.oaiprovider.model.DissTerms;
 import de.qucosa.component.oaiprovider.model.RecordTransport;
 import de.qucosa.component.oaiprovider.model.SetsConfig;
@@ -40,7 +39,6 @@ public class OaiProviderProcessor implements Processor {
         DissTerms dissTerms = (DissTerms) exchange.getContext().getRegistry().lookupByName("dissTerms");
         SetsConfig setsConfig = (SetsConfig) exchange.getContext().getRegistry().lookupByName("setsConfig");
         Document dissemination = (Document) exchange.getIn().getBody();
-        MetsXmlMapper metsXmlMapper = new MetsXmlMapper(dissemination, dissTerms.getMapXmlNamespaces());
         String format = exchange.getProperty("format").toString();
 
         RecordTransport record = new RecordTransport();

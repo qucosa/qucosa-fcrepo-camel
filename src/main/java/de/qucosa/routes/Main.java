@@ -16,6 +16,8 @@
 
 package de.qucosa.routes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.qucosa.component.fcrepo3.aggregate.RecordListAggregator;
 import de.qucosa.component.oaiprovider.OaiProviderProcessor;
 import de.qucosa.component.oaiprovider.model.DissTerms;
@@ -23,6 +25,8 @@ import de.qucosa.component.oaiprovider.model.SetsConfig;
 import de.qucosa.transformers.DcTransformer;
 import de.qucosa.transformers.XMetaDissTransformer;
 import org.apache.camel.BeanInject;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.xml.Namespaces;
@@ -41,11 +45,13 @@ public class Main extends RouteBuilder {
     private SetsConfig setsConfig;
 
     @Override
-    public void configure() {
+    public void configure() throws JsonProcessingException {
 
         RecordListAggregator recordListAggregator = new RecordListAggregator();
 
         Namespaces namespaces = new Namespaces("", "");
+
+        ObjectMapper om = new ObjectMapper();
 
         for (DissTerms.XmlNamspace xmlNamspace : dissTerms.getSetXmlNamespaces()) {
             namespaces.add(xmlNamspace.getPrefix(), xmlNamspace.getUrl());
@@ -55,7 +61,17 @@ public class Main extends RouteBuilder {
                 .id("oaiProviderProcess")
                 .process(new OaiProviderProcessor())
                 .aggregate(constant(true), recordListAggregator).completionSize(2)
-                .to("oaiprovider:update")
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        ObjectMapper om = new ObjectMapper();
+                        exchange.getIn().setBody(om.writeValueAsString(exchange.getIn().getBody()));
+                    }
+                })
+                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+                .to("http4:localhost:8080/qucosa-oai-provider/record/update")
+//                .to("oaiprovider:update")
                 .log("${body}");
 
         from("direct:dcdiss")

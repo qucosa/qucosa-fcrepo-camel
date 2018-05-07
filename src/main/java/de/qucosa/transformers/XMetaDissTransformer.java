@@ -46,10 +46,8 @@ public class XMetaDissTransformer extends MetsSupport implements Expression {
 
         try {
             exchange.getIn().setBody(transformXmetadisDocument(exchange, metsDoc, xslSource));
-        } catch (XPathExpressionException e) {
-            new XPathExpressionException("The xpath expression is failed!");
-        } catch (TransformerException | UnsupportedEncodingException e) {
-            new TransformerException("Transofrm stylesheet is failed!");
+        } catch (XPathExpressionException | TransformerException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
 
         exchange.setProperty("pid", exchange.getProperty("pid"));

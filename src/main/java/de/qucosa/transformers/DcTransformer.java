@@ -48,11 +48,9 @@ public class DcTransformer extends MetsSupport implements Expression {
         try {
             exchange.getIn().setBody(transformDcDocument(exchange, metsDoc, xslSource));
         } catch (XPathExpressionException e) {
-
-        } catch (TransformerException e) {
-
-        } catch (UnsupportedEncodingException e) {
-
+            new XPathExpressionException("The xpath expression is failed!");
+        } catch (TransformerException | UnsupportedEncodingException e) {
+            new TransformerException("Transofrm stylesheet is failed!");
         }
 
         exchange.setProperty("pid", exchange.getProperty("pid"));

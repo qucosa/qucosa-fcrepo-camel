@@ -58,7 +58,7 @@ public class UpdateCacheEndpoint extends DefaultEndpoint {
                 post.addHeader("content-type", "application/json");
                 post.setEntity(stringEntity);
                 HttpResponse httpResponse = httpClient.execute(post);
-                ((CloseableHttpClient) httpClient).close();
+                httpClient.close();
             }
         };
     }

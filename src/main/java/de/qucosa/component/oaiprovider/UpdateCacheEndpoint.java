@@ -18,21 +18,16 @@ package de.qucosa.component.oaiprovider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.qucosa.component.oaiprovider.model.RecordTransport;
-import org.apache.camel.Component;
-import org.apache.camel.Consumer;
-import org.apache.camel.Endpoint;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.apache.camel.Producer;
+import org.apache.camel.*;
 import org.apache.camel.impl.DefaultEndpoint;
 import org.apache.camel.impl.DefaultProducer;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Set;
 
 public class UpdateCacheEndpoint extends DefaultEndpoint {
@@ -57,22 +52,13 @@ public class UpdateCacheEndpoint extends DefaultEndpoint {
                 System.out.println(exchange.getIn().getBody());
                 ObjectMapper om = new ObjectMapper();
                 Set<RecordTransport> records = (Set<RecordTransport>) exchange.getIn().getBody();
-                URL url = new URL("http://localhost:8080/qucosa-oai-provider/record/update");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoOutput(true);
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "application/json");
-
-                OutputStream outputStream = connection.getOutputStream();
-                outputStream.write(om.writeValueAsBytes(records));
-                outputStream.flush();
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String output = null;
-
-                while ((output = reader.readLine()) != null) { }
-
-                connection.disconnect();
+                CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+                HttpPost post = new HttpPost("http://localhost:8080/qucosa-oai-provider/record/update");
+                StringEntity stringEntity = new StringEntity(om.writeValueAsString(records));
+                post.addHeader("content-type", "application/json");
+                post.setEntity(stringEntity);
+                HttpResponse httpResponse = httpClient.execute(post);
+                ((CloseableHttpClient) httpClient).close();
             }
         };
     }

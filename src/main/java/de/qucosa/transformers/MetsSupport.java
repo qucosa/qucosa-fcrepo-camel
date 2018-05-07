@@ -16,7 +16,6 @@
 
 package de.qucosa.transformers;
 
-import de.qucosa.component.oaiprovider.model.DissTerms;
 import de.qucosa.component.oaiprovider.model.SetsConfig;
 import de.qucosa.utils.SimpleNamespaceContext;
 import org.w3c.dom.Document;

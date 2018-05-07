@@ -42,28 +42,27 @@ public class RecordListAggregator implements AggregationStrategy {
     }
 
     private void combineRecords(Exchange eOld, Exchange eNew) {
-        RecordTransport eOldBody = (RecordTransport) eOld.getIn().getBody();
-        RecordTransport eNewBody = (RecordTransport) eNew.getIn().getBody();
 
-        if (eOldBody instanceof  RecordTransport && eNewBody instanceof RecordTransport) {
+        if (eOld.getIn().getBody() instanceof  RecordTransport && eNew.getIn().getBody() instanceof RecordTransport) {
             Set<RecordTransport> records = new HashSet<>();
             records.add(eOld.getIn().getBody(RecordTransport.class));
             records.add(eNew.getIn().getBody(RecordTransport.class));
             eNew.getIn().setBody(records);
         }
 
-        if (eOldBody instanceof Set && eNewBody instanceof RecordTransport) {
+        if (eOld.getIn().getBody() instanceof Set && eNew.getIn().getBody() instanceof RecordTransport) {
             Set<RecordTransport> records = new HashSet<>();
-            records.addAll((Collection<? extends RecordTransport>) eOldBody);
+            records.addAll((Collection<? extends RecordTransport>) eOld.getIn().getBody());
             records.add(eNew.getIn().getBody(RecordTransport.class));
+            eNew.getIn().setBody(records);
         }
 
-        if (eOldBody instanceof RecordTransport && eNewBody instanceof Set) {
-            ((Set) eNewBody).add(eOld.getIn().getBody(RecordTransport.class));
+        if (eOld.getIn().getBody() instanceof RecordTransport && eNew.getIn().getBody() instanceof Set) {
+            ((Set) eOld.getIn().getBody()).add(eOld.getIn().getBody(RecordTransport.class));
         }
 
-        if (eOldBody instanceof Set && eNewBody instanceof Set) {
-            ((Set) eNewBody).addAll((Collection) eOldBody);
+        if (eOld.getIn().getBody() instanceof Set && eNew.getIn().getBody() instanceof Set) {
+            ((Set) eOld.getIn().getBody()).addAll((Collection) eOld.getIn().getBody());
         }
     }
 }

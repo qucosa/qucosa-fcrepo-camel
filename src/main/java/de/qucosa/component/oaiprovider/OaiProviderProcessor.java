@@ -83,7 +83,7 @@ public class OaiProviderProcessor implements Processor {
                         }
                     }
                 } else {
-                    predicateKey = setObj.getPredicate();
+                    setSpecs.add(setObj.getPredicate());
                 }
             }
         }

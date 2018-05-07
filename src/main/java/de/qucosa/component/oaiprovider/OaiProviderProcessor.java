@@ -76,6 +76,10 @@ public class OaiProviderProcessor implements Processor {
 
                         if (predicateValues.length > 0) {
 
+                            for (int i = 0; i < predicateValues.length; i++) {
+                                String setspec = predicateKey + ":" + predicateValues[i];
+                                setSpecs.add(setspec);
+                            }
                         }
                     }
                 } else {

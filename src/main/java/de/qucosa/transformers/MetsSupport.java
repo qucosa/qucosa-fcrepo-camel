@@ -33,7 +33,7 @@ abstract public class MetsSupport {
     protected SetsConfig sets = new SetsConfig();
 
     protected String extractAgent(Document metsDoc) throws XPathExpressionException {
-        String agent = null;
+        String agent;
         XPath xPath = xpath();
         agent = (String) xPath.compile("//mets:agent[@ROLE='EDITOR' and @TYPE='ORGANIZATION']/mets:name[1]")
                 .evaluate(metsDoc, XPathConstants.STRING);

@@ -61,7 +61,7 @@ public class XMetaDissTransformer extends MetsSupport implements Expression {
     }
 
     private Document transformXmetadisDocument(Exchange exchange, Document metsDoc, StreamSource xslSource) throws XPathExpressionException, TransformerException, UnsupportedEncodingException {
-        Transformer transformer = null;
+        Transformer transformer;
         StringWriter stringWriter = new StringWriter();
         StreamResult streamResult = new StreamResult(stringWriter);
 

@@ -56,8 +56,8 @@ public class OaiProviderProcessor implements Processor {
         List<String> setSpecs = new ArrayList<>();
 
         for (SetsConfig.Set setObj : setsConfig.getSetObjects()) {
-            String predicateKey = null;
-            String predicateValue = null;
+            String predicateKey;
+            String predicateValue;
 
             if (setObj.getPredicate() != null && !setObj.getPredicate().isEmpty()) {
 

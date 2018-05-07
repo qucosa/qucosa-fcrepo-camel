@@ -51,8 +51,7 @@ public class RecordListAggregator implements AggregationStrategy {
         }
 
         if (eOld.getIn().getBody() instanceof Set && eNew.getIn().getBody() instanceof RecordTransport) {
-            Set<RecordTransport> records = new HashSet<>();
-            records.addAll((Collection<? extends RecordTransport>) eOld.getIn().getBody());
+            Set<RecordTransport> records = new HashSet<>((Collection<? extends RecordTransport>) eOld.getIn().getBody());
             records.add(eNew.getIn().getBody(RecordTransport.class));
             eNew.getIn().setBody(records);
         }

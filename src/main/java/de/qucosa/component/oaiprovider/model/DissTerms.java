@@ -36,6 +36,9 @@ import java.util.Set;
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DissTerms {
+    @JsonIgnore
+    private DissTermsDao dao = null;
+
     @JsonProperty("xmlnamespaces")
     private Set<XmlNamspace> xmlnamespaces;
 
@@ -44,9 +47,6 @@ public class DissTerms {
 
     @JsonProperty("formats")
     private Set<DissFormat> formats;
-
-    @JsonIgnore
-    private DissTermsDao dissTermsData = new DissTermsDao();
 
     public Set<XmlNamspace> getXmlnamespaces() {
         return xmlnamespaces;
@@ -74,26 +74,26 @@ public class DissTerms {
 
     @JsonIgnore
     public Map<String, String> getMapXmlNamespaces() {
-        return dissTermsData.getMapXmlNamespaces();
+        return dao().getMapXmlNamespaces();
     }
 
     @JsonIgnore
     public XmlNamspace getXmlNamespace(String prefix) {
-        return dissTermsData.getXmlNamespace(prefix);
+        return dao().getXmlNamespace(prefix);
     }
 
     @JsonIgnore
     public Term getTerm(String diss, String name) {
-        return dissTermsData.getTerm(diss, name);
+        return dao().getTerm(diss, name);
     }
 
     @JsonIgnore
     public Set<DissFormat> formats() {
-        return dissTermsData.dissFormats();
+        return dao().dissFormats();
     }
 
     @JsonIgnore
-    public Set<XmlNamspace> getSetXmlNamespaces() { return dissTermsData.getSetXmlNamespaces(); }
+    public Set<XmlNamspace> getSetXmlNamespaces() { return dao().getSetXmlNamespaces(); }
 
     public static class XmlNamspace {
         @JsonProperty("prefix")
@@ -189,6 +189,15 @@ public class DissTerms {
         public void setDissType(String dissType) {
             this.dissType = dissType;
         }
+    }
+
+    private DissTermsDao dao() {
+
+        if (dao == null) {
+            dao = new DissTermsDao();
+        }
+
+        return dao;
     }
 
     private class DissTermsDao {

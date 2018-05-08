@@ -68,7 +68,7 @@ final public class MetsSupport {
                 put("mets", "http://www.loc.gov/METS/");
             }
         }));
-        
+
         return xPath;
     }
 }

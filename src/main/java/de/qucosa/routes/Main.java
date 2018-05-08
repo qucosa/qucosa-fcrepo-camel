@@ -90,6 +90,7 @@ public class Main extends RouteBuilder {
                 .split().body()
                 .setProperty("pid", xpath("//mets:mets/@OBJID", String.class).namespaces(namespaces))
                 .setProperty("lastmoddate", xpath("//mets:mets/mets:metsHdr/@LASTMODDATE", String.class).namespaces(namespaces))
+                .setProperty("agent", xpath("//mets:agent[@ROLE='EDITOR' and @TYPE='ORGANIZATION']/mets:name[1]", String.class).namespaces(namespaces))
                 .multicast()
                 .to("direct:dcdiss", "direct:xmetadiss")
                 .end();

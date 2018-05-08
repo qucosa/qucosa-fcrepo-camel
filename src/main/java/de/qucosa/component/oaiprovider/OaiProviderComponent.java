@@ -22,20 +22,12 @@ import org.apache.camel.impl.DefaultComponent;
 import java.util.Map;
 
 public class OaiProviderComponent extends DefaultComponent {
-    private String uri;
-
-    private OaiProviderConfiguration configuration = null;
 
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-        this.uri = uri;
-        configuration = new OaiProviderConfiguration();
+        OaiProviderConfiguration configuration = new OaiProviderConfiguration();
         setProperties(configuration, parameters);
-
-        switch (remaining.toLowerCase()) {
-            default:
-                throw new Exception();
-        }
+        return null;
     }
 
 }

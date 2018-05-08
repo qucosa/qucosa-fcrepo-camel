@@ -300,8 +300,7 @@ public class DissTerms {
         }
 
         private Set<XmlNamspace> xmlNamespaces() {
-            HashSet<XmlNamspace> xmlNamespaces = (HashSet<XmlNamspace>) dissTerms.getXmlnamespaces();
-            return xmlNamespaces;
+            return dissTerms.getXmlnamespaces();
         }
     }
 

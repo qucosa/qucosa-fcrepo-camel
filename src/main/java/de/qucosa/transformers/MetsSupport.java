@@ -16,41 +16,12 @@
 
 package de.qucosa.transformers;
 
-import de.qucosa.component.oaiprovider.model.SetsConfig;
-import de.qucosa.utils.SimpleNamespaceContext;
-import org.w3c.dom.Document;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract public class MetsSupport {
+final public class MetsSupport {
 
-    protected SetsConfig sets = new SetsConfig();
-
-    protected String extractAgent(Document metsDoc) throws XPathExpressionException {
-        String agent;
-        XPath xPath = xpath();
-        agent = (String) xPath.compile("//mets:agent[@ROLE='EDITOR' and @TYPE='ORGANIZATION']/mets:name[1]")
-                .evaluate(metsDoc, XPathConstants.STRING);
-        return agent;
-    }
-
-    protected String extractPid(boolean transferUrlPidencode, Document metsDoc) throws XPathExpressionException {
-        String pid = null;
-
-        if (transferUrlPidencode) {
-            XPath xPath = xpath();
-            pid = (String) xPath.compile("//mets:mets/@OBJID").evaluate(metsDoc, XPathConstants.STRING);
-        }
-
-        return pid;
-    }
-
-    protected Map<String, String> decodeSubstitutions(String parameterValue) {
+    public static Map<String, String> decodeSubstitutions(String parameterValue) {
         HashMap<String, String> result = new HashMap<String, String>();
 
         if (parameterValue != null && !parameterValue.isEmpty()) {
@@ -62,15 +33,5 @@ abstract public class MetsSupport {
         }
 
         return result;
-    }
-
-    private XPath xpath() {
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        xPath.setNamespaceContext(new SimpleNamespaceContext(new HashMap<String, String>() {
-            {
-                put("mets", "http://www.loc.gov/METS/");
-            }
-        }));
-        return xPath;
     }
 }

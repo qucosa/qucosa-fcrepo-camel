@@ -31,11 +31,6 @@ public class OaiProviderComponent extends DefaultComponent {
         this.uri = uri;
         configuration = new OaiProviderConfiguration();
         setProperties(configuration, parameters);
-
-        switch (remaining.toLowerCase()) {
-            default:
-                throw new Exception();
-        }
     }
 
 }

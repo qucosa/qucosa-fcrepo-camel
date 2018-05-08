@@ -33,22 +33,19 @@ public class DateTimeConverter {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
         GregorianCalendar gc = xmlGregorianCalendar.toGregorianCalendar();
         Date date = gc.getTime();
-        Timestamp ts = new Timestamp(date.getTime());
-        return ts;
+        return new Timestamp(date.getTime());
     }
 
     public static Timestamp timestampWithOUTTimezone(String dateString) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
         Date date = dateFormat.parse(dateString);
-        Timestamp ts = new Timestamp(date.getTime());
-        return ts;
+        return new Timestamp(date.getTime());
     }
 
     public static java.sql.Date sqlDate(String dateString) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date utilDate = dateFormat.parse(dateString);
-        java.sql.Date date = new java.sql.Date(utilDate.getTime());
-        return date;
+        return new java.sql.Date(utilDate.getTime());
     }
 
     public static String sqlTimestampToString(Timestamp timestamp) {

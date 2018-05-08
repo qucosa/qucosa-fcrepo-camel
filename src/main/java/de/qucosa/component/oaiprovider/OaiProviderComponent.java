@@ -25,7 +25,6 @@ public class OaiProviderComponent extends DefaultComponent {
 
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-        String uri1 = uri;
         OaiProviderConfiguration configuration = new OaiProviderConfiguration();
         setProperties(configuration, parameters);
         return null;

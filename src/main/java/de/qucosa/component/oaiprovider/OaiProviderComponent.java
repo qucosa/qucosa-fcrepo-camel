@@ -19,7 +19,6 @@ package de.qucosa.component.oaiprovider;
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 public class OaiProviderComponent extends DefaultComponent {
@@ -33,26 +32,10 @@ public class OaiProviderComponent extends DefaultComponent {
         configuration = new OaiProviderConfiguration();
         setProperties(configuration, parameters);
 
-        Method method = getClass().getDeclaredMethod(remaining);
-//        return (Endpoint) method.invoke(this);
-
         switch (remaining.toLowerCase()) {
-            case "update":
-                return update();
             default:
                 throw new Exception();
         }
     }
 
-    /**
-     * Execute via java reflection api in createEndpoint method. This endpoint
-     * updated the oai provider cache.
-     *
-     * @return
-     */
-    @SuppressWarnings("unused")
-    private Endpoint update() {
-        UpdateCacheEndpoint endpoint = new UpdateCacheEndpoint(uri, this, configuration);
-        return endpoint;
-    }
 }

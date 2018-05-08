@@ -36,9 +36,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static de.qucosa.transformers.MetsSupport.extractAgent;
-import static de.qucosa.transformers.MetsSupport.extractPid;
-
 public class DcTransformer implements Expression {
 
     @Override
@@ -64,8 +61,8 @@ public class DcTransformer implements Expression {
         StreamResult streamResult = new StreamResult(stringWriter);
 
         Map<String, String> values = new LinkedHashMap<String, String>() {{
-            put("AGENT", extractAgent(metsDoc));
-            put("PID", extractPid(Boolean.valueOf(exchange.getProperty("transferUrlPidencode").toString()), metsDoc));
+            put("AGENT", exchange.getProperty("agent").toString());
+            put("PID", exchange.getProperty("pid").toString());
         }};
 
         StringSubstitutor substitutor = new StringSubstitutor(values, "##", "##");

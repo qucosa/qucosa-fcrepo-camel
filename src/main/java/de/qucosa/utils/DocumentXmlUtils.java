@@ -84,7 +84,7 @@ public class DocumentXmlUtils {
     }
 
     public static Element node(InputStream stream) throws ParserConfigurationException, IOException, SAXException {
-        Element element = null;
+        Element element;
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);
 

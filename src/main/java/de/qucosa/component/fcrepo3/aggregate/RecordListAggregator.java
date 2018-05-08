@@ -20,8 +20,10 @@ import de.qucosa.component.oaiprovider.model.RecordTransport;
 import org.apache.camel.Exchange;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class RecordListAggregator implements AggregationStrategy {
@@ -44,24 +46,24 @@ public class RecordListAggregator implements AggregationStrategy {
     private void combineRecords(Exchange eOld, Exchange eNew) {
 
         if (eOld.getIn().getBody() instanceof  RecordTransport && eNew.getIn().getBody() instanceof RecordTransport) {
-            Set<RecordTransport> records = new HashSet<>();
+            List<RecordTransport> records = new ArrayList<>();
             records.add(eOld.getIn().getBody(RecordTransport.class));
             records.add(eNew.getIn().getBody(RecordTransport.class));
             eNew.getIn().setBody(records);
         }
 
         if (eOld.getIn().getBody() instanceof Set && eNew.getIn().getBody() instanceof RecordTransport) {
-            Set<RecordTransport> records = new HashSet<>((Collection<? extends RecordTransport>) eOld.getIn().getBody());
+            List<RecordTransport> records = new ArrayList<>((Collection<? extends RecordTransport>) eOld.getIn().getBody());
             records.add(eNew.getIn().getBody(RecordTransport.class));
             eNew.getIn().setBody(records);
         }
 
         if (eOld.getIn().getBody() instanceof RecordTransport && eNew.getIn().getBody() instanceof Set) {
-            ((Set) eNew.getIn().getBody()).add(eOld.getIn().getBody(RecordTransport.class));
+            ((List) eNew.getIn().getBody()).add(eOld.getIn().getBody(RecordTransport.class));
         }
 
         if (eOld.getIn().getBody() instanceof Set && eNew.getIn().getBody() instanceof Set) {
-            ((Set) eOld.getIn().getBody()).addAll((Collection) eOld.getIn().getBody());
+            ((List) eOld.getIn().getBody()).addAll((Collection) eOld.getIn().getBody());
         }
     }
 }

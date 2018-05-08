@@ -16,6 +16,7 @@
 
 package de.qucosa.utils;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
@@ -28,12 +29,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 public class DocumentXmlUtils {
@@ -83,36 +83,19 @@ public class DocumentXmlUtils {
         return stringWriter.toString();
     }
 
-    public static Element node(InputStream stream) {
+    public static Element node(InputStream stream) throws ParserConfigurationException, IOException, SAXException {
         Element element = null;
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);
 
-        try {
-            DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(stream);
-            element = document.getDocumentElement();
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
-        }
+        DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(stream);
+        element = document.getDocumentElement();
 
         return element;
     }
 
-    public static Element node(String input) {
-        InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-        Element element = null;
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        builderFactory.setNamespaceAware(true);
-
-        try {
-            DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(stream);
-            element = document.getDocumentElement();
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
-        }
-
-        return element;
+    public static Element node(String input) throws IOException, SAXException, ParserConfigurationException {
+        return node(IOUtils.toInputStream(input, Charset.defaultCharset()));
     }
 }

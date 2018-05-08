@@ -16,8 +16,12 @@
 
 package de.qucosa.component.oaiprovider;
 
+import org.apache.camel.Consumer;
 import org.apache.camel.Endpoint;
+import org.apache.camel.Processor;
+import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultComponent;
+import org.apache.camel.impl.DefaultEndpoint;
 
 import java.util.Map;
 
@@ -31,6 +35,7 @@ public class OaiProviderComponent extends DefaultComponent {
         this.uri = uri;
         configuration = new OaiProviderConfiguration();
         setProperties(configuration, parameters);
+        return null;
     }
 
 }

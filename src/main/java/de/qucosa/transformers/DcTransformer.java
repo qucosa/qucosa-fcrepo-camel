@@ -36,16 +36,17 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class XMetaDissTransformer extends MetsSupport implements Expression {
+public class DcTransformer extends MetsSupport implements Expression {
 
     @Override
     public <T> T evaluate(Exchange exchange, Class<T> aClass) {
         ElementNSImpl elem = (ElementNSImpl) exchange.getIn().getBody();
         Document metsDoc = elem.getOwnerDocument();
+//        Document metsDoc = (Document) exchange.getIn().getBody();
         StreamSource xslSource = new StreamSource(this.getClass().getResourceAsStream(exchange.getProperty("xsltStylesheetResourceName").toString()));
 
         try {
-            exchange.getIn().setBody(transformXmetadisDocument(exchange, metsDoc, xslSource));
+            exchange.getIn().setBody(transformDcDocument(exchange, metsDoc, xslSource));
         } catch (XPathExpressionException | TransformerException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -56,8 +57,7 @@ public class XMetaDissTransformer extends MetsSupport implements Expression {
         return (T) exchange.getIn().getBody();
     }
 
-    private Document transformXmetadisDocument(Exchange exchange, Document metsDoc, StreamSource xslSource) throws XPathExpressionException, TransformerException, UnsupportedEncodingException {
-        Transformer transformer;
+    private Document transformDcDocument(Exchange exchange, Document metsDoc, StreamSource xslSource) throws XPathExpressionException, TransformerException, UnsupportedEncodingException {
         StringWriter stringWriter = new StringWriter();
         StreamResult streamResult = new StreamResult(stringWriter);
 
@@ -67,14 +67,15 @@ public class XMetaDissTransformer extends MetsSupport implements Expression {
             }
 
             {
-                put("PID", extractPid(true, metsDoc));
+                put("PID", extractPid(Boolean.valueOf(exchange.getProperty("transferUrlPidencode").toString()), metsDoc));
             }
         };
 
         StringSubstitutor substitutor = new StringSubstitutor(values, "##", "##");
         String transferUrl = substitutor.replace(exchange.getProperty("transfer.url.pattern").toString());
 
-        transformer = TransformerFactory.newInstance().newTransformer(xslSource);
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer(xslSource);
         transformer.setParameter("transfer_url", transferUrl);
         transformer.transform(new DOMSource(metsDoc), streamResult);
 

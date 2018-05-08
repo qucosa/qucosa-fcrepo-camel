@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.oaiprovider.component.model;
+package de.qucosa.component.oaiprovider.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

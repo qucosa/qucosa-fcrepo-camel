@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.fcrepo3.component;
+package de.qucosa.component.fcrepo3;
 
 import de.qucosa.disseminator.MetsDisseminator;
 import de.qucosa.repository.AuthenticationException;
@@ -55,7 +55,7 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
                 NodeList list = (NodeList) exchange.getIn().getBody();
                 String pid = list.item(0).getNodeValue();
                 URL repoUrl = new URL(getFedoraHosturl());
-                Document mets = null;
+                Document mets;
 
                 try {
                     Credentials credentials = Credentials.fromColonSeparatedString(getFedoraCredentials());

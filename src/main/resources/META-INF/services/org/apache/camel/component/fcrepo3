@@ -15,4 +15,4 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-class=de.qucosa.fcrepo3.component.Fcrepo3Component
+class=de.qucosa.component.fcrepo3.Fcrepo3Component

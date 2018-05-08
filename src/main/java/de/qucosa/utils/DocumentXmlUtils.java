@@ -87,11 +87,10 @@ public class DocumentXmlUtils {
         Element element = null;
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);
-        Document document = null;
 
         try {
             DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
-            document = documentBuilder.parse(stream);
+            Document document = documentBuilder.parse(stream);
             element = document.getDocumentElement();
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
@@ -105,11 +104,10 @@ public class DocumentXmlUtils {
         Element element = null;
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);
-        Document document = null;
 
         try {
             DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
-            document = documentBuilder.parse(stream);
+            Document document = documentBuilder.parse(stream);
             element = document.getDocumentElement();
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();

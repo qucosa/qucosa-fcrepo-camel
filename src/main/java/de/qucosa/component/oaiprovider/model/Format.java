@@ -14,34 +14,28 @@
  * limitations under the License.
  */
 
-package de.qucosa.oaiprovider.component.model;
+package de.qucosa.component.oaiprovider.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Record implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class Format {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("identifierId")
-    private Long identifierId;
+    @JsonProperty("mdprefix")
+    private String mdprefix;
 
-    @JsonProperty("format")
-    private Long format;
+    @JsonProperty("lastpolldate")
+    private Timestamp lastpolldate;
 
-    @JsonProperty("moddate")
-    private Date moddate;
-
-    @JsonProperty("xmldata")
-    private String xmldata;
+    @JsonProperty("dissType")
+    private String dissType;
 
     public Long getId() {
         return id;
@@ -51,35 +45,27 @@ public class Record implements Serializable {
         this.id = id;
     }
 
-    public Long getIdentifierId() {
-        return identifierId;
+    public String getMdprefix() {
+        return mdprefix;
     }
 
-    public void setIdentifierId(Long identifierId) {
-        this.identifierId = identifierId;
+    public void setMdprefix(String mdprefix) {
+        this.mdprefix = mdprefix;
     }
 
-    public Long getFormat() {
-        return format;
+    public Timestamp getLastpolldate() {
+        return lastpolldate;
     }
 
-    public void setFormat(Long format) {
-        this.format = format;
+    public void setLastpolldate(Timestamp lastpolldate) {
+        this.lastpolldate = lastpolldate;
     }
 
-    public Date getModdate() {
-        return moddate;
+    public String getDissType() {
+        return dissType;
     }
 
-    public void setModdate(Date moddate) {
-        this.moddate = moddate;
-    }
-
-    public String getXmldata() {
-        return xmldata;
-    }
-
-    public void setXmldata(String xmldata) {
-        this.xmldata = xmldata;
+    public void setDissType(String dissType) {
+        this.dissType = dissType;
     }
 }

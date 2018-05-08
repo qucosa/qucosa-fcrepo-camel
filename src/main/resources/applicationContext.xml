@@ -56,6 +56,11 @@
         <property name="connectionFactory" ref="fedoraJmsConnFactory"/>
     </bean>
 
+    <!-- Configuration Beans -->
+    <bean id="dissTerms" class="de.qucosa.component.oaiprovider.model.DissTerms" />
+
+    <bean id="setsConfig" class="de.qucosa.component.oaiprovider.model.SetsConfig" />
+
     <!-- Camel context configuration -->
     <bean id="routes" class="de.qucosa.routes.Main"/>
 

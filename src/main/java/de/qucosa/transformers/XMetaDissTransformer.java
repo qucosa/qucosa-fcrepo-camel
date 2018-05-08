@@ -36,7 +36,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class XMetaDissTransformer extends MetsSupport implements Expression {
+import static de.qucosa.transformers.MetsSupport.extractAgent;
+import static de.qucosa.transformers.MetsSupport.extractPid;
+
+public class XMetaDissTransformer implements Expression {
 
     @Override
     public <T> T evaluate(Exchange exchange, Class<T> aClass) {
@@ -61,15 +64,10 @@ public class XMetaDissTransformer extends MetsSupport implements Expression {
         StringWriter stringWriter = new StringWriter();
         StreamResult streamResult = new StreamResult(stringWriter);
 
-        Map<String, String> values = new LinkedHashMap<String, String>() {
-            {
+        Map<String, String> values = new LinkedHashMap<String, String>() {{
                 put("AGENT", extractAgent(metsDoc));
-            }
-
-            {
                 put("PID", extractPid(true, metsDoc));
-            }
-        };
+            }};
 
         StringSubstitutor substitutor = new StringSubstitutor(values, "##", "##");
         String transferUrl = substitutor.replace(exchange.getProperty("transfer.url.pattern").toString());

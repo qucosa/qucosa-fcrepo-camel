@@ -36,13 +36,15 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DcTransformer extends MetsSupport implements Expression {
+import static de.qucosa.transformers.MetsSupport.extractAgent;
+import static de.qucosa.transformers.MetsSupport.extractPid;
+
+public class DcTransformer implements Expression {
 
     @Override
     public <T> T evaluate(Exchange exchange, Class<T> aClass) {
         ElementNSImpl elem = (ElementNSImpl) exchange.getIn().getBody();
         Document metsDoc = elem.getOwnerDocument();
-//        Document metsDoc = (Document) exchange.getIn().getBody();
         StreamSource xslSource = new StreamSource(this.getClass().getResourceAsStream(exchange.getProperty("xsltStylesheetResourceName").toString()));
 
         try {
@@ -61,15 +63,10 @@ public class DcTransformer extends MetsSupport implements Expression {
         StringWriter stringWriter = new StringWriter();
         StreamResult streamResult = new StreamResult(stringWriter);
 
-        Map<String, String> values = new LinkedHashMap<String, String>() {
-            {
-                put("AGENT", extractAgent(metsDoc));
-            }
-
-            {
-                put("PID", extractPid(Boolean.valueOf(exchange.getProperty("transferUrlPidencode").toString()), metsDoc));
-            }
-        };
+        Map<String, String> values = new LinkedHashMap<String, String>() {{
+            put("AGENT", extractAgent(metsDoc));
+            put("PID", extractPid(Boolean.valueOf(exchange.getProperty("transferUrlPidencode").toString()), metsDoc));
+        }};
 
         StringSubstitutor substitutor = new StringSubstitutor(values, "##", "##");
         String transferUrl = substitutor.replace(exchange.getProperty("transfer.url.pattern").toString());

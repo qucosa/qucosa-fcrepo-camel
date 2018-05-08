@@ -60,7 +60,7 @@ public class Main extends RouteBuilder {
                 .marshal(new ListJacksonDataFormat(RecordTransport.class))
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .to("http4:localhost:8080/qucosa-oai-provider/record/update");
+                .to("http4:{{record.update.url}}");
 
         from("direct:dcdiss")
                 .id("build-dc-dissemination")

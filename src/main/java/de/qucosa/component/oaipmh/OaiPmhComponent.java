@@ -22,8 +22,16 @@ import org.apache.camel.impl.DefaultComponent;
 import java.util.Map;
 
 public class OaiPmhComponent extends DefaultComponent {
+    private String resumptionToken = null;
+
     @Override
-    protected Endpoint createEndpoint(String s, String s1, Map<String, Object> map) throws Exception {
-        return null;
+    protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
+
+        switch(remaining.toLowerCase()) {
+            case "identifiers":
+                return new OaiPmhEndpoint(uri, this, resumptionToken);
+            default:
+                return null;
+        }
     }
 }

@@ -46,6 +46,9 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
     @UriParam
     private long delay = 600000;
 
+    @UriParam
+    private String url;
+
     public OaiPmhEndpoint(String uri, Component component) {
         super(uri, component);
     }
@@ -65,6 +68,7 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
         }
 
         validateDateParameters();
+        configureConsumer(consumer);
 
         return consumer;
     }
@@ -114,14 +118,13 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
         this.metadataPrefix = metadataPrefix;
     }
 
-    public long getDelay() {
-        return delay;
-    }
+    public long getDelay() { return delay; }
 
-    public void setDelay(long delay) {
-        this.delay = delay;
-    }
+    public void setDelay(long delay) { this.delay = delay; }
 
+    public String getUrl() { return url; }
+
+    public void setUrl(String url) { this.url = url; }
 
     private void validateDateParameters() throws ParseException {
         DateFormat df = new SimpleDateFormat("yyyy-mm-dd");

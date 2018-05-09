@@ -52,8 +52,7 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
 
             @Override
             public void process(Exchange exchange) throws Exception {
-                NodeList list = (NodeList) exchange.getIn().getBody();
-                String pid = list.item(0).getNodeValue();
+                String pid = (String) exchange.getIn().getBody();
                 URL repoUrl = new URL(getFedoraHosturl());
                 Document mets;
 

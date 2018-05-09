@@ -95,10 +95,14 @@ public class Main extends RouteBuilder {
                 .to("direct:dcdiss", "direct:xmetadiss")
                 .end();
 
+//        from("oaipmh:?url=http://192.168.42.28:8080/fedora&verb=ListIdentifiers&metadataPrefix=oai_dc&delay=2000")
+//                .id("oai-pmh-load-identifiers")
+//                .to("direct:update");
+
         from("activemq:topic:fedora.apim.update")
                 .id("ActiveMQ-updates-route")
                 .log("${body}")
-                .transform(xpath("/atom:entry/atom:summary[@type='text']/text()")
+                .transform(xpath("/atom:entry/atom:summary[@type='text']/text()", String.class)
                         .namespace("atom", "http://www.w3.org/2005/Atom"))
                 .to("direct:update");
 

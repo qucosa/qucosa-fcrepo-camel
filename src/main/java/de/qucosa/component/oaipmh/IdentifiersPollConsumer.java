@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.component.oaipmh.model;
+package de.qucosa.component.oaipmh;
 
 import org.apache.camel.Processor;
 import org.apache.camel.impl.DefaultEndpoint;

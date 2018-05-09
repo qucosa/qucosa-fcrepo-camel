@@ -22,6 +22,7 @@ import org.apache.camel.impl.DefaultComponent;
 import java.util.Map;
 
 public class OaiPmhComponent extends DefaultComponent {
+
     private String resumptionToken = null;
 
     @Override
@@ -30,4 +31,13 @@ public class OaiPmhComponent extends DefaultComponent {
                 ? new OaiPmhEndpoint(uri, this, resumptionToken)
                 : null;
     }
+
+    public String getResumptionToken() {
+        return resumptionToken;
+    }
+
+    public void setResumptionToken(String resumptionToken) {
+        this.resumptionToken = resumptionToken;
+    }
+
 }

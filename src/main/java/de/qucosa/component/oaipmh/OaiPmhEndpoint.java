@@ -44,7 +44,7 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
     private String metadataPrefix = "oai_dc";
 
     @UriParam
-    private long delay;
+    private long delay = 600000;
 
     public OaiPmhEndpoint(String uri, Component component) {
         super(uri, component);

@@ -23,21 +23,11 @@ import java.util.Map;
 
 public class OaiPmhComponent extends DefaultComponent {
 
-    private String resumptionToken = null;
-
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
         return (!uri.isEmpty() && uri != null && !remaining.isEmpty() && remaining != null)
-                ? new OaiPmhEndpoint(uri, this, resumptionToken)
+                ? new OaiPmhEndpoint(uri, this)
                 : null;
-    }
-
-    public String getResumptionToken() {
-        return resumptionToken;
-    }
-
-    public void setResumptionToken(String resumptionToken) {
-        this.resumptionToken = resumptionToken;
     }
 
 }

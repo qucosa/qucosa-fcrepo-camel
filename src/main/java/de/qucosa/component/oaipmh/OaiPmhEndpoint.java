@@ -43,7 +43,7 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
     @UriParam
     private String metadataPrefix = "oai_dc";
 
-    public OaiPmhEndpoint(String uri, Component component, String resumptionToken) {
+    public OaiPmhEndpoint(String uri, Component component) {
         super(uri, component);
     }
 

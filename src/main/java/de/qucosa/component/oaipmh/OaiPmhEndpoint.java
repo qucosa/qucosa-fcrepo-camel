@@ -43,6 +43,9 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
     @UriParam
     private String metadataPrefix = "oai_dc";
 
+    @UriParam
+    private long delay;
+
     public OaiPmhEndpoint(String uri, Component component) {
         super(uri, component);
     }
@@ -110,6 +113,15 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
     public void setMetadataPrefix(String metadataPrefix) {
         this.metadataPrefix = metadataPrefix;
     }
+
+    public long getDelay() {
+        return delay;
+    }
+
+    public void setDelay(long delay) {
+        this.delay = delay;
+    }
+
 
     private void validateDateParameters() throws ParseException {
         DateFormat df = new SimpleDateFormat("yyyy-mm-dd");

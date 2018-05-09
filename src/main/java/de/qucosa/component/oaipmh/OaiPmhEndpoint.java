@@ -16,13 +16,11 @@
 
 package de.qucosa.component.oaipmh;
 
-import de.qucosa.component.oaipmh.model.IdentifiersPollConsumer;
 import org.apache.camel.Component;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultEndpoint;
-import org.apache.camel.impl.ScheduledPollConsumer;
 import org.apache.camel.spi.UriParam;
 
 import java.text.DateFormat;

@@ -26,12 +26,8 @@ public class OaiPmhComponent extends DefaultComponent {
 
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-
-        switch(remaining.toLowerCase()) {
-            case "identifiers":
-                return new OaiPmhEndpoint(uri, this, resumptionToken);
-            default:
-                return null;
-        }
+        return (!uri.isEmpty() && uri != null && !remaining.isEmpty() && remaining != null)
+                ? new OaiPmhEndpoint(uri, this, resumptionToken)
+                : null;
     }
 }

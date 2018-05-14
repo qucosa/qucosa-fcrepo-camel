@@ -49,6 +49,9 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
     @UriParam
     private String url;
 
+    @UriParam
+    private String credentials;
+
     public OaiPmhEndpoint(String uri, Component component) {
         super(uri, component);
     }
@@ -125,6 +128,10 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
     public String getUrl() { return url; }
 
     public void setUrl(String url) { this.url = url; }
+
+    public String getCredentials() { return credentials; }
+
+    public void setCredentials(String credentials) { this.credentials = credentials; }
 
     private void validateDateParameters() throws ParseException {
         DateFormat df = new SimpleDateFormat("yyyy-mm-dd");

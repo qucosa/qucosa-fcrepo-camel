@@ -22,7 +22,18 @@ import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultEndpoint;
 import org.apache.camel.spi.UriParam;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -74,6 +85,30 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
         configureConsumer(consumer);
 
         return consumer;
+    }
+
+    public HttpClientContext httpClientContext() {
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        String[] credentials = this.getCredentials().split(":");
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(credentials[0], credentials[1]));
+        HttpClientContext clientContext = HttpClientContext.create();
+        clientContext.setCredentialsProvider(credentialsProvider);
+        return clientContext;
+    }
+
+    public String xml(String uri) throws IOException {
+        String xml = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(uri);
+        CloseableHttpResponse response = httpClient.execute(httpGet, httpClientContext());
+
+        try {
+            xml = EntityUtils.toString(response.getEntity(), "UTF-8");
+        } finally {
+            response.close();
+        }
+
+        return xml;
     }
 
     @Override

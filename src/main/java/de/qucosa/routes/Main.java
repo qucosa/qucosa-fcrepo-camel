@@ -60,7 +60,9 @@ public class Main extends RouteBuilder {
                 .marshal(new ListJacksonDataFormat(RecordTransport.class))
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .to("http4:{{record.update.url}}");
+//                .to("http4:{{record.update.url}}")
+                .log("${body}")
+                .to("mock:result");
 
         from("direct:dcdiss")
                 .id("build-dc-dissemination")
@@ -95,9 +97,8 @@ public class Main extends RouteBuilder {
                 .to("direct:dcdiss", "direct:xmetadiss")
                 .end();
 
-        from("oaipmh:?url=http://192.168.42.28:8080/fedora&crendtials={{fedora.credentials}}&verb=ListIdentifiers&metadataPrefix=oai_dc&delay=2000")
-                .id("oai-pmh-load-identifiers")
-                .to("direct:update");
+        from("oaipmh:?url={{fedora.url}}/oai&credentials={{fedora.credentials}}&verb=ListIdentifiers&metadataPrefix=oai_dc&delay=2000")
+                .id("oai-pmh-load-identifiers")                .to("direct:update");
 
         from("activemq:topic:fedora.apim.update")
                 .id("ActiveMQ-updates-route")

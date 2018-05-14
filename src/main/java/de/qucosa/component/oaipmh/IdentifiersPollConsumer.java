@@ -16,13 +16,81 @@
 
 package de.qucosa.component.oaipmh;
 
+import de.qucosa.component.oaiprovider.model.DissTerms;
+import de.qucosa.utils.DocumentXmlUtils;
+import org.apache.camel.Endpoint;
+import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.impl.DefaultEndpoint;
 import org.apache.camel.impl.DefaultScheduledPollConsumer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class IdentifiersPollConsumer extends DefaultScheduledPollConsumer {
 
-    public IdentifiersPollConsumer(DefaultEndpoint defaultEndpoint, Processor processor) {
-        super(defaultEndpoint, processor);
+    private Processor processor;
+
+    private OaiPmhEndpoint endpoint;
+
+    private String resToken = null;
+
+    public IdentifiersPollConsumer(OaiPmhEndpoint endpoint, Processor processor) {
+        super(endpoint, processor);
+        this.processor = processor;
+        this.endpoint = endpoint;
+    }
+
+    @Override
+    protected int poll() throws Exception {
+        Exchange exchange = endpoint.createExchange();
+        DissTerms dissTerms = (DissTerms) exchange.getContext().getRegistry().lookupByName("dissTerms");
+        String xml = null;
+
+        if (resToken == null) {
+            xml = endpoint.xml(endpoint.getUrl() + "?verb=" + endpoint.getVerb() + "&metadataPrefix=" + endpoint.getMetadataPrefix());
+        } else {
+            xml = endpoint.xml(endpoint.getUrl() + "?verb=" + endpoint.getVerb() + "&resumptionToken=" + resToken);
+        }
+
+        if (!xml.isEmpty()) {
+            Document document = DocumentXmlUtils.document(new ByteArrayInputStream(xml.getBytes("UTF-8")), false);
+            XPath xPath = DocumentXmlUtils.xpath(dissTerms.getMapXmlNamespaces());
+            String token = (String) xPath.compile("//ListIdentifiers/resumptionToken/text()").evaluate(document, XPathConstants.STRING);
+            resToken = (token != null && !token.isEmpty()) ? token : null;
+            NodeList nodeList = (NodeList) xPath.compile("//ListIdentifiers/header/identifier/text()").evaluate(document, XPathConstants.NODESET);
+            List<String> pids = new ArrayList<>();
+
+            if (nodeList != null && nodeList.getLength() > 0) {
+
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    Node node = nodeList.item(i);
+                    Pattern pattern = Pattern.compile("qucosa:\\d+$");
+                    Matcher matcher = pattern.matcher(node.getNodeValue());
+
+                    if (matcher.find()) {
+                        pids.add(matcher.group());
+                    }
+                }
+
+                if (pids.size() > 0) {
+
+                    for (String pid : pids) {
+                        Exchange send = endpoint.createExchange();
+                        send.getIn().setBody(pid);
+                        processor.process(send);
+                    }
+                }
+            }
+        }
+
+        return (resToken == null) ? 1 : poll();
     }
 }

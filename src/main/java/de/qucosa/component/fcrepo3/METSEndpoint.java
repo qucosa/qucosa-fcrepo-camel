@@ -28,7 +28,6 @@ import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultProducer;
 import org.apache.camel.spi.UriParam;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import java.net.URL;
 

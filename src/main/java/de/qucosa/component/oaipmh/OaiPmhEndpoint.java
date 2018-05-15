@@ -20,7 +20,7 @@ import org.apache.camel.Component;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
-import org.apache.camel.impl.DefaultEndpoint;
+import org.apache.camel.impl.DefaultPollingEndpoint;
 import org.apache.camel.spi.UriParam;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -38,7 +38,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class OaiPmhEndpoint extends DefaultEndpoint {
+public class OaiPmhEndpoint extends DefaultPollingEndpoint {
     @UriParam
     private String verb = "ListIdentifiers";
 
@@ -53,9 +53,6 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
 
     @UriParam
     private String metadataPrefix = "oai_dc";
-
-    @UriParam
-    private long delay = 600000;
 
     @UriParam
     private String url;
@@ -74,7 +71,7 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
 
     @Override
     public Consumer createConsumer(Processor processor) throws Exception {
-        Consumer consumer = null;
+        Consumer consumer;
 
         switch (getVerb().toLowerCase()) {
             default:
@@ -97,7 +94,7 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
     }
 
     public String xml(String uri) throws IOException {
-        String xml = null;
+        String xml;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(uri);
         CloseableHttpResponse response = httpClient.execute(httpGet, httpClientContext());
@@ -155,10 +152,6 @@ public class OaiPmhEndpoint extends DefaultEndpoint {
     public void setMetadataPrefix(String metadataPrefix) {
         this.metadataPrefix = metadataPrefix;
     }
-
-    public long getDelay() { return delay; }
-
-    public void setDelay(long delay) { this.delay = delay; }
 
     public String getUrl() { return url; }
 

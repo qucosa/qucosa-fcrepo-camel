@@ -18,7 +18,6 @@ package de.qucosa.component.oaipmh;
 
 import de.qucosa.component.oaiprovider.model.DissTerms;
 import de.qucosa.utils.DocumentXmlUtils;
-import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.impl.DefaultScheduledPollConsumer;
@@ -42,6 +41,8 @@ public class IdentifiersPollConsumer extends DefaultScheduledPollConsumer {
 
     private String resToken = null;
 
+    int cntPoll;
+
     public IdentifiersPollConsumer(OaiPmhEndpoint endpoint, Processor processor) {
         super(endpoint, processor);
         this.processor = processor;
@@ -50,9 +51,10 @@ public class IdentifiersPollConsumer extends DefaultScheduledPollConsumer {
 
     @Override
     protected int poll() throws Exception {
+        cntPoll++;
         Exchange exchange = endpoint.createExchange();
         DissTerms dissTerms = (DissTerms) exchange.getContext().getRegistry().lookupByName("dissTerms");
-        String xml = null;
+        String xml;
 
         if (resToken == null) {
             xml = endpoint.xml(endpoint.getUrl() + "?verb=" + endpoint.getVerb() + "&metadataPrefix=" + endpoint.getMetadataPrefix());
@@ -91,6 +93,6 @@ public class IdentifiersPollConsumer extends DefaultScheduledPollConsumer {
             }
         }
 
-        return (resToken == null) ? 1 : poll();
+        return cntPoll;
     }
 }

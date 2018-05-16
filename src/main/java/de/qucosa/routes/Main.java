@@ -95,7 +95,7 @@ public class Main extends RouteBuilder {
                 .to("direct:dcdiss", "direct:xmetadiss")
                 .end();
 
-        from("oaipmh:?url={{fedora.url}}/oai&credentials={{fedora.credentials}}&verb=ListIdentifiers&metadataPrefix=oai_dc&delay={{oaipmh.poll.delay}}")
+        from("oaipmh:{{fedora.url}}/oai?credentials={{fedora.credentials}}&verb=ListIdentifiers&metadataPrefix=oai_dc&delay={{oaipmh.poll.delay}}")
                 .id("oai-pmh-load-identifiers")
                 .to("direct:update");
 

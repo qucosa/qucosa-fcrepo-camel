@@ -28,7 +28,6 @@ import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultProducer;
 import org.apache.camel.spi.UriParam;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import java.net.URL;
 
@@ -52,8 +51,7 @@ public class METSEndpoint extends AbstractFcrepo3Endpoint {
 
             @Override
             public void process(Exchange exchange) throws Exception {
-                NodeList list = (NodeList) exchange.getIn().getBody();
-                String pid = list.item(0).getNodeValue();
+                String pid = (String) exchange.getIn().getBody();
                 URL repoUrl = new URL(getFedoraHosturl());
                 Document mets;
 

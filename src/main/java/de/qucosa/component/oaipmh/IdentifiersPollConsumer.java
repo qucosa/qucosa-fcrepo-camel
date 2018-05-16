@@ -28,8 +28,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +40,8 @@ public class IdentifiersPollConsumer extends DefaultScheduledPollConsumer {
     private String resToken = null;
 
     int cntPoll;
+
+    private static final Pattern PATTERN = Pattern.compile("qucosa:\\d+$");
 
     public IdentifiersPollConsumer(OaiPmhEndpoint endpoint, Processor processor) {
         super(endpoint, processor);
@@ -68,25 +68,16 @@ public class IdentifiersPollConsumer extends DefaultScheduledPollConsumer {
             String token = (String) xPath.compile("//ListIdentifiers/resumptionToken/text()").evaluate(document, XPathConstants.STRING);
             resToken = (token != null && !token.isEmpty()) ? token : null;
             NodeList nodeList = (NodeList) xPath.compile("//ListIdentifiers/header/identifier/text()").evaluate(document, XPathConstants.NODESET);
-            List<String> pids = new ArrayList<>();
 
             if (nodeList != null && nodeList.getLength() > 0) {
 
                 for (int i = 0; i < nodeList.getLength(); i++) {
                     Node node = nodeList.item(i);
-                    Pattern pattern = Pattern.compile("qucosa:\\d+$");
-                    Matcher matcher = pattern.matcher(node.getNodeValue());
+                    Matcher matcher = PATTERN.matcher(node.getNodeValue());
 
                     if (matcher.find()) {
-                        pids.add(matcher.group());
-                    }
-                }
-
-                if (pids.size() > 0) {
-
-                    for (String pid : pids) {
                         Exchange send = endpoint.createExchange();
-                        send.getIn().setBody(pid);
+                        send.getIn().setBody(matcher.group());
                         processor.process(send);
                     }
                 }

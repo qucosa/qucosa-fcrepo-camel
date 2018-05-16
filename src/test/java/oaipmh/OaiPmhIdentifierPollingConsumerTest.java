@@ -19,21 +19,24 @@ package oaipmh;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.junit.Ignore;
 import org.junit.Test;
 
+
 public class OaiPmhIdentifierPollingConsumerTest extends CamelTestSupport {
+
     @Test
+    @Ignore
     public void Actualization_token_by_poll_interval() throws InterruptedException {
         MockEndpoint mock = getMockEndpoint("mock:result");
         assertMockEndpointsSatisfied();
     }
 
     @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
-
+    protected RouteBuilder createRouteBuilder() {
         return new RouteBuilder() {
             public void configure() {
-                from("oaipmh:?url=http://192.168.42.28:8080/fedora&verb=ListIdentifiers&metatdataPrefix=oai_dc&delay=2000&")
+                from("oaipmh:?url=http://192.168.42.28:8080/fedora&verb=ListIdentifiers&metatdataPrefix=oai_dc&delay=2000")
                         //.to("stream:out");
                         .to("mock:result");
             }

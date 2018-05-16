@@ -16,7 +16,7 @@
 
 package de.qucosa.component.fcrepo3.aggregate;
 
-import de.qucosa.component.oaiprovider.model.RecordTransport;
+import de.qucosa.component.oaipmh.model.RecordTransport;
 import org.apache.camel.Exchange;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 

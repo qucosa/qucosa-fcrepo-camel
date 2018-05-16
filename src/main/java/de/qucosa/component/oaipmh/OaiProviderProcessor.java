@@ -17,7 +17,7 @@
 package de.qucosa.component.oaipmh;
 
 import de.qucosa.model.DissTerms;
-import de.qucosa.component.oaiprovider.model.RecordTransport;
+import de.qucosa.component.oaipmh.model.RecordTransport;
 import de.qucosa.model.SetsConfig;
 import de.qucosa.utils.DateTimeConverter;
 import de.qucosa.utils.DocumentXmlUtils;

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import de.qucosa.component.fcrepo3.aggregate.RecordListAggregator;
 import de.qucosa.component.oaipmh.OaiProviderProcessor;
 import de.qucosa.model.DissTerms;
-import de.qucosa.component.oaiprovider.model.RecordTransport;
+import de.qucosa.component.oaipmh.model.RecordTransport;
 import de.qucosa.model.SetsConfig;
 import de.qucosa.transformers.DcTransformer;
 import de.qucosa.transformers.XMetaDissTransformer;

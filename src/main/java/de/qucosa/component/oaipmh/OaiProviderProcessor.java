@@ -16,9 +16,9 @@
 
 package de.qucosa.component.oaipmh;
 
-import de.qucosa.component.oaiprovider.model.DissTerms;
+import de.qucosa.model.DissTerms;
 import de.qucosa.component.oaiprovider.model.RecordTransport;
-import de.qucosa.component.oaiprovider.model.SetsConfig;
+import de.qucosa.model.SetsConfig;
 import de.qucosa.utils.DateTimeConverter;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;

@@ -57,9 +57,9 @@
     </bean>
 
     <!-- Configuration Beans -->
-    <bean id="dissTerms" class="de.qucosa.component.oaiprovider.model.DissTerms" />
+    <bean id="dissTerms" class="de.qucosa.model.DissTerms" />
 
-    <bean id="setsConfig" class="de.qucosa.component.oaiprovider.model.SetsConfig" />
+    <bean id="setsConfig" class="de.qucosa.model.SetsConfig" />
 
     <!-- Camel context configuration -->
     <bean id="routes" class="de.qucosa.routes.Main"/>

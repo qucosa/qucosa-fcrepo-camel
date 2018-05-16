@@ -16,7 +16,7 @@
 
 package de.qucosa.component.oaipmh;
 
-import de.qucosa.component.oaiprovider.model.DissTerms;
+import de.qucosa.model.DissTerms;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;

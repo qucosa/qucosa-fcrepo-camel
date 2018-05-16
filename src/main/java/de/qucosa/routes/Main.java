@@ -18,7 +18,7 @@ package de.qucosa.routes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.qucosa.component.fcrepo3.aggregate.RecordListAggregator;
-import de.qucosa.component.oaiprovider.OaiProviderProcessor;
+import de.qucosa.component.oaipmh.OaiProviderProcessor;
 import de.qucosa.component.oaiprovider.model.DissTerms;
 import de.qucosa.component.oaiprovider.model.RecordTransport;
 import de.qucosa.component.oaiprovider.model.SetsConfig;

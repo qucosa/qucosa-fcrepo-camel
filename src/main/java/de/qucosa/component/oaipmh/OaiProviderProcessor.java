@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.qucosa.component.oaiprovider;
+package de.qucosa.component.oaipmh;
 
 import de.qucosa.component.oaiprovider.model.DissTerms;
 import de.qucosa.component.oaiprovider.model.RecordTransport;

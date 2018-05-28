@@ -37,6 +37,9 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DissTerms {
     @JsonIgnore
+    private String configPath;
+
+    @JsonIgnore
     private DissTermsDao dao = null;
 
     @JsonProperty("xmlnamespaces")
@@ -47,6 +50,10 @@ public class DissTerms {
 
     @JsonProperty("formats")
     private Set<DissFormat> formats;
+
+    public DissTerms(@JsonProperty("configPath") String configPath) {
+        this.configPath = configPath;
+    }
 
     public Set<XmlNamspace> getXmlnamespaces() {
         return xmlnamespaces;
@@ -194,7 +201,7 @@ public class DissTerms {
     private DissTermsDao dao() {
 
         if (dao == null) {
-            dao = new DissTermsDao();
+            dao = new DissTermsDao(configPath);
         }
 
         return dao;
@@ -205,9 +212,9 @@ public class DissTerms {
 
         DissTerms dissTerms = null;
 
-        public DissTermsDao() {
+        public DissTermsDao(String configPath) {
             ObjectMapper om = new ObjectMapper();
-            File file = new File("/home/opt/qucosa-fcrepo-camel/config/dissemination-config.json");
+            File file = new File(configPath + "/dissemination-config.json");
 
             try {
                 dissTerms = om.readValue(Files.readAllBytes(Paths.get(file.getAbsolutePath())), DissTerms.class);

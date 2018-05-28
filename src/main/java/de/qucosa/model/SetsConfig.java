@@ -41,6 +41,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SetsConfig {
     @JsonIgnore
+    private String configPath;
+
+    @JsonIgnore
     private SetSpecDao dao = null;
 
     @JsonProperty("sets")
@@ -48,6 +51,10 @@ public class SetsConfig {
 
     public List<Set> getSets() {
         return sets;
+    }
+
+    public SetsConfig(@JsonProperty("configPath") String configPath) {
+        this.configPath = configPath;
     }
 
     public void setSets(List<Set> sets) {
@@ -72,7 +79,7 @@ public class SetsConfig {
     private SetSpecDao dao() {
 
         if (dao == null) {
-            dao = new SetSpecDao();
+            dao = new SetSpecDao(configPath);
         }
 
         return dao;
@@ -119,9 +126,9 @@ public class SetsConfig {
 
         private List<Set> sets = null;
 
-        public SetSpecDao() {
+        public SetSpecDao(String configPath) {
             ObjectMapper om = new ObjectMapper();
-            File setSpecs = new File("/home/opt/qucosa-fcrepo-camel/config/list-set-conf.json");
+            File setSpecs = new File(configPath + "/list-set-conf.json");
 
             try {
                 sets = om.readValue(setSpecs, om.getTypeFactory().constructCollectionType(List.class, Set.class));

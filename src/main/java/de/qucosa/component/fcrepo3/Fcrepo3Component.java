@@ -16,8 +16,6 @@
 
 package de.qucosa.component.fcrepo3;
 
-import de.qucosa.model.DissTerms;
-import de.qucosa.model.SetsConfig;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
@@ -33,10 +31,6 @@ public class Fcrepo3Component extends DefaultComponent {
         Endpoint endpoint = null;
 
         if (remaining != null && !remaining.isEmpty()) {
-            DissTerms dt = new DissTerms();
-            SetsConfig sets = new SetsConfig();
-            configuration.setDissConf(dt);
-            configuration.setSets(sets);
 
             switch (remaining.toLowerCase()) {
                 case "mets":

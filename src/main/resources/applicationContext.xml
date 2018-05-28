@@ -57,9 +57,13 @@
     </bean>
 
     <!-- Configuration Beans -->
-    <bean id="dissTerms" class="de.qucosa.model.DissTerms" />
+    <bean id="dissTerms" class="de.qucosa.model.DissTerms" >
+        <constructor-arg name="configPath" value="${home.dir}/config" type="java.lang.String"/>
+    </bean>
 
-    <bean id="setsConfig" class="de.qucosa.model.SetsConfig" />
+    <bean id="setsConfig" class="de.qucosa.model.SetsConfig">
+        <constructor-arg name="configPath" value="${home.dir}/config" type="java.lang.String"/>
+    </bean>
 
     <!-- Camel context configuration -->
     <bean id="routes" class="de.qucosa.routes.Main"/>

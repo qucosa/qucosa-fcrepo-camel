@@ -78,7 +78,13 @@ public class OaiProviderProcessor implements Processor {
 
                             for (int i = 0; i < predicateValues.length; i++) {
                                 String setspec = predicateKey + ":" + predicateValues[i];
-                                setSpecs.add(setspec);
+
+                                if (matchTerm(predicateKey, predicateValues[i], format, dissTerms, dissemination)) {
+
+                                    if (!setSpecs.contains(setspec)) {
+                                        setSpecs.add(setspec);
+                                    }
+                                }
                             }
                         }
                     }

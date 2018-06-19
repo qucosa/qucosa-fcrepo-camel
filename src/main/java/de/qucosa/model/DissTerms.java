@@ -53,6 +53,15 @@ public class DissTerms {
 
         if (config instanceof String) {
             this.config = getClass().getResourceAsStream((String) config);
+
+            if (this.config == null) {
+
+                try {
+                    this.config = new FileInputStream(new File((String) config));
+                } catch (FileNotFoundException e) {
+                    logger.error("dissemination-config.json is not found.", e);
+                }
+            }
         }
 
         if (config instanceof InputStream) {

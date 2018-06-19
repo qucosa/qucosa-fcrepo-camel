@@ -62,7 +62,7 @@
     </bean>
 
     <bean id="setsConfig" class="de.qucosa.model.SetsConfig">
-        <constructor-arg name="configPath" value="${home.dir}/config" type="java.lang.String"/>
+        <constructor-arg name="config" value="${home.dir}/config" type="java.lang.Object"/>
     </bean>
 
     <!-- Camel context configuration -->

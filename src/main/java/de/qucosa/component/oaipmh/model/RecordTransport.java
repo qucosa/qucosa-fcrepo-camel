@@ -34,8 +34,8 @@ public class RecordTransport implements Serializable {
     @JsonProperty("pid")
     private String pid;
 
-    @JsonProperty("prefix")
-    private String prefix;
+    @JsonProperty("mdprefix")
+    private String mdprefix;
 
     @JsonProperty("sets")
     private List<String> sets = new ArrayList<String>();
@@ -61,13 +61,9 @@ public class RecordTransport implements Serializable {
         this.pid = pid;
     }
 
-    public String getPrefix() {
-        return prefix;
-    }
+    public String getMdprefix() { return mdprefix; }
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
+    public void setMdprefix(String mdprefix) { this.mdprefix = mdprefix; }
 
     public void setSets(List<String> sets) { this.sets = sets; }
 

@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -31,17 +30,14 @@ public class Record implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("identifierId")
-    private Long identifierId;
+    @JsonProperty("pid")
+    private String pid;
 
-    @JsonProperty("format")
-    private Long format;
+    @JsonProperty("uid")
+    private String uid;
 
-    @JsonProperty("moddate")
-    private Date moddate;
-
-    @JsonProperty("xmldata")
-    private String xmldata;
+    @JsonProperty("deleted")
+    private boolean deleted;
 
     public Long getId() {
         return id;
@@ -51,35 +47,19 @@ public class Record implements Serializable {
         this.id = id;
     }
 
-    public Long getIdentifierId() {
-        return identifierId;
+    public String getPid() {
+        return pid;
     }
 
-    public void setIdentifierId(Long identifierId) {
-        this.identifierId = identifierId;
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
-    public Long getFormat() {
-        return format;
-    }
+    public String getUid() { return uid; }
 
-    public void setFormat(Long format) {
-        this.format = format;
-    }
+    public void setUid(String uid) { this.uid = uid; }
 
-    public Date getModdate() {
-        return moddate;
-    }
+    public boolean isDeleted() { return deleted; }
 
-    public void setModdate(Date moddate) {
-        this.moddate = moddate;
-    }
-
-    public String getXmldata() {
-        return xmldata;
-    }
-
-    public void setXmldata(String xmldata) {
-        this.xmldata = xmldata;
-    }
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 }

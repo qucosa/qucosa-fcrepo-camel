@@ -30,11 +30,14 @@ public class Set implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("setSpec")
+    @JsonProperty("setspec")
     private String setSpec;
 
-    @JsonProperty("setName")
+    @JsonProperty("setname")
     private String setName;
+
+    @JsonProperty("setdescription")
+    private String setDescription;
 
     @JsonProperty("predicate")
     private String predicate;
@@ -62,6 +65,10 @@ public class Set implements Serializable {
     public void setSetName(String setName) {
         this.setName = setName;
     }
+
+    public String getSetDescription() { return setDescription; }
+
+    public void setSetDescription(String setDescription) { this.setDescription = setDescription; }
 
     public String getPredicate() {
         return predicate;

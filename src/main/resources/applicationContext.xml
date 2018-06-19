@@ -58,7 +58,7 @@
 
     <!-- Configuration Beans -->
     <bean id="dissTerms" class="de.qucosa.model.DissTerms" >
-        <constructor-arg name="config" value="${home.dir}/config" type="java.lang.Object"/>
+        <constructor-arg name="config" value="${home.dir}/config/dissemination-config.json" type="java.lang.Object"/>
     </bean>
 
     <bean id="setsConfig" class="de.qucosa.model.SetsConfig">

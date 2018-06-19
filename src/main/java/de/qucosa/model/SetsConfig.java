@@ -54,8 +54,18 @@ public class SetsConfig {
     }
 
     public <T> SetsConfig(@JsonProperty("config") T config) {
+
         if (config instanceof String) {
             this.config = getClass().getResourceAsStream((String) config);
+
+            if (this.config == null) {
+
+                try {
+                    this.config = new FileInputStream(new File((String) config));
+                } catch (FileNotFoundException e) {
+                    logger.error("list-set-conf.json is not found.", e);
+                }
+            }
         }
 
         if (config instanceof InputStream) {
@@ -102,38 +112,33 @@ public class SetsConfig {
     }
 
     public static class Set {
-        @JsonProperty("setSpec")
+        @JsonProperty("setspec")
         private String setSpec;
 
-        @JsonProperty("setName")
+        @JsonProperty("setname")
         private String setName;
 
         @JsonProperty("predicate")
         private String predicate;
 
-        public String getSetSpec() {
-            return setSpec;
-        }
+        @JsonProperty("setdescription")
+        private String setDescription;
 
-        public void setSetSpec(String setSpec) {
-            this.setSpec = setSpec;
-        }
+        public String getSetSpec() { return setSpec; }
 
-        public String getSetName() {
-            return setName;
-        }
+        public void setSetSpec(String setSpec) { this.setSpec = setSpec; }
 
-        public void setSetName(String setName) {
-            this.setName = setName;
-        }
+        public String getSetName() { return setName; }
 
-        public String getPredicate() {
-            return predicate;
-        }
+        public void setSetName(String setName) { this.setName = setName; }
 
-        public void setPredicate(String predicate) {
-            this.predicate = predicate;
-        }
+        public String getPredicate() { return predicate; }
+
+        public void setPredicate(String predicate) { this.predicate = predicate; }
+
+        public String getSetDescription() { return setDescription; }
+
+        public void setSetDescription(String setDescription) { this.setDescription = setDescription; }
     }
 
     private static class SetSpecDao {

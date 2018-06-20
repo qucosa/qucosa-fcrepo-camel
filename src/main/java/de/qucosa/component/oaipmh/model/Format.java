@@ -30,13 +30,13 @@ public class Format {
     private String mdprefix;
 
     @JsonProperty("schemaurl")
-    private String schemarl;
+    private String schemaurl;
 
     @JsonProperty("namespace")
     private String namespace;
 
     @JsonProperty("deleted")
-    private boolean deleted; private String schemaurl;
+    private boolean deleted;
 
     public Long getId() {
         return id;

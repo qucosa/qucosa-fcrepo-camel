@@ -59,7 +59,7 @@ public class DissTerms {
                 try {
                     this.config = new FileInputStream(new File((String) config));
                 } catch (FileNotFoundException e) {
-                    logger.error("dissemination-config.json is not found.", e);
+                    logger.error("dissemination-config.json file not found.", e);
                 }
             }
         }
@@ -73,7 +73,7 @@ public class DissTerms {
             try {
                 this.config = new FileInputStream((File) config);
             } catch (FileNotFoundException e) {
-                logger.error("dissemination-config.json is not found.", e);
+                logger.error("dissemination-config.json file not found.", e);
             }
         }
     }
@@ -240,7 +240,7 @@ public class DissTerms {
             try {
                 dissTerms = om.readValue(stream, DissTerms.class);
             } catch (IOException e) {
-                logger.debug("dissemination-conf parse failed.");
+                logger.error("Cannot parse dissemination-conf JSON file.");
             }
         }
 
@@ -280,19 +280,19 @@ public class DissTerms {
             for (DissTerm dt : dissTerms) {
 
                 if (!dt.getDiss().equals(diss)) {
-                    logger.debug(diss + " is does not exists in dissemination-config.");
+                    logger.error(diss + " is does not exists in dissemination-config.");
                     continue;
                 }
 
                 if (dt.getTerms().isEmpty()) {
-                    logger.debug(diss + " has no terms config.");
+                    logger.error(diss + " has no terms config.");
                     continue;
                 }
 
                 for (Term t : dt.getTerms()) {
 
                     if (!t.getName().equals(name)) {
-                        logger.debug("The term name " + name + " is not available in dissemination " + diss);
+                        logger.error("The term name " + name + " is not available in dissemination " + diss);
                         continue;
                     }
 

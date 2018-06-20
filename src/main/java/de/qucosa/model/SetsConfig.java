@@ -63,7 +63,7 @@ public class SetsConfig {
                 try {
                     this.config = new FileInputStream(new File((String) config));
                 } catch (FileNotFoundException e) {
-                    logger.error("list-set-conf.json is not found.", e);
+                    logger.error(config + " is not found.", e);
                 }
             }
         }
@@ -77,7 +77,7 @@ public class SetsConfig {
             try {
                 this.config = new FileInputStream((File) config);
             } catch (FileNotFoundException e) {
-                logger.error("list-set-conf.json is not found.", e);
+                logger.error(config + " is not found.", e);
             }
         }
     }

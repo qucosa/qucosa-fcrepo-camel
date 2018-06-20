@@ -142,6 +142,8 @@ public class SetsConfig {
     }
 
     private static class SetSpecDao {
+        @JsonIgnore
+        private Logger logger = LoggerFactory.getLogger(SetSpecDao.class);
 
         private List<Set> sets = null;
 
@@ -151,7 +153,7 @@ public class SetsConfig {
             try {
                 sets = om.readValue(stream, om.getTypeFactory().constructCollectionType(List.class, Set.class));
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Cannot parse sets JSON config.", e);
             }
         }
 

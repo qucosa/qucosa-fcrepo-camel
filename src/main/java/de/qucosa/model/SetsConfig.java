@@ -20,14 +20,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +38,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SetsConfig {
     @JsonIgnore
-    private String configPath;
+    private Logger logger = LoggerFactory.getLogger(SetsConfig.class);
+
+    @JsonIgnore
+    private InputStream config;
 
     @JsonIgnore
     private SetSpecDao dao = null;
@@ -53,9 +53,35 @@ public class SetsConfig {
         return sets;
     }
 
-    public SetsConfig(@JsonProperty("configPath") String configPath) {
-        this.configPath = configPath;
+    public <T> SetsConfig(@JsonProperty("config") T config) {
+
+        if (config instanceof String) {
+            this.config = getClass().getResourceAsStream((String) config);
+
+            if (this.config == null) {
+
+                try {
+                    this.config = new FileInputStream(new File((String) config));
+                } catch (FileNotFoundException e) {
+                    logger.error(config + " is not found.", e);
+                }
+            }
+        }
+
+        if (config instanceof InputStream) {
+            this.config = (InputStream) config;
+        }
+
+        if (config instanceof File) {
+
+            try {
+                this.config = new FileInputStream((File) config);
+            } catch (FileNotFoundException e) {
+                logger.error(config + " is not found.", e);
+            }
+        }
     }
+
 
     public void setSets(List<Set> sets) {
         this.sets = sets;
@@ -79,65 +105,55 @@ public class SetsConfig {
     private SetSpecDao dao() {
 
         if (dao == null) {
-            dao = new SetSpecDao(configPath);
+            dao = new SetSpecDao(config);
         }
 
         return dao;
     }
 
     public static class Set {
-        @JsonProperty("setSpec")
+        @JsonProperty("setspec")
         private String setSpec;
 
-        @JsonProperty("setName")
+        @JsonProperty("setname")
         private String setName;
 
         @JsonProperty("predicate")
         private String predicate;
 
-        public String getSetSpec() {
-            return setSpec;
-        }
+        @JsonProperty("setdescription")
+        private String setDescription;
 
-        public void setSetSpec(String setSpec) {
-            this.setSpec = setSpec;
-        }
+        public String getSetSpec() { return setSpec; }
 
-        public String getSetName() {
-            return setName;
-        }
+        public void setSetSpec(String setSpec) { this.setSpec = setSpec; }
 
-        public void setSetName(String setName) {
-            this.setName = setName;
-        }
+        public String getSetName() { return setName; }
 
-        public String getPredicate() {
-            return predicate;
-        }
+        public void setSetName(String setName) { this.setName = setName; }
 
-        public void setPredicate(String predicate) {
-            this.predicate = predicate;
-        }
+        public String getPredicate() { return predicate; }
+
+        public void setPredicate(String predicate) { this.predicate = predicate; }
+
+        public String getSetDescription() { return setDescription; }
+
+        public void setSetDescription(String setDescription) { this.setDescription = setDescription; }
     }
 
     private static class SetSpecDao {
-        @SuppressWarnings("unused")
-        private final Logger logger = LoggerFactory.getLogger(SetSpecDao.class);
+        @JsonIgnore
+        private Logger logger = LoggerFactory.getLogger(SetSpecDao.class);
 
         private List<Set> sets = null;
 
-        public SetSpecDao(String configPath) {
+        public SetSpecDao(InputStream stream) {
             ObjectMapper om = new ObjectMapper();
-            File setSpecs = new File(configPath + "/list-set-conf.json");
 
             try {
-                sets = om.readValue(setSpecs, om.getTypeFactory().constructCollectionType(List.class, Set.class));
-            } catch (JsonParseException e) {
-                e.printStackTrace();
-            } catch (JsonMappingException e) {
-                e.printStackTrace();
+                sets = om.readValue(stream, om.getTypeFactory().constructCollectionType(List.class, Set.class));
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Cannot parse sets JSON config.", e);
             }
         }
 

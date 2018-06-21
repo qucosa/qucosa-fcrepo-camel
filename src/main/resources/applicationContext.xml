@@ -58,11 +58,11 @@
 
     <!-- Configuration Beans -->
     <bean id="dissTerms" class="de.qucosa.model.DissTerms" >
-        <constructor-arg name="configPath" value="${home.dir}/config" type="java.lang.String"/>
+        <constructor-arg name="config" value="${home.dir}/config/dissemination-config.json" type="java.lang.Object"/>
     </bean>
 
     <bean id="setsConfig" class="de.qucosa.model.SetsConfig">
-        <constructor-arg name="configPath" value="${home.dir}/config" type="java.lang.String"/>
+        <constructor-arg name="config" value="${home.dir}/config/list-set-conf.json" type="java.lang.Object"/>
     </bean>
 
     <!-- Camel context configuration -->

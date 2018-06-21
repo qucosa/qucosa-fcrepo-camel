@@ -20,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.sql.Timestamp;
-
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Format {
@@ -31,11 +29,14 @@ public class Format {
     @JsonProperty("mdprefix")
     private String mdprefix;
 
-    @JsonProperty("lastpolldate")
-    private Timestamp lastpolldate;
+    @JsonProperty("schemaurl")
+    private String schemaurl;
 
-    @JsonProperty("dissType")
-    private String dissType;
+    @JsonProperty("namespace")
+    private String namespace;
+
+    @JsonProperty("deleted")
+    private boolean deleted;
 
     public Long getId() {
         return id;
@@ -53,19 +54,15 @@ public class Format {
         this.mdprefix = mdprefix;
     }
 
-    public Timestamp getLastpolldate() {
-        return lastpolldate;
-    }
+    public String getNamespace() { return namespace; }
 
-    public void setLastpolldate(Timestamp lastpolldate) {
-        this.lastpolldate = lastpolldate;
-    }
+    public void setNamespace(String namespace) { this.namespace = namespace; }
 
-    public String getDissType() {
-        return dissType;
-    }
+    public boolean isDeleted() { return deleted; }
 
-    public void setDissType(String dissType) {
-        this.dissType = dissType;
-    }
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
+
+    public String getSchemaurl() { return schemaurl; }
+
+    public void setSchemaurl(String schemaurl) { this.schemaurl = schemaurl; }
 }

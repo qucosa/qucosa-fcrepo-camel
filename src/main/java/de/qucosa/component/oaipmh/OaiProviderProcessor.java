@@ -42,7 +42,7 @@ public class OaiProviderProcessor implements Processor {
         String format = exchange.getProperty("format").toString();
 
         RecordTransport record = new RecordTransport();
-        record.setPrefix(format);
+        record.setMdprefix(format);
         record.setPid(exchange.getProperty("pid").toString());
         record.setData(dissemination);
         record.setModified(DateTimeConverter.timestampWithTimezone(exchange.getProperty("lastmoddate").toString()));

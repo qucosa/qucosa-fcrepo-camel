@@ -61,8 +61,8 @@
         <constructor-arg name="path" value="${home.dir}/config/dissemination-config.json" type="java.lang.String"/>
     </bean>
 
-    <bean id="setsConfig" class="de.qucosa.model.SetsConfig">
-        <constructor-arg name="config" value="${home.dir}/config/list-set-conf.json" type="java.lang.Object"/>
+    <bean id="setsConfig" class="de.qucosa.config.SetConfigDao">
+        <constructor-arg name="path" value="${home.dir}/config/list-set-conf.json" type="java.lang.String"/>
     </bean>
 
     <!-- Camel context configuration -->

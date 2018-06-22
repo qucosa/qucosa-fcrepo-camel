@@ -17,6 +17,8 @@
 package config;
 
 import de.qucosa.config.DissTermsDao;
+import de.qucosa.config.DissTermsMapper;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,11 +27,12 @@ public class DissTermsTest {
 
     @Before
     public void init() {
-        termsDao = new DissTermsDao(getClass().getResourceAsStream("/config/dissemination-config.json"));
+        termsDao = new DissTermsDao(getClass().getResourceAsStream("/configuration/dissemination-config.json"));
     }
 
     @Test
-    public void Dao_set_xml_namespaces() {
-        termsDao.getSetXmlNamespaces();
+    public void Dao_get_xml_namespace_oaidc() {
+        DissTermsMapper.XmlNamespace namespace = termsDao.getXmlNamespace("oai_dc");
+        Assert.assertEquals("oai_dc", namespace.getPrefix());
     }
 }

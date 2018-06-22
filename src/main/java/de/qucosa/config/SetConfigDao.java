@@ -16,5 +16,66 @@
 
 package de.qucosa.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.HashSet;
+import java.util.List;
+
 public class SetConfigDao {
+
+    private Logger logger = LoggerFactory.getLogger(DissTermsMapper.class);
+
+    private List<SetConfigMapper.Set> mapping;
+
+    private InputStream config;
+
+    public SetConfigDao(String path) throws FileNotFoundException {
+        this(new File(path));
+    }
+
+    public SetConfigDao(File file) throws FileNotFoundException {
+        this((InputStream) new FileInputStream(file));
+    }
+
+    public SetConfigDao(InputStream stream) {
+        this.config = stream;
+
+        ObjectMapper om = new ObjectMapper();
+
+        try {
+            mapping = om.readValue(stream, om.getTypeFactory().constructCollectionType(List.class, SetConfigMapper.Set.class));
+        } catch (IOException e) {
+            logger.error("Cannot parse list-set-conf JSON file.");
+        }
+    }
+
+    public List<SetConfigMapper.Set> getSetObjects() { return mapping; }
+
+    public SetConfigMapper.Set getSetObject(String setSpec) {
+        SetConfigMapper.Set setObj = null;
+
+        for (SetConfigMapper.Set obj : getSetObjects()) {
+
+            if (obj.getSetSpec().equals(setSpec)) {
+                setObj = obj;
+                break;
+            }
+        }
+
+        return setObj;
+    }
+
+    public java.util.Set<String> getSetSpecs() {
+        java.util.Set<String> setSpecs = new HashSet<String>();
+
+        for (int i = 0; i < getSetObjects().size(); i++) {
+            SetConfigMapper.Set set = getSetObjects().get(i);
+            setSpecs.add(set.getSetSpec());
+        }
+
+        return setSpecs;
+    }
 }

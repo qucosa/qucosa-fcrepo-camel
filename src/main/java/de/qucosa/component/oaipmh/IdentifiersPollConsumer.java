@@ -16,7 +16,7 @@
 
 package de.qucosa.component.oaipmh;
 
-import de.qucosa.model.DissTerms;
+import de.qucosa.config.DissTermsDao;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -53,7 +53,7 @@ public class IdentifiersPollConsumer extends DefaultScheduledPollConsumer {
     protected int poll() throws Exception {
         cntPoll++;
         Exchange exchange = endpoint.createExchange();
-        DissTerms dissTerms = (DissTerms) exchange.getContext().getRegistry().lookupByName("dissTerms");
+        DissTermsDao dissTerms = (DissTermsDao) exchange.getContext().getRegistry().lookupByName("dissTerms");
         String xml;
 
         if (resToken == null) {

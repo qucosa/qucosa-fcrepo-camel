@@ -17,7 +17,6 @@
 package de.qucosa.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.qucosa.model.DissTerms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ import java.util.Set;
 
 public class DissTermsDao {
 
-    private Logger logger = LoggerFactory.getLogger(DissTerms.class);
+    private Logger logger = LoggerFactory.getLogger(DissTermsMapper.class);
 
     private InputStream config;
 
@@ -56,22 +55,22 @@ public class DissTermsDao {
     }
 
     public Map<String, String> getMapXmlNamespaces() {
-        HashSet<DissTerms.XmlNamspace> xmlNamespaces = (HashSet<DissTerms.XmlNamspace>) mapping.getXmlnamespaces();
+        HashSet<DissTermsMapper.XmlNamespace> xmlNamespaces = (HashSet<DissTermsMapper.XmlNamespace>) mapping.getXmlnamespaces();
         Map<String, String> map = new HashMap<>();
 
-        for (DissTerms.XmlNamspace namspace : xmlNamespaces) {
+        for (DissTermsMapper.XmlNamespace namspace : xmlNamespaces) {
             map.put(namspace.getPrefix(), namspace.getUrl());
         }
 
         return map;
     }
 
-    public Set<DissTerms.XmlNamspace> getSetXmlNamespaces() { return mapping.getXmlnamespaces(); }
+    public Set<DissTermsMapper.XmlNamespace> getSetXmlNamespaces() { return mapping.getXmlnamespaces(); }
 
-    public DissTerms.XmlNamspace getXmlNamespace(String prefix) {
-        DissTerms.XmlNamspace xmlNamspace = null;
+    public DissTermsMapper.XmlNamespace getXmlNamespace(String prefix) {
+        DissTermsMapper.XmlNamespace xmlNamspace = null;
 
-        for (DissTerms.XmlNamspace namespace : mapping.getXmlnamespaces()) {
+        for (DissTermsMapper.XmlNamespace namespace : mapping.getXmlnamespaces()) {
 
             if (namespace.getPrefix().equals(prefix)) {
                 xmlNamspace = namespace;
@@ -81,11 +80,11 @@ public class DissTermsDao {
         return xmlNamspace;
     }
 
-    public DissTerms.Term getTerm(String diss, String name) {
-        HashSet<DissTerms.DissTerm> dissTerms = (HashSet<DissTerms.DissTerm>) mapping.getDissTerms();
-        DissTerms.Term term = null;
+    public DissTermsMapper.Term getTerm(String diss, String name) {
+        HashSet<DissTermsMapper.DissTerm> dissTerms = (HashSet<DissTermsMapper.DissTerm>) mapping.getDissTerms();
+        DissTermsMapper.Term term = null;
 
-        for (DissTerms.DissTerm dt : dissTerms) {
+        for (DissTermsMapper.DissTerm dt : dissTerms) {
 
             if (!dt.getDiss().equals(diss)) {
                 logger.error(diss + " is does not exists in dissemination-config.");
@@ -97,7 +96,7 @@ public class DissTermsDao {
                 continue;
             }
 
-            for (DissTerms.Term t : dt.getTerms()) {
+            for (DissTermsMapper.Term t : dt.getTerms()) {
 
                 if (!t.getName().equals(name)) {
                     logger.error("The term name " + name + " is not available in dissemination " + diss);
@@ -115,12 +114,12 @@ public class DissTermsDao {
         return term;
     }
 
-    public Set<DissTerms.DissFormat> getFormats() { return mapping.getFormats(); }
+    public Set<DissTermsMapper.DissFormat> getFormats() { return mapping.getFormats(); }
 
-    public DissTerms.DissFormat getFormat(String format) {
-        DissTerms.DissFormat dissFormat = null;
+    public DissTermsMapper.DissFormat getFormat(String format) {
+        DissTermsMapper.DissFormat dissFormat = null;
 
-        for (DissTerms.DissFormat df : mapping.getFormats()) {
+        for (DissTermsMapper.DissFormat df : mapping.getFormats()) {
 
             if (df.getMdprefix().equals(format)) {
                 dissFormat = df;

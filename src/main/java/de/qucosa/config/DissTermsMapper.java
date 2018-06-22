@@ -19,7 +19,6 @@ package de.qucosa.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.qucosa.model.DissTerms;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -28,28 +27,28 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DissTermsMapper implements Serializable {
     @JsonProperty("xmlnamespaces")
-    private Set<DissTerms.XmlNamspace> xmlnamespaces;
+    private Set<DissTermsMapper.XmlNamespace> xmlnamespaces;
 
     @JsonProperty("dissTerms")
-    private Set<DissTerms.DissTerm> dissTerms;
+    private Set<DissTermsMapper.DissTerm> dissTerms;
 
     @JsonProperty("formats")
-    private Set<DissTerms.DissFormat> formats;
+    private Set<DissTermsMapper.DissFormat> formats;
 
-    public Set<DissTerms.XmlNamspace> getXmlnamespaces() { return xmlnamespaces; }
+    public Set<DissTermsMapper.XmlNamespace> getXmlnamespaces() { return xmlnamespaces; }
 
-    public void setXmlnamespaces(Set<DissTerms.XmlNamspace> xmlnamespaces) { this.xmlnamespaces = xmlnamespaces; }
+    public void setXmlnamespaces(Set<DissTermsMapper.XmlNamespace> xmlnamespaces) { this.xmlnamespaces = xmlnamespaces; }
 
-    public Set<DissTerms.DissTerm> getDissTerms() { return dissTerms; }
+    public Set<DissTermsMapper.DissTerm> getDissTerms() { return dissTerms; }
 
-    public void setDissTerms(Set<DissTerms.DissTerm> dissTerms) { this.dissTerms = dissTerms; }
+    public void setDissTerms(Set<DissTermsMapper.DissTerm> dissTerms) { this.dissTerms = dissTerms; }
 
-    public Set<DissTerms.DissFormat> getFormats() { return formats; }
+    public Set<DissTermsMapper.DissFormat> getFormats() { return formats; }
 
-    public void setFormats(Set<DissTerms.DissFormat> formats) { this.formats = formats; }
+    public void setFormats(Set<DissTermsMapper.DissFormat> formats) { this.formats = formats; }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class XmlNamspace {
+    public static class XmlNamespace {
         @JsonProperty("prefix")
         private String prefix;
 
@@ -71,15 +70,15 @@ public class DissTermsMapper implements Serializable {
         private String diss;
 
         @JsonProperty("terms")
-        private Set<DissTerms.Term> terms;
+        private Set<DissTermsMapper.Term> terms;
 
         public String getDiss() { return diss; }
 
         public void setDiss(String diss) { this.diss = diss; }
 
-        public Set<DissTerms.Term> getTerms() { return terms; }
+        public Set<DissTermsMapper.Term> getTerms() { return terms; }
 
-        public void setTerms(Set<DissTerms.Term> terms) { this.terms = terms; }
+        public void setTerms(Set<DissTermsMapper.Term> terms) { this.terms = terms; }
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

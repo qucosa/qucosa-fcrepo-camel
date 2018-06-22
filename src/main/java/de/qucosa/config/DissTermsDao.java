@@ -39,7 +39,7 @@ public class DissTermsDao {
     }
 
     public DissTermsDao(File file) throws FileNotFoundException {
-        this((InputStream) new FileInputStream(file));
+        this(new FileInputStream(file));
     }
 
     public DissTermsDao(InputStream stream) {

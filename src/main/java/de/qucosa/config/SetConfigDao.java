@@ -37,7 +37,7 @@ public class SetConfigDao {
     }
 
     public SetConfigDao(File file) throws FileNotFoundException {
-        this((InputStream) new FileInputStream(file));
+        this(new FileInputStream(file));
     }
 
     public SetConfigDao(InputStream stream) {

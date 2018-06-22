@@ -19,7 +19,8 @@ package de.qucosa.component.oaipmh;
 import de.qucosa.component.oaipmh.model.RecordTransport;
 import de.qucosa.config.DissTermsDao;
 import de.qucosa.config.DissTermsMapper;
-import de.qucosa.model.SetsConfig;
+import de.qucosa.config.SetConfigDao;
+import de.qucosa.config.SetConfigMapper;
 import de.qucosa.utils.DateTimeConverter;
 import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
@@ -38,7 +39,7 @@ public class OaiProviderProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         DissTermsDao dissTerms = (DissTermsDao) exchange.getContext().getRegistry().lookupByName("dissTerms");
-        SetsConfig setsConfig = (SetsConfig) exchange.getContext().getRegistry().lookupByName("setsConfig");
+        SetConfigDao setsConfig = (SetConfigDao) exchange.getContext().getRegistry().lookupByName("setsConfig");
         Document dissemination = (Document) exchange.getIn().getBody();
         String format = exchange.getProperty("format").toString();
 
@@ -53,10 +54,10 @@ public class OaiProviderProcessor implements Processor {
         exchange.getIn().setBody(record);
     }
 
-    private List<String> getSetSpecs(DissTermsDao dissTerms, SetsConfig setsConfig, String format, Document dissemination) throws XPathExpressionException {
+    private List<String> getSetSpecs(DissTermsDao dissTerms, SetConfigDao setsConfig, String format, Document dissemination) throws XPathExpressionException {
         List<String> setSpecs = new ArrayList<>();
 
-        for (SetsConfig.Set setObj : setsConfig.getSetObjects()) {
+        for (SetConfigMapper.Set setObj : setsConfig.getSetObjects()) {
             String predicateKey;
             String predicateValue;
 

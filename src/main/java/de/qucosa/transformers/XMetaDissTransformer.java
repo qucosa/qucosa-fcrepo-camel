@@ -40,12 +40,10 @@ public class XMetaDissTransformer implements Expression {
 
     @Override
     public <T> T evaluate(Exchange exchange, Class<T> aClass) {
-        ElementNSImpl elem = (ElementNSImpl) exchange.getIn().getBody();
-        Document metsDoc = elem.getOwnerDocument();
         StreamSource xslSource = new StreamSource(this.getClass().getResourceAsStream(exchange.getProperty("xsltStylesheetResourceName").toString()));
 
         try {
-            exchange.getIn().setBody(transformXmetadisDocument(exchange, metsDoc, xslSource));
+            exchange.getIn().setBody(transformXmetadisDocument(exchange, exchange.getIn().getBody(Document.class), xslSource));
         } catch (XPathExpressionException | TransformerException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

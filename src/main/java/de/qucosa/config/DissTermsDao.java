@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -38,24 +37,18 @@ public class DissTermsDao {
 
     private DissTermsMapper mapping;
 
-    public DissTermsDao(String path) throws FileNotFoundException {
+    public DissTermsDao(String path) throws IOException {
         this(new File(path));
     }
 
-    public DissTermsDao(File file) throws FileNotFoundException {
+    public DissTermsDao(File file) throws IOException {
         this(new FileInputStream(file));
     }
 
-    public DissTermsDao(InputStream stream) {
+    public DissTermsDao(InputStream stream) throws IOException {
         this.config = stream;
-
         ObjectMapper om = new ObjectMapper();
-
-        try {
-            mapping = om.readValue(config, DissTermsMapper.class);
-        } catch (IOException e) {
-            logger.error("Cannot parse dissemination-conf JSON file.");
-        }
+        mapping = om.readValue(config, DissTermsMapper.class);
     }
 
     public Map<String, String> getMapXmlNamespaces() {

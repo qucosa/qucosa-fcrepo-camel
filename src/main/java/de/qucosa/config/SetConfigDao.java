@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -36,24 +35,18 @@ public class SetConfigDao {
 
     private InputStream config;
 
-    public SetConfigDao(String path) throws FileNotFoundException {
+    public SetConfigDao(String path) throws IOException {
         this(new File(path));
     }
 
-    public SetConfigDao(File file) throws FileNotFoundException {
+    public SetConfigDao(File file) throws IOException {
         this(new FileInputStream(file));
     }
 
-    public SetConfigDao(InputStream stream) {
+    public SetConfigDao(InputStream stream) throws IOException {
         this.config = stream;
-
         ObjectMapper om = new ObjectMapper();
-
-        try {
-            mapping = om.readValue(stream, om.getTypeFactory().constructCollectionType(List.class, SetConfigMapper.Set.class));
-        } catch (IOException e) {
-            logger.error("Cannot parse list-set-conf JSON file.");
-        }
+        mapping = om.readValue(stream, om.getTypeFactory().constructCollectionType(List.class, SetConfigMapper.Set.class));
     }
 
     public List<SetConfigMapper.Set> getSetObjects() { return mapping; }

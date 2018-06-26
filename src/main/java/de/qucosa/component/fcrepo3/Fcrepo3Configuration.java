@@ -16,15 +16,15 @@
 
 package de.qucosa.component.fcrepo3;
 
-import de.qucosa.model.DissTerms;
-import de.qucosa.model.SetsConfig;
+import de.qucosa.config.DissTermsDao;
+import de.qucosa.config.SetConfigDao;
 
 public class Fcrepo3Configuration {
     private String endpointDef = "FindObjects";
 
-    private DissTerms dissTerms = null;
+    private DissTermsDao dissTerms = null;
 
-    private SetsConfig sets = null;
+    private SetConfigDao sets = null;
 
     public String getEndpointDef() {
         return endpointDef;
@@ -34,19 +34,19 @@ public class Fcrepo3Configuration {
         this.endpointDef = endpointDef;
     }
 
-    public DissTerms getDissConf() {
+    public DissTermsDao getDissConf() {
         return dissTerms;
     }
 
-    public void setDissConf(DissTerms dissTerms) {
+    public void setDissConf(DissTermsDao dissTerms) {
         this.dissTerms = dissTerms;
     }
 
-    public SetsConfig getSets() {
+    public SetConfigDao getSets() {
         return sets;
     }
 
-    public void setSets(SetsConfig sets) {
+    public void setSets(SetConfigDao sets) {
         this.sets = sets;
     }
 }

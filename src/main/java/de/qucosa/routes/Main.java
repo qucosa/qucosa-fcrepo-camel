@@ -19,9 +19,10 @@ package de.qucosa.routes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.qucosa.component.fcrepo3.aggregate.RecordListAggregator;
 import de.qucosa.component.oaipmh.OaiProviderProcessor;
-import de.qucosa.model.DissTerms;
 import de.qucosa.component.oaipmh.model.RecordTransport;
-import de.qucosa.model.SetsConfig;
+import de.qucosa.config.DissTermsDao;
+import de.qucosa.config.DissTermsMapper;
+import de.qucosa.config.SetConfigDao;
 import de.qucosa.transformers.DcTransformer;
 import de.qucosa.transformers.XMetaDissTransformer;
 import org.apache.camel.BeanInject;
@@ -39,17 +40,17 @@ public class Main extends RouteBuilder {
     long updateDelay;
 
     @BeanInject("dissTerms")
-    private DissTerms dissTerms;
+    private DissTermsDao dissTerms;
 
     @BeanInject("setsConfig")
-    private SetsConfig setsConfig;
+    private SetConfigDao setsConfig;
 
     @Override
     public void configure() throws JsonProcessingException {
 
         Namespaces namespaces = new Namespaces("", "");
 
-        for (DissTerms.XmlNamspace xmlNamspace : dissTerms.getSetXmlNamespaces()) {
+        for (DissTermsMapper.XmlNamespace xmlNamspace : dissTerms.getSetXmlNamespaces()) {
             namespaces.add(xmlNamspace.getPrefix(), xmlNamspace.getUrl());
         }
 
@@ -69,7 +70,7 @@ public class Main extends RouteBuilder {
                 .setProperty("agent.name.substitutions", simple(""))
                 .setProperty("transferUrlPidencode", simple("true"))
                 .transform(new DcTransformer())
-                .setProperty("format", simple("dc"))
+                .setProperty("format", simple("oai_dc"))
                 .to("direct:oaiprovider");
 
         from("direct:xmetadiss")

@@ -62,9 +62,5 @@ public class RecordListAggregator implements AggregationStrategy {
                 ((List) eNew.getIn().getBody()).add(eOld.getIn().getBody(RecordTransport.class));
             }
         }
-
-        if (eOld.getIn().getBody() instanceof List && eNew.getIn().getBody() instanceof List) {
-            ((List) eNew.getIn().getBody()).addAll((Collection) eOld.getIn().getBody());
-        }
     }
 }

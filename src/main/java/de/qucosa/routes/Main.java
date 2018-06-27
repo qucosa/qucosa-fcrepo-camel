@@ -87,18 +87,18 @@ public class Main extends RouteBuilder {
         from("direct:epicur")
                 .id("build-epicur-dissemination")
                 .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
+                .setProperty("frontpage.url.pattern", simple(""))
                 .setProperty("agent.name.substitutions", simple(""))
                 .setProperty("transferUrlPidencode", simple("true"))
                 .transform(new EpicurTransformer())
                 .setProperty("format", simple("epicur"))
-                .to("direct:oaiprivider");
+                .to("direct:oaiprovider");
 
         from("direct:update")
                 .id("update-message-route")
                 .resequence().body().timeout(TimeUnit.SECONDS.toMillis(updateDelay))
                 .log("Perform updates for ${body}")
                 .to("fcrepo3:METS?fedoraHosturl={{fedora.url}}&fedoraCredentials={{fedora.credentials}}")
-                .split().body()
                 .setProperty("pid", xpath("//mets:mets/@OBJID", String.class).namespaces(namespaces))
                 .setProperty("lastmoddate", xpath("//mets:mets/mets:metsHdr/@LASTMODDATE", String.class).namespaces(namespaces))
                 .setProperty("agent", xpath("//mets:agent[@ROLE='EDITOR' and @TYPE='ORGANIZATION']/mets:name[1]", String.class).namespaces(namespaces))

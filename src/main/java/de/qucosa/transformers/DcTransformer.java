@@ -20,7 +20,6 @@ import de.qucosa.utils.DocumentXmlUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Expression;
 import org.apache.commons.text.StringSubstitutor;
-import org.apache.xerces.dom.ElementNSImpl;
 import org.w3c.dom.Document;
 
 import javax.xml.transform.Transformer;

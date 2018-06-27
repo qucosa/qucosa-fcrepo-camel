@@ -33,8 +33,6 @@ public class SetConfigDao {
 
     private List<SetConfigMapper.Set> mapping;
 
-    private InputStream config;
-
     public SetConfigDao(String path) throws IOException {
         this(new File(path));
     }
@@ -44,7 +42,7 @@ public class SetConfigDao {
     }
 
     public SetConfigDao(InputStream stream) throws IOException {
-        this.config = stream;
+        InputStream config = stream;
         ObjectMapper om = new ObjectMapper();
         mapping = om.readValue(stream, om.getTypeFactory().constructCollectionType(List.class, SetConfigMapper.Set.class));
     }

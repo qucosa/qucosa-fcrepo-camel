@@ -24,6 +24,7 @@ import de.qucosa.config.DissTermsDao;
 import de.qucosa.config.DissTermsMapper;
 import de.qucosa.config.SetConfigDao;
 import de.qucosa.transformers.DcTransformer;
+import de.qucosa.transformers.EpicurTransformer;
 import de.qucosa.transformers.XMetaDissTransformer;
 import org.apache.camel.BeanInject;
 import org.apache.camel.Exchange;
@@ -57,7 +58,7 @@ public class Main extends RouteBuilder {
         from("direct:oaiprovider")
                 .id("oaiProviderProcess")
                 .process(new OaiProviderProcessor())
-                .aggregate(constant(true), new RecordListAggregator()).completionSize(2)
+                .aggregate(constant(true), new RecordListAggregator()).completionSize(3)
                 .marshal(new ListJacksonDataFormat(RecordTransport.class))
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
@@ -83,17 +84,26 @@ public class Main extends RouteBuilder {
                 .setProperty("format", simple("xmetadiss"))
                 .to("direct:oaiprovider");
 
+        from("direct:epicur")
+                .id("build-epicur-dissemination")
+                .setProperty("transfer.url.pattern", simple("{{transfer.url.pattern}}"))
+                .setProperty("frontpage.url.pattern", simple(""))
+                .setProperty("agent.name.substitutions", simple(""))
+                .setProperty("transferUrlPidencode", simple("true"))
+                .transform(new EpicurTransformer())
+                .setProperty("format", simple("epicur"))
+                .to("direct:oaiprovider");
+
         from("direct:update")
                 .id("update-message-route")
                 .resequence().body().timeout(TimeUnit.SECONDS.toMillis(updateDelay))
                 .log("Perform updates for ${body}")
                 .to("fcrepo3:METS?fedoraHosturl={{fedora.url}}&fedoraCredentials={{fedora.credentials}}")
-                .split().body()
                 .setProperty("pid", xpath("//mets:mets/@OBJID", String.class).namespaces(namespaces))
                 .setProperty("lastmoddate", xpath("//mets:mets/mets:metsHdr/@LASTMODDATE", String.class).namespaces(namespaces))
                 .setProperty("agent", xpath("//mets:agent[@ROLE='EDITOR' and @TYPE='ORGANIZATION']/mets:name[1]", String.class).namespaces(namespaces))
                 .multicast()
-                .to("direct:dcdiss", "direct:xmetadiss")
+                .to("direct:dcdiss", "direct:xmetadiss", "direct:epicur")
                 .end();
 
         from("oaipmh:{{fedora.url}}/oai?credentials={{fedora.credentials}}&verb=ListIdentifiers&metadataPrefix=oai_dc&delay={{oaipmh.poll.delay}}")

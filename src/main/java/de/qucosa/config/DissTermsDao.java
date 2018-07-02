@@ -33,8 +33,6 @@ public class DissTermsDao {
 
     private Logger logger = LoggerFactory.getLogger(DissTermsMapper.class);
 
-    private InputStream config;
-
     private DissTermsMapper mapping;
 
     public DissTermsDao(String path) throws IOException {
@@ -46,7 +44,7 @@ public class DissTermsDao {
     }
 
     public DissTermsDao(InputStream stream) throws IOException {
-        this.config = stream;
+        InputStream config = stream;
         ObjectMapper om = new ObjectMapper();
         mapping = om.readValue(config, DissTermsMapper.class);
     }

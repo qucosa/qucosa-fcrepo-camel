@@ -22,11 +22,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 public class DissTermsTest {
     private DissTermsDao termsDao;
 
     @Before
-    public void init() {
+    public void init() throws IOException {
         termsDao = new DissTermsDao(getClass().getResourceAsStream("/configuration/dissemination-config.json"));
     }
 
